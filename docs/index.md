@@ -1,3 +1,5 @@
-# REPLACE_PACKAGE_NAME
+# tensorshare
 
-REPLACE_PACKAGE_DESCRIPTION
+🤝 Trade any tensors over the network
+
+__Work in progress__

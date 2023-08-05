@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) 2023-present REPLACE_FULL_NAME <REPLACE_EMAIL>
+Copyright (c) 2023-present Thomas Chaigneau <t.chaigneau.tc@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

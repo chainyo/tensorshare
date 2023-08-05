@@ -3,7 +3,7 @@ build-backend = "hatchling.build"
 requires = ["hatchling"]
 
 [project]
-authors = [{name = "REPLACE_FULL_NAME"}]
+authors = [{name = "Thomas Chaigneau"}]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Programming Language :: Python",
@@ -15,21 +15,21 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = []
-description = "REPLACE_PACKAGE_DESCRIPTION"
+description = "🤝 Trade any tensors over the network"
 dynamic = ["version"]
-keywords = []
+keywords = ["tensors", "machine learning", "deep learning", "artificial intelligence"]
 license = "MIT"
-name = "REPLACE_PACKAGE_NAME"
+name = "tensorshare"
 readme = "README.md"
 requires-python = ">=3.8,<3.12"
 
 [project.urls]
-Documentation = "https://REPLACE_GITHUB_USERNAME.github.io/REPLACE_PACKAGE_NAME"
-Issues = "https://github.com/REPLACE_GITHUB_USERNAME/REPLACE_PACKAGE_NAME/issues"
-Source = "https://github.com/REPLACE_GITHUB_USERNAME/REPLACE_PACKAGE_NAME"
+Documentation = "https://chainyo.github.io/tensorshare"
+Issues = "https://github.com/chainyo/tensorshare/issues"
+Source = "https://github.com/chainyo/tensorshare"
 
 [tool.hatch.version]
-path = "src/REPLACE_PACKAGE_NAME/__init__.py"
+path = "src/tensorshare/__init__.py"
 
 [project.optional-dependencies]
 docs = [
@@ -79,7 +79,7 @@ select = [
 ]
 
 [tool.ruff.isort]
-known-first-party = ["REPLACE_PACKAGE_NAME"]
+known-first-party = ["tensorshare"]
 
 [tool.hatch.envs.tests]
 features = [

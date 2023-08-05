@@ -1,4 +1,4 @@
-"""`REPLACE_PACKAGE_NAME `: REPLACE_PACKAGE_DESCRIPTION"""
+"""`tensorshare `: 🤝 Trade any tensors over the network"""
 
-__author__ = "REPLACE_FULL_NAME <REPLACE_EMAIL>"
+__author__ = "Thomas Chaigneau <t.chaigneau.tc@gmail.com>"
 __version__ = "0.0.1"

@@ -1,12 +1,12 @@
-site_name: REPLACE_PACKAGE_NAME
-site_url: https://github.com/REPLACE_GITHUB_USERNAME/REPLACE_PACKAGE_NAME
-site_author: REPLACE_FULL_NAME
-site_description: REPLACE_PACKAGE_DESCRIPTION
+site_name: tensorshare
+site_url: https://github.com/chainyo/tensorshare
+site_author: chainyo
+site_description: 🤝 Trade any tensors over the network
 
-repo_name: REPLACE_GITHUB_USERNAME/REPLACE_PACKAGE_NAME
-repo_url: https://github.com/REPLACE_GITHUB_USERNAME/REPLACE_PACKAGE_NAME
+repo_name: chainyo/tensorshare
+repo_url: https://github.com/chainyo/tensorshare
 
-copyright: Copyright (c) 2023-present REPLACE_FULL_NAME <REPLACE_EMAIL>
+copyright: Copyright (c) 2023-present Thomas Chaigneau <t.chaigneau.tc@gmail.com>
 
 theme:
   name: material
@@ -38,13 +38,13 @@ plugins:
 extra:
   social:
     - icon: fontawesome/brands/python
-      link: https://pypi.org/project/REPLACE_PACKAGE_NAME/
+      link: https://pypi.org/project/tensorshare/
     - icon: fontawesome/brands/github
-      link: https://github.com/REPLACE_GITHUB_USERNAME
-    # - icon: fontawesome/brands/twitter
-    #   link: https://twitter.com/REPLACE_TWITTER_USERNAME
-    # - icon: fontawesome/brands/linkedin
-    #   link: https://www.linkedin.com/in/REPLACE_LINKEDIN_USERNAME/
+      link: https://github.com/chainyo
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/chainyo_ai
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/thomas-chaigneau-dev
 
 nav:
   - Home: index.md
