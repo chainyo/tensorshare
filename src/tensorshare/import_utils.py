@@ -66,8 +66,10 @@ def require_backend(*backend_names: str) -> Callable[[], Callable]:
     Returns:
         Callable[[], Callable]: Decorator.
     """
+
     def decorator(func: Callable) -> Callable[[], Callable]:
         """Decorator."""
+
         def wrapper(*args, **kwargs) -> Callable:
             """Wrapper."""
             for backend_name in backend_names:
@@ -79,7 +81,8 @@ def require_backend(*backend_names: str) -> Callable[[], Callable]:
                 else:
                     if not _is_package_available(backend_name):
                         raise ImportError(
-                            f"`{func.__name__}` requires `{backend_name}` to be installed."
+                            f"`{func.__name__}` requires `{backend_name}` to be"
+                            " installed."
                         )
 
             return func(*args, **kwargs)
