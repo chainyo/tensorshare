@@ -15,8 +15,8 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-  "pydantic==2.1.1",
-  "safetensors==0.3.1",
+  "pydantic>=2.1.1",
+  "safetensors>=0.3.1",
 ]
 description = "🤝 Trade any tensors over the network"
 dynamic = ["version"]
@@ -35,11 +35,11 @@ Source = "https://github.com/chainyo/tensorshare"
 path = "src/tensorshare/__init__.py"
 
 [project.optional-dependencies]
-torch = ["torch"]
-numpy = ["numpy"]
+torch = ["torch>=1.10"]
+numpy = ["numpy>=1.21.6"]
 # tensorflow = ["tensorflow"]  Disable until 2.14 is released for pydantic v2 compatibility
-jax = ["jax<0.4.14", "flax", "jaxlib<0.4.14"]
-paddlepaddle = ["paddlepaddle"]
+jax = ["flax>=0.6.3", "jax<0.4.14", "jaxlib<0.4.14"]
+paddlepaddle = ["paddlepaddle>=2.4.1"]
 docs = [
   "mkdocs~=1.4.0",
   "mkdocs-material~=8.5.4",
@@ -52,31 +52,31 @@ quality = [
   "pre-commit~=2.20.0",
 ]
 tests = [
+  "flax>=0.6.3",
   "jax<0.4.14",
-  "jaxlib",
-  "flax",
-  "numpy",
-  "paddlepaddle",
+  "jaxlib<0.4.14",
+  "numpy>=1.21.6",
+  "paddlepaddle>=2.4.1",
   "pytest~=7.1.2",
   # "tensorflow",
-  "torch",
+  "torch>=1.10",
 ]
 # To install all optional frameworks dependencies: pip install tensorshare[all]
 all = [
+  "flax>=0.6.3",
   "jax<0.4.14",
-  "jaxlib",
-  "flax",
-  "numpy",
-  "paddlepaddle",
+  "jaxlib<0.4.14",
+  "numpy>=1.21.6",
+  "paddlepaddle>=2.4.1",
   # "tensorflow",
-  "torch",
+  "torch>=1.10",
 ]
 # To install all the dependencies for development purposes: pip install -e ".[dev]"
 dev = [
   "black~=22.10.0",
+  "flax>=0.6.3",
   "jax<0.4.14",
-  "jaxlib",
-  "flax",
+  "jaxlib<0.4.14",
   "mkdocs~=1.4.0",
   "mkdocs-material~=8.5.4",
   "mkdocs-git-revision-date-localized-plugin~=1.1.0",
@@ -84,11 +84,10 @@ dev = [
   "pre-commit~=2.20.0",
   "pytest~=7.1.2",
   "ruff~=0.0.263",
-  "numpy",
-  "paddlepaddle",
-  "safetensors==0.3.1",
+  "numpy>=1.21.6",
+  "paddlepaddle>=2.4.1",
   # "tensorflow",
-  "torch",
+  "torch>=1.10",
 ]
 
 [tool.hatch.envs.quality]
