@@ -35,13 +35,8 @@ __Feel free to contribute to the project by opening issues and pull requests.__
 
 ## Roadmap
 
-- [ ] Convertion from one framework to safetensors
-    * [ ] PyTorch
-    * [ ] TensorFlow
-    * [ ] JAX
-    * [ ] NumPy
-    * [ ] PadddlePaddle
-
+- [x] Convert functions from one framework to safetensors
+- [ ] Convert factory class for transparent usage
 - [ ] Pydantic schema for sharing tensors
 - [ ] Server for sharing tensors
 - [ ] Client for sharing tensors
