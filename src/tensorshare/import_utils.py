@@ -49,11 +49,9 @@ def _is_padddle_available() -> bool:
     try:
         import paddle  # noqa: F401
 
-        package_available = True
+        return True
     except ImportError:
-        package_available = False
-    finally:
-        return package_available
+        return False
 
 
 def require_backend(*backend_names: str) -> Callable[[], Callable]:
