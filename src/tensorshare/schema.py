@@ -11,10 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""`tensorshare `: 🤝 Trade any tensors over the network"""
+"""Pydantic schemas to enable resilient and secure tensor sharing."""
 
-__author__ = "Thomas Chaigneau <t.chaigneau.tc@gmail.com>"
-__version__ = "0.0.1"
+from pydantic import BaseModel, ByteSize
 
 
-from tensorshare.schema import TensorShare
+class TensorShare(BaseModel):
+    """Base model for tensor sharing."""
+
+    tensors: bytes
+    size: ByteSize
