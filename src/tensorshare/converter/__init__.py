@@ -11,12 +11,4 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""`tensorshare `: 🤝 Trade any tensors over the network"""
-
-__author__ = "Thomas Chaigneau <t.chaigneau.tc@gmail.com>"
-__version__ = "0.0.1"
-
-
-from tensorshare.schema import TensorShare
-
-__all__ = ["TensorShare"]
+"""Converter is used to convert any tensors format to safetensors format"""
