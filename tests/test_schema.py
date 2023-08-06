@@ -28,6 +28,10 @@ from tensorshare.schema import TensorShare
 class TestTensorShare:
     """Tests for the pydantic schemas of tensorshare."""
 
+    def test_tensorshare_pydantic_schema(self) -> None:
+        """Test the pydantic schema of tensorshare."""
+        # TODO: Check the TensorShare pydantic schema and its model_config
+
     @pytest.mark.usefixtures("dict_zeros_flax_tensor")
     def test_tensorshare_with_flax(self, dict_zeros_flax_tensor) -> None:
         """Test the tensorshare schema with flax tensors."""
