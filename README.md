@@ -1,6 +1,4 @@
-# tensorshare
 <h1 align="center">TensorShare</h1>
-<p align="center"><em>🤝 Trade any tensors over the network</em></p>
 
 <div align="center">
 	<a  href="https://pypi.org/project/tensorshare" target="_blank">
@@ -20,9 +18,20 @@
 	</a>
 </div>
 
-TensorShare: A powerful tool enabling lightning-fast tensor sharing across networks.
+<p align="center"><em>🤝 Trade any tensors over the network</em></p>
 
-__Work in progress__
+---
+
+TensorShare is a powerful tool enabling ⚡ lightning-fast tensor sharing across networks.
+
+This project leverage the best open-source tools to provide a simple and easy-to-use interface for sharing tensors:
+
+* [safetensors](https://github.com/huggingface/safetensors) for secure tensor serialization and deserialization.
+* [pydantic](https://github.com/pydantic/pydantic) for data validation and settings management.
+* [fastapi](https://github.com/tiangolo/fastapi) for building APIs (and because it's too good to avoid it).
+
+__This project is heavily in development and is not ready for production use.__
+__Feel free to contribute to the project by opening issues and pull requests.__
 
 ## Roadmap
 
