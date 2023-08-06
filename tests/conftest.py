@@ -13,11 +13,11 @@
 # limitations under the License.
 """Fixture stores for the testing suite."""
 
-import pytest
-
 import jax.numpy as jnp
 import numpy as np
 import paddle
+import pytest
+
 # import tensorflow as tf
 import torch
 
@@ -63,10 +63,12 @@ def zeros_numpy_tensor() -> np.ndarray:
     """Return a numpy tensor of zeros."""
     return np.zeros((512, 1024))
 
+
 @pytest.fixture
 def zeros_paddle_tensor() -> paddle.Tensor:
     """Return a paddle tensor of zeros."""
     return paddle.zeros((512, 1024))
+
 
 # @pytest.fixture
 # def zeros_tensorflow_tensor() -> tf.Tensor:

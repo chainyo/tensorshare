@@ -17,16 +17,21 @@ from typing import Dict, Optional
 
 import numpy as np
 import paddle
+
 # import tensorflow as tf
 import torch
 from jax import Array
 from safetensors.flax import save as flax_save
 from safetensors.numpy import save as np_save
 from safetensors.paddle import save as paddle_save
+
 # from safetensors.tensorflow import save as tf_save
 from safetensors.torch import save as torch_save
 
+from tensorshare.import_utils import require_backend
 
+
+@require_backend("flax", "jax", "jaxlib")
 def convert_flax_to_safetensors(
     tensors: Dict[str, Array], metadata: Optional[Dict[str, str]] = None
 ) -> bytes:
@@ -44,6 +49,8 @@ def convert_flax_to_safetensors(
     """
     return flax_save(tensors, metadata=metadata)
 
+
+@require_backend("numpy")
 def convert_numpy_to_safetensors(
     tensors: Dict[str, np.ndarray], metadata: Optional[Dict[str, str]] = None
 ) -> bytes:
@@ -61,6 +68,8 @@ def convert_numpy_to_safetensors(
     """
     return np_save(tensors, metadata=metadata)
 
+
+@require_backend("paddlepaddle")
 def convert_paddle_to_safetensors(
     tensors: Dict[str, paddle.Tensor], metadata: Optional[Dict[str, str]] = None
 ) -> bytes:
@@ -78,6 +87,8 @@ def convert_paddle_to_safetensors(
     """
     return paddle_save(tensors, metadata=metadata)
 
+
+# @require_backend("tensorflow")
 # def convert_tensorflow_to_safetensors(
 #     tensors: Dict[str, tf.Tensor], metadata: Optional[Dict[str, str]] = None
 # ) -> bytes:
@@ -95,6 +106,8 @@ def convert_paddle_to_safetensors(
 #     """
 #     return tf_save(tensors, metadata=metadata)
 
+
+@require_backend("torch")
 def convert_torch_to_safetensors(
     tensors: Dict[str, torch.Tensor], metadata: Optional[Dict[str, str]] = None
 ) -> bytes:

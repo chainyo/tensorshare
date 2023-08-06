@@ -18,3 +18,5 @@ __version__ = "0.0.1"
 
 
 from tensorshare.schema import TensorShare
+
+__all__ = ["TensorShare"]
