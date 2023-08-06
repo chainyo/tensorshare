@@ -14,7 +14,7 @@
 """`tensorshare `: 🤝 Trade any tensors over the network"""
 
 __author__ = "Thomas Chaigneau <t.chaigneau.tc@gmail.com>"
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 
 
 from tensorshare.schema import TensorShare
