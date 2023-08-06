@@ -22,11 +22,15 @@ theme:
   font:
     text: Roboto
     code: Roboto Mono
+  icon:
+    logo: material/handshake
 
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
 
 plugins:
   - search:
