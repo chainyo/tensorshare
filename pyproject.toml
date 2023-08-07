@@ -3,10 +3,23 @@ build-backend = "hatchling.build"
 requires = ["hatchling"]
 
 [project]
-authors = [{name = "Thomas Chaigneau"}]
+name = "tensorshare"
+description = "🤝 Trade any tensors over the network"
+readme = "README.md"
+requires-python = ">=3.8,<3.12"
+license = "MIT"
+authors = [{name = "Thomas Chaigneau", email = "t.chaigneau.tc@gmail.com"}]
 classifiers = [
+  "Topic :: Internet",
+  "Topic :: Software Development :: Libraries :: Application Frameworks",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Software Development",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
   "Development Status :: 4 - Beta",
   "Programming Language :: Python",
+  "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
@@ -18,13 +31,22 @@ dependencies = [
   "pydantic>=2.1.1",
   "safetensors>=0.3.1",
 ]
-description = "🤝 Trade any tensors over the network"
 dynamic = ["version"]
-keywords = ["tensors", "machine learning", "deep learning", "artificial intelligence"]
-license = "MIT"
-name = "tensorshare"
-readme = "README.md"
-requires-python = ">=3.8,<3.12"
+keywords = [
+  "deep learning",
+  "machine-learning",
+  "artificial intelligence",
+  "safetensors",
+  "pydantic",
+  "fastapi",
+  "pytorch",
+  "numpy",
+  "jax",
+  "paddlepaddle",
+  "tensorflow",
+  "network",
+]
+
 
 [project.urls]
 Documentation = "https://chainyo.github.io/tensorshare"
