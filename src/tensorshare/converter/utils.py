@@ -1,4 +1,4 @@
-"""Utils functions for the converter module."""
+"""Define all the backends conversion methods to safetensors format."""
 
 from typing import Dict, Optional
 
