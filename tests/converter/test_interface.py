@@ -13,8 +13,8 @@ import torch
 from tensorshare.converter.interface import (
     BACKENDS_FUNC_MAPPING,
     TENSOR_TYPE_MAPPING,
-    _infer_backend,
     TensorConverter,
+    _infer_backend,
 )
 from tensorshare.converter.utils import (
     convert_flax_to_safetensors,
@@ -150,7 +150,7 @@ class TestTensorConverter:
 
     def test_infer_backend_with_unsupported_tensor(self) -> None:
         """Test the convert function with an unsupported tensor."""
-        tensors = {"unsupported": 1} 
+        tensors = {"unsupported": 1}
         first_tensor_type = [type(tensor) for tensor in tensors.values()][0]
 
         with pytest.raises(
@@ -164,7 +164,9 @@ class TestTensorConverter:
             TensorConverter.convert(tensors)
 
     @pytest.mark.usefixtures("multiple_flax_tensors")
-    def test_tensor_converter_convert_with_multiple_flax_tensors(self, multiple_flax_tensors) -> None:
+    def test_tensor_converter_convert_with_multiple_flax_tensors(
+        self, multiple_flax_tensors
+    ) -> None:
         """Test the convert function with multiple flax tensors."""
         tensorshare = TensorConverter.convert(multiple_flax_tensors)
 
@@ -187,7 +189,9 @@ class TestTensorConverter:
         assert isinstance(tensorshare.size_as_str, str)
 
     @pytest.mark.usefixtures("multiple_numpy_tensors")
-    def test_tensor_converter_convert_with_multiple_numpy_tensors(self, multiple_numpy_tensors) -> None:
+    def test_tensor_converter_convert_with_multiple_numpy_tensors(
+        self, multiple_numpy_tensors
+    ) -> None:
         """Test the convert function with multiple numpy tensors."""
         tensorshare = TensorConverter.convert(multiple_numpy_tensors)
 
@@ -210,7 +214,9 @@ class TestTensorConverter:
         assert isinstance(tensorshare.size_as_str, str)
 
     @pytest.mark.usefixtures("multiple_paddle_tensors")
-    def test_tensor_converter_convert_with_multiple_paddle_tensors(self, multiple_paddle_tensors) -> None:
+    def test_tensor_converter_convert_with_multiple_paddle_tensors(
+        self, multiple_paddle_tensors
+    ) -> None:
         """Test the convert function with multiple paddle tensors."""
         tensorshare = TensorConverter.convert(multiple_paddle_tensors)
 
@@ -256,7 +262,9 @@ class TestTensorConverter:
     #     assert isinstance(tensorshare.size_as_str, str)
 
     @pytest.mark.usefixtures("multiple_torch_tensors")
-    def test_tensor_converter_convert_with_multiple_torch_tensors(self, multiple_torch_tensors) -> None:
+    def test_tensor_converter_convert_with_multiple_torch_tensors(
+        self, multiple_torch_tensors
+    ) -> None:
         """Test the convert function with multiple torch tensors."""
         tensorshare = TensorConverter.convert(multiple_torch_tensors)
 
@@ -279,7 +287,9 @@ class TestTensorConverter:
         assert isinstance(tensorshare.size_as_str, str)
 
     @pytest.mark.usefixtures("multiple_torch_tensors")
-    def test_tensor_converter_convert_with_metadata(self, multiple_torch_tensors) -> None:
+    def test_tensor_converter_convert_with_metadata(
+        self, multiple_torch_tensors
+    ) -> None:
         """Test the convert function with metadata."""
         metadata = {"foo": "bar"}
         tensorshare = TensorConverter.convert(multiple_torch_tensors, metadata=metadata)
@@ -290,10 +300,12 @@ class TestTensorConverter:
         assert isinstance(tensorshare.size_as_str, str)
 
     @pytest.mark.usefixtures("multiple_backend_tensors")
-    def test_tensor_converter_convert_with_multiple_backend_tensors(self, multiple_backend_tensors) -> None:
+    def test_tensor_converter_convert_with_multiple_backend_tensors(
+        self, multiple_backend_tensors
+    ) -> None:
         """Test the convert function with multiple backend tensors."""
         tensor_types = [type(tensor) for tensor in multiple_backend_tensors.values()]
-        
+
         with pytest.raises(
             TypeError,
             match=re.escape(
@@ -306,9 +318,7 @@ class TestTensorConverter:
         """Test the convert function with an empty dict."""
         with pytest.raises(
             ValueError,
-            match=re.escape(
-                "Tensors dictionary cannot be empty."
-            ),
+            match=re.escape("Tensors dictionary cannot be empty."),
         ):
             TensorConverter.convert({})
 
@@ -322,7 +332,9 @@ class TestTensorConverter:
             ("tensors",),
         ],
     )
-    def test_tensor_converter_convert_with_invalid_tensors_format(self, tensors) -> None:
+    def test_tensor_converter_convert_with_invalid_tensors_format(
+        self, tensors
+    ) -> None:
         """Test the convert function with an invalid tensors format."""
         with pytest.raises(
             TypeError,
@@ -334,7 +346,8 @@ class TestTensorConverter:
 
     @pytest.mark.usefixtures("multiple_torch_tensors")
     @pytest.mark.parametrize(
-        "backend", ["invalid", "mxnet", "caffe2", "chainer"],
+        "backend",
+        ["invalid", "mxnet", "caffe2", "chainer"],
     )
     def test_tensor_converter_convert_with_invalid_backend(
         self, multiple_torch_tensors, backend
@@ -343,14 +356,16 @@ class TestTensorConverter:
         with pytest.raises(
             KeyError,
             match=re.escape(
-                f"Invalid backend `{backend}`. Must be one of {list(Backend.__members__)}."
+                f"Invalid backend `{backend}`. Must be one of"
+                f" {list(Backend.__members__)}."
             ),
         ):
             TensorConverter.convert(multiple_torch_tensors, backend=backend)
 
     @pytest.mark.usefixtures("multiple_torch_tensors")
     @pytest.mark.parametrize(
-        "backend", [1, 1.0, ["backend"], ("backend",), {"backend": "torch"}],
+        "backend",
+        [1, 1.0, ["backend"], ("backend",), {"backend": "torch"}],
     )
     def test_tensor_converter_convert_with_invalid_backend_format(
         self, multiple_torch_tensors, backend
@@ -359,9 +374,10 @@ class TestTensorConverter:
         with pytest.raises(
             TypeError,
             match=re.escape(
-                f"Backend must be a string or an instance of Backend enum, got `{type(backend)}` instead. "
-                "Use `tensorshare.schema.Backend` to access the Backend enum. "
-                "If you don't specify a backend, it will be inferred from the tensors format."
+                "Backend must be a string or an instance of Backend enum, got"
+                f" `{type(backend)}` instead. Use `tensorshare.schema.Backend` to"
+                " access the Backend enum. If you don't specify a backend, it will be"
+                " inferred from the tensors format."
             ),
         ):
             TensorConverter.convert(multiple_torch_tensors, backend=backend)

@@ -132,13 +132,15 @@ class TensorConverter:
                     _backend = Backend[backend.upper()]
                 except KeyError:
                     raise KeyError(
-                        f"Invalid backend `{backend}`. Must be one of {list(Backend.__members__)}."
+                        f"Invalid backend `{backend}`. Must be one of"
+                        f" {list(Backend.__members__)}."
                     )
             elif not isinstance(backend, Backend):
                 raise TypeError(
-                    f"Backend must be a string or an instance of Backend enum, got `{type(backend)}` instead. "
-                    "Use `tensorshare.schema.Backend` to access the Backend enum. "
-                    "If you don't specify a backend, it will be inferred from the tensors format."
+                    "Backend must be a string or an instance of Backend enum, got"
+                    f" `{type(backend)}` instead. Use `tensorshare.schema.Backend` to"
+                    " access the Backend enum. If you don't specify a backend, it will"
+                    " be inferred from the tensors format."
                 )
         else:
             _backend = _infer_backend(tensors)
