@@ -1,5 +1,7 @@
 """Fixture stores for the testing suite."""
 
+import random
+
 import jax.numpy as jnp
 import numpy as np
 import paddle
@@ -7,6 +9,22 @@ import pytest
 
 # import tensorflow as tf
 import torch
+
+from tensorshare.converter.utils import convert_numpy_to_safetensors
+
+
+@pytest.fixture
+def converted_fixed_numpy_tensors() -> bytes:
+    """Return a serialized numpy tensor."""
+    _tensor = {"embeddings": np.zeros((2, 2))}
+    return convert_numpy_to_safetensors(_tensor)
+
+
+@pytest.fixture
+def random_fp32_numpy_tensors() -> bytes:
+    """Return a serialized numpy tensor."""
+    shape = (random.randint(1, 100), random.randint(1, 100))
+    return {"embeddings": np.random.random(shape)}
 
 
 @pytest.fixture

@@ -21,3 +21,8 @@ class TensorShare(BaseModel):
         },
         ser_json_bytes="base64",
     )
+
+    @property
+    def size_as_str(self) -> str:
+        """Return size as a string in human readable format."""
+        return self.size.human_readable()
