@@ -2,13 +2,14 @@
 
 from typing import Dict, Optional, OrderedDict, Union
 
+import jaxlib
 import numpy as np
 import paddle
 
 # import tensorflow as tf
 import torch
-import jaxlib
 from jax import Array
+from pydantic import ByteSize
 
 from tensorshare.converter.utils import (
     convert_flax_to_safetensors,
@@ -55,7 +56,8 @@ def _infer_backend(
             Tensors stored in a dictionary with their name as key.
 
     Raises:
-        ValueError: If the type of the tensors is not supported.
+        TypeError: If all tensors don't have the same type.
+        TypeError: If the type of the tensors is not supported.
 
     Returns:
         Backend: The backend inferred from the type of the tensors.
@@ -63,14 +65,14 @@ def _infer_backend(
     tensor_types = [type(tensor) for tensor in tensors.values()]
 
     if len(set(tensor_types)) > 1:
-        raise ValueError(
+        raise TypeError(
             f"All tensors must have the same type, got {tensor_types} instead."
         )
 
     first_tensor_type = tensor_types[0]
 
     if first_tensor_type not in TENSOR_TYPE_MAPPING:
-        raise ValueError(
+        raise TypeError(
             f"Unsupported tensor type {first_tensor_type}. Supported types are"
             f" {list(TENSOR_TYPE_MAPPING.keys())}\nThe supported backends are"
             f" {list(BACKENDS_FUNC_MAPPING.keys())}."
@@ -86,7 +88,7 @@ class TensorConverter:
     def convert(
         tensors: Dict[str, Union[Array, np.ndarray, paddle.Tensor, torch.Tensor]],
         metadata: Optional[Dict[str, str]] = None,
-        backend: Optional[Backend] = None,
+        backend: Optional[Union[str, Backend]] = None,
     ) -> TensorShare:
         """Convert a dictionary of tensors to a TensorShare object.
 
@@ -98,7 +100,7 @@ class TensorConverter:
                 Tensors stored in a dictionary with their name as key.
             metadata (Optional[Dict[str, str]], optional):
                 Metadata to add to the safetensors file. Defaults to None.
-            backend (Backend, optional):
+            backend (Optional[Union[str, Backend]], optional):
                 Backend to use for the conversion. Defaults to None.
                 If None, the backend will be inferred from the tensors format.
                 Backend can be one of the following:
@@ -110,8 +112,9 @@ class TensorConverter:
 
         Raises:
             TypeError: If tensors is not a dictionary.
+            TypeError: If backend is not a string or an instance of Backend enum.
             ValueError: If tensors is empty.
-            ValueError: If backend is not one of the supported backends.
+            KeyError: If backend is not one of the supported backends.
 
         Returns:
             TensorShare: TensorShare object containing the converted tensors.
@@ -123,16 +126,26 @@ class TensorConverter:
         elif not tensors:
             raise ValueError("Tensors dictionary cannot be empty.")
 
-        if backend and backend not in Backend:
-            raise ValueError(
-                f"Invalid backend `{backend}`. Must be one of {list(Backend)}."
-            )
-        elif backend is None:
-            backend = _infer_backend(tensors)
+        if backend is not None:
+            if isinstance(backend, str):
+                try:
+                    _backend = Backend[backend.upper()]
+                except KeyError:
+                    raise KeyError(
+                        f"Invalid backend `{backend}`. Must be one of {list(Backend.__members__)}."
+                    )
+            elif not isinstance(backend, Backend):
+                raise TypeError(
+                    f"Backend must be a string or an instance of Backend enum, got `{type(backend)}` instead. "
+                    "Use `tensorshare.schema.Backend` to access the Backend enum. "
+                    "If you don't specify a backend, it will be inferred from the tensors format."
+                )
+        else:
+            _backend = _infer_backend(tensors)
 
-        _tensors = BACKENDS_FUNC_MAPPING[backend](tensors, metadata=metadata)
+        _tensors = BACKENDS_FUNC_MAPPING[_backend](tensors, metadata=metadata)
 
         return TensorShare(
             tensors=_tensors,
-            size=len(_tensors),
+            size=ByteSize(len(_tensors)),
         )
