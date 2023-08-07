@@ -7,6 +7,7 @@ import paddle
 
 # import tensorflow as tf
 import torch
+import jaxlib
 from jax import Array
 
 from tensorshare.converter.utils import (
@@ -31,7 +32,7 @@ BACKENDS_FUNC_MAPPING = OrderedDict(
 # Mapping between tensor type and backend
 TENSOR_TYPE_MAPPING = OrderedDict(
     [
-        (Array, Backend.FLAX),
+        (jaxlib.xla_extension.ArrayImpl, Backend.FLAX),
         (np.ndarray, Backend.NUMPY),
         (paddle.Tensor, Backend.PADDLEPADDLE),
         # (tf.Tensor, Backend.TENSORFLOW),
@@ -42,7 +43,6 @@ TENSOR_TYPE_MAPPING = OrderedDict(
 
 def _infer_backend(
     tensors: Dict[str, Union[Array, np.ndarray, paddle.Tensor, torch.Tensor]],
-    check_all_same_type: bool = True,
 ) -> Backend:
     """Find the backend of the tensors based on their type.
 
@@ -53,8 +53,6 @@ def _infer_backend(
     Args:
         tensors (Dict[str, Union[Array, np.ndarray, paddle.Tensor, torch.Tensor]]):
             Tensors stored in a dictionary with their name as key.
-        check_all_same_type (bool, optional):
-            Whether to check if all the tensors have the same type. Defaults to True.
 
     Raises:
         ValueError: If the type of the tensors is not supported.
@@ -62,8 +60,14 @@ def _infer_backend(
     Returns:
         Backend: The backend inferred from the type of the tensors.
     """
-    tensors_values = list(tensors.values())
-    first_tensor_type = type(tensors_values[0])
+    tensor_types = [type(tensor) for tensor in tensors.values()]
+
+    if len(set(tensor_types)) > 1:
+        raise ValueError(
+            f"All tensors must have the same type, got {tensor_types} instead."
+        )
+
+    first_tensor_type = tensor_types[0]
 
     if first_tensor_type not in TENSOR_TYPE_MAPPING:
         raise ValueError(
@@ -71,13 +75,6 @@ def _infer_backend(
             f" {list(TENSOR_TYPE_MAPPING.keys())}\nThe supported backends are"
             f" {list(BACKENDS_FUNC_MAPPING.keys())}."
         )
-
-    if check_all_same_type:
-        if not all(isinstance(tensor, first_tensor_type) for tensor in tensors_values):
-            raise ValueError(
-                "All tensors must have the same type, got"
-                f" {list(map(type, tensors_values))} instead."
-            )
 
     return TENSOR_TYPE_MAPPING[first_tensor_type]
 
@@ -113,6 +110,7 @@ class TensorConverter:
 
         Raises:
             TypeError: If tensors is not a dictionary.
+            ValueError: If tensors is empty.
             ValueError: If backend is not one of the supported backends.
 
         Returns:
@@ -122,6 +120,8 @@ class TensorConverter:
             raise TypeError(
                 f"Tensors must be a dictionary, got `{type(tensors)}` instead."
             )
+        elif not tensors:
+            raise ValueError("Tensors dictionary cannot be empty.")
 
         if backend and backend not in Backend:
             raise ValueError(
