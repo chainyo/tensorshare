@@ -130,11 +130,11 @@ class TensorConverter:
             if isinstance(backend, str):
                 try:
                     _backend = Backend[backend.upper()]
-                except KeyError:
+                except KeyError as e:
                     raise KeyError(
                         f"Invalid backend `{backend}`. Must be one of"
                         f" {list(Backend.__members__)}."
-                    )
+                    ) from e
             elif not isinstance(backend, Backend):
                 raise TypeError(
                     "Backend must be a string or an instance of Backend enum, got"
