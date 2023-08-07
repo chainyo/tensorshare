@@ -1,7 +1,7 @@
 # Contributor Guide
 
 Thank you for your interest in improving this project.
-This project is open-source under the [Apache 2.0 license] and
+This project is open-source under the [MIT license] and
 welcomes contributions in the form of bug reports, feature requests, and pull requests.
 
 Here is a list of important resources for contributors:
@@ -11,7 +11,7 @@ Here is a list of important resources for contributors:
 - [Issue Tracker]
 - [Code of Conduct]
 
-[apache 2.0 license]: https://opensource.org/licenses/Apache-2.0
+[mit license]: https://github.com/chainyo/tensorshare/blob/main/LICENSE
 [source code]: https://github.com/chainyo/tensorshare
 [documentation]: https://chainyo.github.io/tensorshare
 [issue tracker]: https://github.com/chainyo/tensorshare/issues

@@ -21,7 +21,7 @@ dependencies = [
 description = "🤝 Trade any tensors over the network"
 dynamic = ["version"]
 keywords = ["tensors", "machine learning", "deep learning", "artificial intelligence"]
-license = "Apache-2.0"
+license = "MIT"
 name = "tensorshare"
 readme = "README.md"
 requires-python = ">=3.8,<3.12"
