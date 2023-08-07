@@ -28,6 +28,16 @@ def random_fp32_numpy_tensors() -> bytes:
 
 
 @pytest.fixture
+def multiple_backend_tensors() -> dict:
+    """Return a dictionary of tensors from multiple backends."""
+    return {
+        "numpy": np.zeros((512, 1024)),
+        "paddle": paddle.zeros((512, 1024)),
+        "torch": torch.zeros((512, 1024)),
+    }
+
+
+@pytest.fixture
 def dict_zeros_flax_tensor() -> dict:
     """Return a dictionary of flax tensors."""
     return {"embeddings": jnp.zeros((512, 1024))}
@@ -85,3 +95,48 @@ def zeros_paddle_tensor() -> paddle.Tensor:
 def zeros_torch_tensor() -> torch.Tensor:
     """Return a torch tensor of zeros."""
     return torch.zeros((512, 1024))
+
+
+@pytest.fixture
+def multiple_flax_tensors() -> dict:
+    """Return a dictionary of flax tensors."""
+    return {
+        "embeddings": jnp.zeros((512, 1024)),
+        "labels": jnp.zeros((512, 1024)),
+    }
+
+
+@pytest.fixture
+def multiple_numpy_tensors() -> dict:
+    """Return a dictionary of numpy tensors."""
+    return {
+        "embeddings": np.zeros((512, 1024)),
+        "labels": np.zeros((512, 1024)),
+    }
+
+
+@pytest.fixture
+def multiple_paddle_tensors() -> dict:
+    """Return a dictionary of paddle tensors."""
+    return {
+        "embeddings": paddle.zeros((512, 1024)),
+        "labels": paddle.zeros((512, 1024)),
+    }
+
+
+# @pytest.fixture
+# def multiple_tensorflow_tensors() -> dict:
+#     """Return a dictionary of tensorflow tensors."""
+#     return {
+#         "embeddings": tf.zeros((512, 1024)),
+#         "labels": tf.zeros((512, 1024)),
+#     }
+
+
+@pytest.fixture
+def multiple_torch_tensors() -> dict:
+    """Return a dictionary of torch tensors."""
+    return {
+        "embeddings": torch.zeros((512, 1024)),
+        "labels": torch.zeros((512, 1024)),
+    }
