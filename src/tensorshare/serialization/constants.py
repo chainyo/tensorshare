@@ -1,4 +1,4 @@
-"""Constants for tensorshare."""
+"""Constants for tensorshare.serialization."""
 
 from enum import Enum
 from typing import Callable, Dict, OrderedDict, Union
@@ -11,6 +11,11 @@ import paddle
 import torch
 
 from tensorshare.serialization.utils import (
+    deserialize_flax,
+    deserialize_numpy,
+    deserialize_paddle,
+    # deserialize_tensorflow,
+    deserialize_torch,
     serialize_flax,
     serialize_numpy,
     serialize_paddle,
@@ -29,14 +34,24 @@ class Backend(str, Enum):
     TORCH = "torch"
 
 
-# Mapping between backend and conversion function
-BACKENDS_FUNC_MAPPING: Dict[Backend, Callable] = OrderedDict(
+# Mapping between backend and serialization function
+BACKEND_SER_FUNC_MAPPING: Dict[Backend, Callable] = OrderedDict(
     [
         (Backend.FLAX, serialize_flax),
         (Backend.NUMPY, serialize_numpy),
         (Backend.PADDLEPADDLE, serialize_paddle),
         # (Backend.TENSORFLOW, serialize_tensorflow),
         (Backend.TORCH, serialize_torch),
+    ]
+)
+# Mapping between backend and deserialization function
+BACKEND_DESER_FUNC_MAPPING: Dict[Backend, Callable] = OrderedDict(
+    [
+        (Backend.FLAX, deserialize_flax),
+        (Backend.NUMPY, deserialize_numpy),
+        (Backend.PADDLEPADDLE, deserialize_paddle),
+        # (Backend.TENSORFLOW, deserialize_tensorflow),
+        (Backend.TORCH, deserialize_torch),
     ]
 )
 # Mapping between tensor type and backend

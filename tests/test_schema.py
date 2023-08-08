@@ -16,14 +16,14 @@ from tensorshare.serialization.utils import (
 class TestTensorShare:
     """Tests for the pydantic schemas of tensorshare."""
 
-    @pytest.mark.usefixtures("converted_fixed_numpy_tensors")
+    @pytest.mark.usefixtures("serialized_fixed_numpy_tensors")
     def test_tensorshare_pydantic_schema_with_fixed_tensor(
-        self, converted_fixed_numpy_tensors
+        self, serialized_fixed_numpy_tensors
     ) -> None:
         """Test the pydantic schema of tensorshare."""
         tensorshare = TensorShare(
-            tensors=converted_fixed_numpy_tensors,
-            size=len(converted_fixed_numpy_tensors),
+            tensors=serialized_fixed_numpy_tensors,
+            size=len(serialized_fixed_numpy_tensors),
         )
 
         assert isinstance(tensorshare.tensors, bytes)

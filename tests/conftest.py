@@ -14,7 +14,7 @@ from tensorshare.serialization.utils import serialize_numpy
 
 
 @pytest.fixture
-def converted_fixed_numpy_tensors() -> bytes:
+def serialized_fixed_numpy_tensors() -> bytes:
     """Return a serialized numpy tensor."""
     _tensor = {"embeddings": np.zeros((2, 2))}
     return serialize_numpy(_tensor)

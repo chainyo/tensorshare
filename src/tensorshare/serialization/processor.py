@@ -11,7 +11,8 @@ from jax import Array
 from pydantic import ByteSize
 
 from tensorshare.serialization.constants import (
-    BACKENDS_FUNC_MAPPING,
+    BACKEND_DESER_FUNC_MAPPING,
+    BACKEND_SER_FUNC_MAPPING,
     TENSOR_TYPE_MAPPING,
     Backend,
 )
@@ -50,7 +51,7 @@ def _infer_backend(
         raise TypeError(
             f"Unsupported tensor type {first_tensor_type}. Supported types are"
             f" {list(TENSOR_TYPE_MAPPING.keys())}\nThe supported backends are"
-            f" {list(BACKENDS_FUNC_MAPPING.keys())}."
+            f" {list(BACKEND_SER_FUNC_MAPPING.keys())}."
         )
 
     return TENSOR_TYPE_MAPPING[first_tensor_type]
@@ -67,8 +68,9 @@ class TensorProcessor:
     ) -> Tuple[bytes, ByteSize]:
         """Serialize a dictionary of tensors to a TensorShare object.
 
-        This method will convert a dictionary of tensors to a TensorShare object using the specified backend
-        if provided, otherwise it will try to infer the backend from the tensors format.
+        This method will convert a dictionary of tensors to a tuple containing the serialized tensors
+        and the size of the serialized tensors. It will use the backend if provided, otherwise it will
+        try to infer the backend from the tensors format.
 
         Args:
             tensors (Dict[str, Union[Array, np.ndarray, paddle.Tensor, torch.Tensor]]):
@@ -113,18 +115,66 @@ class TensorProcessor:
             elif not isinstance(backend, Backend):
                 raise TypeError(
                     "Backend must be a string or an instance of Backend enum, got"
-                    f" `{type(backend)}` instead. Use `tensorshare.schema.Backend` to"
-                    " access the Backend enum. If you don't specify a backend, it will"
-                    " be inferred from the tensors format."
+                    f" `{type(backend)}` instead. Use"
+                    " `tensorshare.serialization.Backend` to access the Backend enum."
+                    " If you don't specify a backend, it will be inferred from the"
+                    " tensors format."
                 )
         else:
             _backend = _infer_backend(tensors)
 
-        _tensors = BACKENDS_FUNC_MAPPING[_backend](tensors, metadata=metadata)
+        _tensors = BACKEND_SER_FUNC_MAPPING[_backend](tensors, metadata=metadata)
 
         return _tensors, ByteSize(len(_tensors))
 
     @staticmethod
-    def deserialize() -> None:
-        """"""
-        pass
+    def deserialize(
+        data: bytes,
+        backend: Union[str, Backend],
+    ) -> Dict[str, Union[Array, np.ndarray, paddle.Tensor, torch.Tensor]]:
+        """Deserialize bytes to a dictionary of tensors.
+
+        This method will convert TensorShare.tensors to a dictionary of tensors with their name as key.
+        The backend must be specified in order to deserialize the data.
+
+        Args:
+            data (bytes):
+                The serialized tensors to deserialize.
+            backend (Union[str, Backend]):
+                The backend to use for the conversion. Must be one of the following:
+                    - Backend.FLAX or 'flax'
+                    - Backend.NUMPY or 'numpy'
+                    - Backend.PADDLEPADDLE or 'paddlepaddle'
+                    - Backend.TENSORFLOW or 'tensorflow'
+                    - Backend.TORCH or 'torch'
+
+        Raises:
+            TypeError: If data is not bytes.
+            TypeError: If backend is not a string or an instance of Backend enum.
+            KeyError: If backend is not one of the supported backends.
+
+        Returns:
+            Dict[str, Union[Array, np.ndarray, paddle.Tensor, torch.Tensor]]:
+                A dictionary of tensors in the specified backend with their name as key.
+        """
+        if not isinstance(data, bytes):
+            raise TypeError(f"Data must be bytes, got `{type(data)}` instead.")
+
+        if isinstance(backend, str):
+            try:
+                _backend = Backend[backend.upper()]
+            except KeyError as e:
+                raise KeyError(
+                    f"Invalid backend `{backend}`. Must be one of"
+                    f" {list(Backend.__members__)}."
+                ) from e
+        elif not isinstance(backend, Backend):
+            raise TypeError(
+                "Backend must be a string or an instance of Backend enum, got"
+                f" `{type(backend)}` instead. Use `tensorshare.serialization.Backend`"
+                " to access the Backend enum."
+            )
+
+        tensors = BACKEND_DESER_FUNC_MAPPING[_backend](data)
+
+        return tensors  # type: ignore
