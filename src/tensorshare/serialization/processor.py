@@ -1,8 +1,7 @@
-"""Converter interface for converting between different tensor formats."""
+"""Processor interface for converting between different tensor formats."""
 
-from typing import Dict, Optional, OrderedDict, Union
+from typing import Dict, Optional, Tuple, Union
 
-import jaxlib
 import numpy as np
 import paddle
 
@@ -11,34 +10,10 @@ import torch
 from jax import Array
 from pydantic import ByteSize
 
-from tensorshare.converter.utils import (
-    convert_flax_to_safetensors,
-    convert_numpy_to_safetensors,
-    convert_paddle_to_safetensors,
-    # convert_tensorflow_to_safetensors,
-    convert_torch_to_safetensors,
-)
-from tensorshare.schema import Backend, TensorShare
-
-# Mapping between backend and conversion function
-BACKENDS_FUNC_MAPPING = OrderedDict(
-    [
-        (Backend.FLAX, convert_flax_to_safetensors),
-        (Backend.NUMPY, convert_numpy_to_safetensors),
-        (Backend.PADDLEPADDLE, convert_paddle_to_safetensors),
-        # (Backend.TENSORFLOW, convert_tensorflow_to_safetensors),
-        (Backend.TORCH, convert_torch_to_safetensors),
-    ]
-)
-# Mapping between tensor type and backend
-TENSOR_TYPE_MAPPING = OrderedDict(
-    [
-        (jaxlib.xla_extension.ArrayImpl, Backend.FLAX),
-        (np.ndarray, Backend.NUMPY),
-        (paddle.Tensor, Backend.PADDLEPADDLE),
-        # (tf.Tensor, Backend.TENSORFLOW),
-        (torch.Tensor, Backend.TORCH),
-    ]
+from tensorshare.serialization.constants import (
+    BACKENDS_FUNC_MAPPING,
+    TENSOR_TYPE_MAPPING,
+    Backend,
 )
 
 
@@ -81,16 +56,16 @@ def _infer_backend(
     return TENSOR_TYPE_MAPPING[first_tensor_type]
 
 
-class TensorConverter:
-    """Tensor converter class."""
+class TensorProcessor:
+    """Tensor processor class."""
 
     @staticmethod
-    def convert(
+    def serialize(
         tensors: Dict[str, Union[Array, np.ndarray, paddle.Tensor, torch.Tensor]],
         metadata: Optional[Dict[str, str]] = None,
         backend: Optional[Union[str, Backend]] = None,
-    ) -> TensorShare:
-        """Convert a dictionary of tensors to a TensorShare object.
+    ) -> Tuple[bytes, ByteSize]:
+        """Serialize a dictionary of tensors to a TensorShare object.
 
         This method will convert a dictionary of tensors to a TensorShare object using the specified backend
         if provided, otherwise it will try to infer the backend from the tensors format.
@@ -117,7 +92,7 @@ class TensorConverter:
             KeyError: If backend is not one of the supported backends.
 
         Returns:
-            TensorShare: TensorShare object containing the converted tensors.
+            Tuple[bytes, ByteSize]: A tuple containing the serialized tensors and the size of the file.
         """
         if not isinstance(tensors, dict):
             raise TypeError(
@@ -147,7 +122,9 @@ class TensorConverter:
 
         _tensors = BACKENDS_FUNC_MAPPING[_backend](tensors, metadata=metadata)
 
-        return TensorShare(
-            tensors=_tensors,
-            size=ByteSize(len(_tensors)),
-        )
+        return _tensors, ByteSize(len(_tensors))
+
+    @staticmethod
+    def deserialize() -> None:
+        """"""
+        pass

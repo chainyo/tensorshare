@@ -19,7 +19,7 @@ from tensorshare.import_utils import require_backend
 
 
 @require_backend("flax", "jax", "jaxlib")
-def convert_flax_to_safetensors(
+def serialize_flax(
     tensors: Dict[str, Array], metadata: Optional[Dict[str, str]] = None
 ) -> bytes:
     """
@@ -38,7 +38,7 @@ def convert_flax_to_safetensors(
 
 
 @require_backend("numpy")
-def convert_numpy_to_safetensors(
+def serialize_numpy(
     tensors: Dict[str, np.ndarray], metadata: Optional[Dict[str, str]] = None
 ) -> bytes:
     """
@@ -57,7 +57,7 @@ def convert_numpy_to_safetensors(
 
 
 @require_backend("paddlepaddle")
-def convert_paddle_to_safetensors(
+def serialize_paddle(
     tensors: Dict[str, paddle.Tensor], metadata: Optional[Dict[str, str]] = None
 ) -> bytes:
     """
@@ -76,7 +76,7 @@ def convert_paddle_to_safetensors(
 
 
 # @require_backend("tensorflow")
-# def convert_tensorflow_to_safetensors(
+# def serialize_tensorflow(
 #     tensors: Dict[str, tf.Tensor], metadata: Optional[Dict[str, str]] = None
 # ) -> bytes:
 #     """
@@ -95,7 +95,7 @@ def convert_paddle_to_safetensors(
 
 
 @require_backend("torch")
-def convert_torch_to_safetensors(
+def serialize_torch(
     tensors: Dict[str, torch.Tensor], metadata: Optional[Dict[str, str]] = None
 ) -> bytes:
     """
