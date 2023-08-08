@@ -1,8 +1,10 @@
 """Regroup all the utilities for importing modules/libraries in a single file."""
 
-import importlib
 from functools import lru_cache
-from typing import Callable
+from importlib.util import find_spec
+from typing import Any, Callable, TypeVar
+
+R = TypeVar("R")
 
 
 # This function is taken from the Hugging Face Transformers library:
@@ -19,7 +21,7 @@ def _is_package_available(package_name: str) -> bool:
     Returns:
         bool: Whether the package is available.
     """
-    if importlib.util.find_spec(package_name) is not None:
+    if find_spec(package_name) is not None:
         return True
 
     return False
@@ -41,21 +43,23 @@ def _is_padddle_available() -> bool:
         return False
 
 
-def require_backend(*backend_names: str) -> Callable[[], Callable]:
+def require_backend(
+    *backend_names: str,
+) -> Callable[[Callable[..., R]], Callable[..., R]]:
     """
     A decorator that checks if the required backends are available.
 
     Args:
-        *check_funcs (Callable): Functions that return True if the backend is available.
+        *backend_names (str): Backend names to check availability for.
 
     Returns:
-        Callable[[], Callable]: Decorator.
+        Callable[[Callable[..., R]], Callable[..., R]]: Decorator.
     """
 
-    def decorator(func: Callable) -> Callable[[], Callable]:
+    def decorator(func: Callable[..., R]) -> Callable[..., R]:
         """Decorator."""
 
-        def wrapper(*args, **kwargs) -> Callable:
+        def wrapper(*args: Any, **kwargs: Any) -> R:
             """Wrapper."""
             for backend_name in backend_names:
                 if backend_name == "paddlepaddle":

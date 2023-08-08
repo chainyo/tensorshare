@@ -1,6 +1,18 @@
 """Pydantic schemas to enable resilient and secure tensor sharing."""
 
+from enum import Enum
+
 from pydantic import BaseModel, ByteSize, ConfigDict
+
+
+class Backend(str, Enum):
+    """Supported backends."""
+
+    FLAX = "flax"
+    NUMPY = "numpy"
+    PADDLEPADDLE = "paddlepaddle"
+    # TENSORFLOW = "tensorflow"
+    TORCH = "torch"
 
 
 class TensorShare(BaseModel):

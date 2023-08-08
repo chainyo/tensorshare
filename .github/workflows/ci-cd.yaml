@@ -42,6 +42,7 @@ jobs:
         run: |
           black --check --diff --preview src tests
           ruff src tests
+          mypy src
 
   run-tests:
     needs: check-quality

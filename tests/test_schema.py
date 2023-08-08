@@ -10,7 +10,20 @@ from tensorshare.converter.utils import (
     # convert_tensorflow_to_safetensors,
     convert_torch_to_safetensors,
 )
-from tensorshare.schema import TensorShare
+from tensorshare.schema import Backend, TensorShare
+
+
+class TestBackendEnum:
+    """Tests for the backend enum."""
+
+    def test_backend_enum(self) -> None:
+        """Test the backend enum."""
+        assert len(Backend) == 4
+        assert Backend.FLAX == "flax"
+        assert Backend.NUMPY == "numpy"
+        assert Backend.PADDLEPADDLE == "paddlepaddle"
+        # assert Backend.TENSORFLOW == "tensorflow"
+        assert Backend.TORCH == "torch"
 
 
 class TestTensorShare:
