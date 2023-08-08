@@ -13,7 +13,10 @@
 	<a  href="https://github.com/chainyo/tensorshare/actions?workflow=ci-cd" target="_blank">
 		<img src="https://github.com/chainyo/tensorshare/workflows/ci-cd/badge.svg" />
 	</a>
-  <a  href="https://github.com/pypa/hatch" target="_blank">
+	<a href="https://codecov.io/gh/chainyo/tensorshare" > 
+		<img src="https://codecov.io/gh/chainyo/tensorshare/branch/main/graph/badge.svg?token=IA2W48WCCN"/> 
+	</a>
+	<a  href="https://github.com/pypa/hatch" target="_blank">
 		<img src="https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg" />
 	</a>
 </div>
