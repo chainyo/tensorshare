@@ -11,7 +11,7 @@ import torch
 from jax import Array
 from pydantic import ByteSize
 
-from tensorshare.converter.utils import (
+from tensorshare.serialization.utils import (
     convert_flax_to_safetensors,
     convert_numpy_to_safetensors,
     convert_paddle_to_safetensors,
@@ -81,16 +81,16 @@ def _infer_backend(
     return TENSOR_TYPE_MAPPING[first_tensor_type]
 
 
-class TensorConverter:
+class TensorSerializer:
     """Tensor converter class."""
 
     @staticmethod
-    def convert(
+    def serialize(
         tensors: Dict[str, Union[Array, np.ndarray, paddle.Tensor, torch.Tensor]],
         metadata: Optional[Dict[str, str]] = None,
         backend: Optional[Union[str, Backend]] = None,
     ) -> TensorShare:
-        """Convert a dictionary of tensors to a TensorShare object.
+        """Serialize a dictionary of tensors to a TensorShare object.
 
         This method will convert a dictionary of tensors to a TensorShare object using the specified backend
         if provided, otherwise it will try to infer the backend from the tensors format.

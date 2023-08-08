@@ -3,7 +3,7 @@
 import pytest
 from pydantic import ByteSize
 
-from tensorshare.converter.utils import (
+from tensorshare.serialization.utils import (
     convert_flax_to_safetensors,
     convert_numpy_to_safetensors,
     convert_paddle_to_safetensors,

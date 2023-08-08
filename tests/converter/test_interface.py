@@ -1,4 +1,4 @@
-"""Test the TensorConverter interface and the associated functions."""
+"""Test the TensorSerializer interface and the associated functions."""
 
 import re
 
@@ -10,13 +10,13 @@ import pytest
 # import tensorflow as tf
 import torch
 
-from tensorshare.converter.interface import (
+from tensorshare.serialization.interface import (
     BACKENDS_FUNC_MAPPING,
     TENSOR_TYPE_MAPPING,
-    TensorConverter,
+    TensorSerializer,
     _infer_backend,
 )
-from tensorshare.converter.utils import (
+from tensorshare.serialization.utils import (
     convert_flax_to_safetensors,
     convert_numpy_to_safetensors,
     convert_paddle_to_safetensors,
@@ -26,8 +26,8 @@ from tensorshare.converter.utils import (
 from tensorshare.schema import Backend, TensorShare
 
 
-class TestTensorConverter:
-    """Test the TensorConverter interface and the associated functions."""
+class TestTensorSerializer:
+    """Test the TensorSerializer interface and the associated functions."""
 
     def test_backends_func_mapping(self) -> None:
         """Test the backends function mapping."""
@@ -161,14 +161,14 @@ class TestTensorConverter:
                 f" {list(BACKENDS_FUNC_MAPPING.keys())}."
             ),
         ):
-            TensorConverter.convert(tensors)
+            TensorSerializer.serialize(tensors)
 
     @pytest.mark.usefixtures("multiple_flax_tensors")
     def test_tensor_converter_convert_with_multiple_flax_tensors(
         self, multiple_flax_tensors
     ) -> None:
         """Test the convert function with multiple flax tensors."""
-        tensorshare = TensorConverter.convert(multiple_flax_tensors)
+        tensorshare = TensorSerializer.serialize(multiple_flax_tensors)
 
         assert isinstance(tensorshare, TensorShare)
         assert isinstance(tensorshare.tensors, bytes)
@@ -181,7 +181,7 @@ class TestTensorConverter:
         self, multiple_flax_tensors, backend
     ) -> None:
         """Test the convert function with multiple flax tensors and backend."""
-        tensorshare = TensorConverter.convert(multiple_flax_tensors, backend=backend)
+        tensorshare = TensorSerializer.serialize(multiple_flax_tensors, backend=backend)
 
         assert isinstance(tensorshare, TensorShare)
         assert isinstance(tensorshare.tensors, bytes)
@@ -193,7 +193,7 @@ class TestTensorConverter:
         self, multiple_numpy_tensors
     ) -> None:
         """Test the convert function with multiple numpy tensors."""
-        tensorshare = TensorConverter.convert(multiple_numpy_tensors)
+        tensorshare = TensorSerializer.serialize(multiple_numpy_tensors)
 
         assert isinstance(tensorshare, TensorShare)
         assert isinstance(tensorshare.tensors, bytes)
@@ -206,7 +206,7 @@ class TestTensorConverter:
         self, multiple_numpy_tensors, backend
     ) -> None:
         """Test the convert function with multiple numpy tensors and backend."""
-        tensorshare = TensorConverter.convert(multiple_numpy_tensors, backend=backend)
+        tensorshare = TensorSerializer.serialize(multiple_numpy_tensors, backend=backend)
 
         assert isinstance(tensorshare, TensorShare)
         assert isinstance(tensorshare.tensors, bytes)
@@ -218,7 +218,7 @@ class TestTensorConverter:
         self, multiple_paddle_tensors
     ) -> None:
         """Test the convert function with multiple paddle tensors."""
-        tensorshare = TensorConverter.convert(multiple_paddle_tensors)
+        tensorshare = TensorSerializer.serialize(multiple_paddle_tensors)
 
         assert isinstance(tensorshare, TensorShare)
         assert isinstance(tensorshare.tensors, bytes)
@@ -231,7 +231,7 @@ class TestTensorConverter:
         self, multiple_paddle_tensors, backend
     ) -> None:
         """Test the convert function with multiple paddle tensors and backend."""
-        tensorshare = TensorConverter.convert(multiple_paddle_tensors, backend=backend)
+        tensorshare = TensorSerializer.serialize(multiple_paddle_tensors, backend=backend)
 
         assert isinstance(tensorshare, TensorShare)
         assert isinstance(tensorshare.tensors, bytes)
@@ -241,7 +241,7 @@ class TestTensorConverter:
     # @pytest.mark.usefixtures("multiple_tensorflow_tensors")
     # def test_tensor_converter_convert_with_multiple_tensorflow_tensors(self, multiple_tensorflow_tensors) -> None:
     #     """Test the convert function with multiple tensorflow tensors."""
-    #     tensorshare = TensorConverter.convert(multiple_tensorflow_tensors)
+    #     tensorshare = TensorSerializer.serialize(multiple_tensorflow_tensors)
 
     #     assert isinstance(tensorshare, TensorShare)
     #     assert isinstance(tensorshare.tensors, bytes)
@@ -254,7 +254,7 @@ class TestTensorConverter:
     #     self, multiple_tensorflow_tensors, backend
     # ) -> None:
     #     """Test the convert function with multiple tensorflow tensors and backend."""
-    #     tensorshare = TensorConverter.convert(multiple_tensorflow_tensors, backend=backend)
+    #     tensorshare = TensorSerializer.serialize(multiple_tensorflow_tensors, backend=backend)
 
     #     assert isinstance(tensorshare, TensorShare)
     #     assert isinstance(tensorshare.tensors, bytes)
@@ -266,7 +266,7 @@ class TestTensorConverter:
         self, multiple_torch_tensors
     ) -> None:
         """Test the convert function with multiple torch tensors."""
-        tensorshare = TensorConverter.convert(multiple_torch_tensors)
+        tensorshare = TensorSerializer.serialize(multiple_torch_tensors)
 
         assert isinstance(tensorshare, TensorShare)
         assert isinstance(tensorshare.tensors, bytes)
@@ -279,7 +279,7 @@ class TestTensorConverter:
         self, multiple_torch_tensors, backend
     ) -> None:
         """Test the convert function with multiple torch tensors and backend."""
-        tensorshare = TensorConverter.convert(multiple_torch_tensors, backend=backend)
+        tensorshare = TensorSerializer.serialize(multiple_torch_tensors, backend=backend)
 
         assert isinstance(tensorshare, TensorShare)
         assert isinstance(tensorshare.tensors, bytes)
@@ -292,7 +292,7 @@ class TestTensorConverter:
     ) -> None:
         """Test the convert function with metadata."""
         metadata = {"foo": "bar"}
-        tensorshare = TensorConverter.convert(multiple_torch_tensors, metadata=metadata)
+        tensorshare = TensorSerializer.serialize(multiple_torch_tensors, metadata=metadata)
 
         assert isinstance(tensorshare, TensorShare)
         assert isinstance(tensorshare.tensors, bytes)
@@ -312,7 +312,7 @@ class TestTensorConverter:
                 f"All tensors must have the same type, got {tensor_types} instead."
             ),
         ):
-            TensorConverter.convert(multiple_backend_tensors)
+            TensorSerializer.serialize(multiple_backend_tensors)
 
     def test_tensor_converter_convert_with_empty_dict(self) -> None:
         """Test the convert function with an empty dict."""
@@ -320,7 +320,7 @@ class TestTensorConverter:
             ValueError,
             match=re.escape("Tensors dictionary cannot be empty."),
         ):
-            TensorConverter.convert({})
+            TensorSerializer.serialize({})
 
     @pytest.mark.parametrize(
         "tensors",
@@ -342,7 +342,7 @@ class TestTensorConverter:
                 f"Tensors must be a dictionary, got `{type(tensors)}` instead."
             ),
         ):
-            TensorConverter.convert(tensors)
+            TensorSerializer.serialize(tensors)
 
     @pytest.mark.usefixtures("multiple_torch_tensors")
     @pytest.mark.parametrize(
@@ -360,7 +360,7 @@ class TestTensorConverter:
                 f" {list(Backend.__members__)}."
             ),
         ):
-            TensorConverter.convert(multiple_torch_tensors, backend=backend)
+            TensorSerializer.serialize(multiple_torch_tensors, backend=backend)
 
     @pytest.mark.usefixtures("multiple_torch_tensors")
     @pytest.mark.parametrize(
@@ -380,4 +380,4 @@ class TestTensorConverter:
                 " inferred from the tensors format."
             ),
         ):
-            TensorConverter.convert(multiple_torch_tensors, backend=backend)
+            TensorSerializer.serialize(multiple_torch_tensors, backend=backend)

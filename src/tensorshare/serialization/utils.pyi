@@ -1,4 +1,4 @@
-"""Type hints for tensorshare.converter.utils.py."""
+"""Type hints for tensorshare.serialization.utils.py."""
 
 from typing import Any, Dict, Optional
 

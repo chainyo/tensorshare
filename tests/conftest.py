@@ -10,7 +10,7 @@ import pytest
 # import tensorflow as tf
 import torch
 
-from tensorshare.converter.utils import convert_numpy_to_safetensors
+from tensorshare.serialization.utils import convert_numpy_to_safetensors
 
 
 @pytest.fixture
