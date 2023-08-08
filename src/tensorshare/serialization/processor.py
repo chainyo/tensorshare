@@ -120,9 +120,9 @@ class TensorProcessor:
         else:
             _backend = _infer_backend(tensors)
 
-        tensors = BACKENDS_FUNC_MAPPING[_backend](tensors, metadata=metadata)
+        _tensors = BACKENDS_FUNC_MAPPING[_backend](tensors, metadata=metadata)
 
-        return tensors, len(tensors)
+        return _tensors, ByteSize(len(tensors))
 
     @staticmethod
     def deserialize() -> None:

@@ -66,8 +66,8 @@ class TensorShare(BaseModel):
         Returns:
             TensorShare: A TensorShare object.
         """
-        tensors, size = TensorProcessor.serialize(
+        _tensors, size = TensorProcessor.serialize(
             tensors=tensors, metadata=metadata, backend=backend
         )
 
-        return TensorShare(tensors=tensors, size=size)
+        return TensorShare(tensors=_tensors, size=size)

@@ -1,7 +1,7 @@
 """Constants for tensorshare."""
 
 from enum import Enum
-from typing import OrderedDict
+from typing import Callable, Dict, OrderedDict, Union
 
 import jaxlib
 import numpy as np
@@ -30,7 +30,7 @@ class Backend(str, Enum):
 
 
 # Mapping between backend and conversion function
-BACKENDS_FUNC_MAPPING = OrderedDict(
+BACKENDS_FUNC_MAPPING: Dict[Backend, Callable] = OrderedDict(
     [
         (Backend.FLAX, serialize_flax),
         (Backend.NUMPY, serialize_numpy),
@@ -40,7 +40,10 @@ BACKENDS_FUNC_MAPPING = OrderedDict(
     ]
 )
 # Mapping between tensor type and backend
-TENSOR_TYPE_MAPPING = OrderedDict(
+TENSOR_TYPE_MAPPING: Dict[
+    Union[jaxlib.xla_extension.ArrayImpl, np.ndarray, paddle.Tensor, torch.Tensor],
+    Backend,
+] = OrderedDict(
     [
         (jaxlib.xla_extension.ArrayImpl, Backend.FLAX),
         (np.ndarray, Backend.NUMPY),
