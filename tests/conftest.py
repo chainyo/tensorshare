@@ -10,14 +10,14 @@ import pytest
 # import tensorflow as tf
 import torch
 
-from tensorshare.serialization.utils import convert_numpy_to_safetensors
+from tensorshare.serialization.utils import serialize_numpy
 
 
 @pytest.fixture
 def converted_fixed_numpy_tensors() -> bytes:
     """Return a serialized numpy tensor."""
     _tensor = {"embeddings": np.zeros((2, 2))}
-    return convert_numpy_to_safetensors(_tensor)
+    return serialize_numpy(_tensor)
 
 
 @pytest.fixture

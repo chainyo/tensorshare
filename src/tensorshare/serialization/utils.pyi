@@ -14,18 +14,18 @@ def torch_save(
 ) -> bytes: ...
 
 # Convert functions
-def convert_flax_to_safetensors(
+def serialize_flax(
     tensors: Dict[str, Any], metadata: Optional[Dict[str, str]]
 ) -> bytes: ...
-def convert_numpy_to_safetensors(
+def serialize_numpy(
     tensors: Dict[str, Any], metadata: Optional[Dict[str, str]]
 ) -> bytes: ...
-def convert_paddle_to_safetensors(
+def serialize_paddle(
     tensors: Dict[str, Any], metadata: Optional[Dict[str, str]]
 ) -> bytes: ...
-def convert_tensorflow_to_safetensors(
+def serialize_tensorflow(
     tensors: Dict[str, Any], metadata: Optional[Dict[str, str]]
 ) -> bytes: ...
-def convert_torch_to_safetensors(
+def serialize_torch(
     tensors: Dict[str, Any], metadata: Optional[Dict[str, str]]
 ) -> bytes: ...
