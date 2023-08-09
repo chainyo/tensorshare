@@ -11,13 +11,19 @@ copyright: Copyright (c) 2023-present Thomas Chaigneau <t.chaigneau.tc@gmail.com
 theme:
   name: material
   palette:
-    - scheme: default
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: lime
+      accent: deep orange
       toggle:
-        icon: material/brightness-7
+        icon: material/lightbulb
         name: Switch to dark mode
-    - scheme: slate
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: lime
+      accent: deep orange
       toggle:
-        icon: material/brightness-4
+        icon: material/lightbulb-outline
         name: Switch to light mode
   font:
     text: Roboto
@@ -52,4 +58,6 @@ extra:
 
 nav:
   - Home: index.md
+  - Installation: installation.md
+  - Usage: usage.md
   - License: license.md
