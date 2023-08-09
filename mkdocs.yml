@@ -1,4 +1,4 @@
-site_name: tensorshare
+site_name: TensorShare
 site_url: https://github.com/chainyo/tensorshare
 site_author: chainyo
 site_description: 🤝 Trade any tensors over the network
@@ -32,6 +32,8 @@ theme:
     logo: material/handshake
 
 markdown_extensions:
+  - admonition
+  - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.superfences

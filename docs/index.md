@@ -13,7 +13,10 @@
 	<a  href="https://github.com/chainyo/tensorshare/actions?workflow=ci-cd" target="_blank">
 		<img src="https://github.com/chainyo/tensorshare/workflows/ci-cd/badge.svg" />
 	</a>
-  <a  href="https://github.com/pypa/hatch" target="_blank">
+	<a href="https://codecov.io/gh/chainyo/tensorshare" > 
+		<img src="https://codecov.io/gh/chainyo/tensorshare/branch/main/graph/badge.svg?token=IA2W48WCCN"/> 
+	</a>
+	<a  href="https://github.com/pypa/hatch" target="_blank">
 		<img src="https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg" />
 	</a>
 </div>
@@ -33,10 +36,27 @@ This project leverage the best open-source tools to provide a simple and easy-to
 __This project is heavily in development and is not ready for production use.__
 __Feel free to contribute to the project by opening issues and pull requests.__
 
+## Usage
+
+Example of tensors serialization with torch:
+
+```python
+import torch
+from tensorshare import TensorShare
+
+tensors = {
+    "embeddings": torch.zeros((2, 2)),
+    "labels": torch.zeros((2, 2)),
+}
+ts = TensorShare.from_dict(tensors, backend="torch")
+```
+
+For more examples and details, please refer to the [Usage section](./usage).
+
 ## Roadmap
 
-- [x] Convert functions from one framework to safetensors
-- [ ] Convert factory class for transparent usage
-- [ ] Pydantic schema for sharing tensors
+- [x] Serialization and deserialization
+- [x] TensorProcessor for processing tensors
+- [x] Pydantic schema for sharing tensors
 - [ ] Server for sharing tensors
 - [ ] Client for sharing tensors
