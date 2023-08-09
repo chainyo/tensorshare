@@ -36,10 +36,27 @@ This project leverage the best open-source tools to provide a simple and easy-to
 __This project is heavily in development and is not ready for production use.__
 __Feel free to contribute to the project by opening issues and pull requests.__
 
+## Usage
+
+Example of tensors serialization with torch:
+
+```python
+import torch
+from tensorshare import TensorShare
+
+tensors = {
+    "embeddings": torch.zeros((2, 2)),
+    "labels": torch.zeros((2, 2)),
+}
+ts = TensorShare.from_dict(tensors, backend="torch")
+```
+
+For more examples and details, please refer to the [documentation](https://chainyo.github.io/tensorshare/usage/).
+
 ## Roadmap
 
-- [x] Convert functions from one framework to safetensors
-- [ ] Convert factory class for transparent usage
-- [ ] Pydantic schema for sharing tensors
+- [x] Serialization and deserialization
+- [x] TensorProcessor for processing tensors
+- [x] Pydantic schema for sharing tensors
 - [ ] Server for sharing tensors
 - [ ] Client for sharing tensors
