@@ -2,18 +2,18 @@
 
 from __future__ import annotations
 
-from typing import Dict, Optional, Union
+from typing import TYPE_CHECKING, Dict, Optional, Union
 
-import numpy as np
-import paddle
+if TYPE_CHECKING:  # pragma: no cover
+    import numpy as np
+    import paddle
+    import tensorflow as tf
+    import torch
+    from jax import Array
 
-# import tensorflow as tf
-import torch
-from jax import Array
 from pydantic import BaseModel, ByteSize, ConfigDict
 
-from tensorshare.serialization.constants import Backend
-from tensorshare.serialization.processor import TensorProcessor
+from tensorshare.serialization import Backend, TensorProcessor
 
 
 class TensorShare(BaseModel):
@@ -43,7 +43,10 @@ class TensorShare(BaseModel):
     @classmethod
     def from_dict(
         cls,
-        tensors: Dict[str, Union[Array, np.ndarray, paddle.Tensor, torch.Tensor]],
+        tensors: Dict[
+            str,
+            Union["Array", "np.ndarray", "paddle.Tensor", "tf.Tensor", "torch.Tensor"],
+        ],
         metadata: Optional[Dict[str, str]] = None,
         backend: Optional[Union[str, Backend]] = None,
     ) -> TensorShare:
@@ -51,7 +54,7 @@ class TensorShare(BaseModel):
         Create a TensorShare object from a dictionary of tensors.
 
         Args:
-            tensors (Dict[str, Union[Array, np.ndarray, paddle.Tensor, torch.Tensor]]):
+            tensors (Dict[str, Union[Array, np.ndarray, paddle.Tensor, tf.Tensor, torch.Tensor]]):
                 Tensors stored in a dictionary with their name as key.
             metadata (Optional[Dict[str, str]], optional):
                 Metadata to add to the safetensors file. Defaults to None.
@@ -76,7 +79,9 @@ class TensorShare(BaseModel):
     def to_tensors(
         self,
         backend: Union[str, Backend],
-    ) -> Dict[str, Union[Array, np.ndarray, paddle.Tensor, torch.Tensor]]:
+    ) -> Dict[
+        str, Union["Array", "np.ndarray", "paddle.Tensor", "tf.Tensor", "torch.Tensor"]
+    ]:
         """
         Convert a TensorShare object to a dictionary of tensors in the specified backend.
 
@@ -88,7 +93,7 @@ class TensorShare(BaseModel):
             ValueError: If backend is not supported.
 
         Returns:
-            Dict[str, Union[Array, np.ndarray, paddle.Tensor, torch.Tensor]]:
+            Dict[str, Union[Array, np.ndarray, paddle.Tensor, tf.Tensor, torch.Tensor]]:
                 Tensors stored in a dictionary with their name as key in the specified backend.
         """
         return TensorProcessor.deserialize(self.tensors, backend=backend)

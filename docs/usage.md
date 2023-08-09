@@ -134,7 +134,38 @@ ts = TensorShare(
     tensors=...,  # Serialized tensors to byte strings ready to be sent
     size=...,  # Size of the tensors in pydantic.ByteSize format
 )
-tensors = ts.to_tensors(backend="torch")
+tensors = ts.to_tensors(backend=...)
+```
+
+!!! tip
+    Here again, the backend can be specified as a string or as a `Backend` Enum value.
+    Check the [Backends](#backends) section for more information.
+
+Here are some examples of how to deserialize the tensors from a `TensorShare` object in different backends.
+You need to have the desired backend installed in your project to be able to deserialize the tensors in it.
+
+```python
+from tensorshare import TensorShare
+
+ts = TensorShare(
+    tensors=...,  # Serialized tensors to byte strings ready to be sent
+    size=...,  # Size of the tensors in pydantic.ByteSize format
+)
+
+# Get jaxlib.xla_extension.ArrayImpl tensors
+tensors_flax = ts.to_tensors(backend="flax")  # or backend=Backend.FLAX
+
+# Get numpy.ndarray tensors
+tensors_numpy = ts.to_tensors(backend="numpy")  # or backend=Backend.NUMPY
+
+# Get paddle.Tensor tensors
+tensors_paddle = ts.to_tensors(backend="paddlepaddle")  # or backend=Backend.PADDLEPADDLE
+
+# Get tensorflow.Tensor tensors
+tensors_tensorflow = ts.to_tensors(backend="tensorflow")  # or backend=Backend.TENSORFLOW
+
+# Get torch.Tensor tensors
+tensors_pytorch = ts.to_tensors(backend="torch")  # or backend=Backend.TORCH
 ```
 
 ## Backends
@@ -147,23 +178,49 @@ The project currently supports the following backends:
 * [ ] TensorFlow (coming soon when `v2.14` is released)
 * [x] PyTorch
 
+#### Backend Enum
+
 We provide a `Backend` Enum class to help you choose the backend you want to use or for type hinting purposes.
 
 ```python
-from tensorshare.serialization import Backend
+from tensorshare import Backend
 
 flax_backend = Backend.FLAX
->>> <Backend.FLAX: 'flax'>
+>>> <Backend.FLAX: "flax">
 
 numpy_backend = Backend.NUMPY
->>> <Backend.NUMPY: 'numpy'>
+>>> <Backend.NUMPY: "numpy">
 
 paddlepaddle_backend = Backend.PADDLEPADDLE
->>> <Backend.PADDLEPADDLE: 'paddlepaddle'>
+>>> <Backend.PADDLEPADDLE: "paddlepaddle">
 
 tensorflow_backend = Backend.TENSORFLOW
->>> <Backend.TENSORFLOW: 'tensorflow'>
+>>> <Backend.TENSORFLOW: "tensorflow">
 
 backend = Backend.TORCH
->>> <Backend.TORCH: 'torch'>
+>>> <Backend.TORCH: "torch">
+```
+
+#### TensorType Enum
+
+We also provide a `TensorType` Enum class to help you choose the tensor type you want to use or for type hinting
+purposes.
+
+```python
+from tensorshare import TensorType
+
+flax_tensor = TensorType.FLAX
+>>> <TensorType.FLAX: "jaxlib.xla_extension.ArrayImpl">
+
+numpy_tensor = TensorType.NUMPY
+>>> <TensorType.NUMPY: "numpy.ndarray">
+
+paddlepaddle_tensor = TensorType.PADDLEPADDLE
+>>> <TensorType.PADDLEPADDLE: "paddle.Tensor">
+
+tensorflow_tensor = TensorType.TENSORFLOW
+>>> <TensorType.TENSORFLOW: "tensorflow.Tensor">
+
+torch_tensor = TensorType.TORCH
+>>> <TensorType.TORCH: "torch.Tensor">
 ```

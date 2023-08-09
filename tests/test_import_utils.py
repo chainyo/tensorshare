@@ -3,8 +3,9 @@
 import pytest
 
 from tensorshare.import_utils import (
+    _is_flaxlib_available,
     _is_package_available,
-    _is_padddle_available,
+    _is_paddle_available,
     require_backend,
 )
 
@@ -52,15 +53,19 @@ class TestImportUtils:
         with pytest.raises(ValueError):
             _is_package_available("")
 
+    def test_is_flaxlib_available(self) -> None:
+        """Test the _is_flaxlib_available function."""
+        assert _is_flaxlib_available() is True
+
     def test_is_paddle_available(self) -> None:
         """Test the _is_paddle_available function."""
-        assert _is_padddle_available() is True
+        assert _is_paddle_available() is True
 
     def test_is_paddle_available_with_cache(self) -> None:
         """Test the _is_paddle_available function with cache."""
-        cache_info_before = _is_padddle_available.cache_info()
-        _is_padddle_available()
-        cache_info_after = _is_padddle_available.cache_info()
+        cache_info_before = _is_paddle_available.cache_info()
+        _is_paddle_available()
+        cache_info_after = _is_paddle_available.cache_info()
 
         assert cache_info_after.hits == cache_info_before.hits + 1
         assert cache_info_after.misses == cache_info_before.misses
