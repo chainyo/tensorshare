@@ -45,7 +45,7 @@ plugins:
   - git-revision-date-localized:
       type: timeago
       enable_creation_date: true
-  - mkdocstrings:
+  - mkdocstrings
 
 extra:
   social:
@@ -62,4 +62,7 @@ nav:
   - Home: index.md
   - Installation: installation.md
   - Usage: usage.md
+  - API Reference:
+    - tensorshare.TensorShare: api/schema.md
+    - tensorshare.serialization: api/serialization.md
   - License: license.md
