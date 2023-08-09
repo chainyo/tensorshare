@@ -33,6 +33,10 @@ ts = TensorShare.from_dict(tensors)
 
 You can specify the backend to use by passing the `backend` argument to the `from_dict` method.
 
+!!! tip
+    The backend can be specified as a string or as a `Backend` Enum value. Check the [Backends](#backends) section
+    for more information.
+
 ```python
 import torch
 from tensorshare import TensorShare
@@ -118,6 +122,19 @@ tensors = {
     "labels": tf.zeros((2, 2)),
 }
 ts = TensorShare.from_dict(tensors, backend="tensorflow")
+```
+
+## Deserializing tensors
+
+Just like the `from_dict` method, the `to_tensors` method can be used to deserialize the serialized tensors
+stored in the `TensorShare` object. The method expects a `backend` argument to specify the backend to use.
+
+```python
+ts = TensorShare(
+    tensors=...,  # Serialized tensors to byte strings ready to be sent
+    size=...,  # Size of the tensors in pydantic.ByteSize format
+)
+tensors = ts.to_tensors(backend="torch")
 ```
 
 ## Backends
