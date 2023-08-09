@@ -125,18 +125,7 @@ class TestTensorProcessorSerialize:
             TensorProcessor.serialize(tensors)
 
     @pytest.mark.usefixtures("multiple_flax_tensors")
-    def test_tensor_processor_serialize_with_multiple_flax_tensors(
-        self, multiple_flax_tensors
-    ) -> None:
-        """Test the serialize function with multiple flax tensors."""
-        tensorshare = TensorProcessor.serialize(multiple_flax_tensors)
-
-        assert isinstance(tensorshare, tuple)
-        assert isinstance(tensorshare[0], bytes)
-        assert isinstance(tensorshare[1], int)
-
-    @pytest.mark.usefixtures("multiple_flax_tensors")
-    @pytest.mark.parametrize("backend", [Backend.FLAX, "flax"])
+    @pytest.mark.parametrize("backend", [None, Backend.FLAX, "flax"])
     def test_tensor_processor_serialize_with_multiple_flax_tensors_and_backend(
         self, multiple_flax_tensors, backend
     ) -> None:
@@ -148,18 +137,7 @@ class TestTensorProcessorSerialize:
         assert isinstance(tensorshare[1], int)
 
     @pytest.mark.usefixtures("multiple_numpy_tensors")
-    def test_tensor_processor_serialize_with_multiple_numpy_tensors(
-        self, multiple_numpy_tensors
-    ) -> None:
-        """Test the serialize function with multiple numpy tensors."""
-        tensorshare = TensorProcessor.serialize(multiple_numpy_tensors)
-
-        assert isinstance(tensorshare, tuple)
-        assert isinstance(tensorshare[0], bytes)
-        assert isinstance(tensorshare[1], int)
-
-    @pytest.mark.usefixtures("multiple_numpy_tensors")
-    @pytest.mark.parametrize("backend", [Backend.NUMPY, "numpy"])
+    @pytest.mark.parametrize("backend", [None, Backend.NUMPY, "numpy"])
     def test_tensor_processor_serialize_with_multiple_numpy_tensors_and_backend(
         self, multiple_numpy_tensors, backend
     ) -> None:
@@ -171,18 +149,7 @@ class TestTensorProcessorSerialize:
         assert isinstance(tensorshare[1], int)
 
     @pytest.mark.usefixtures("multiple_paddle_tensors")
-    def test_tensor_processor_serialize_with_multiple_paddle_tensors(
-        self, multiple_paddle_tensors
-    ) -> None:
-        """Test the serialize function with multiple paddle tensors."""
-        tensorshare = TensorProcessor.serialize(multiple_paddle_tensors)
-
-        assert isinstance(tensorshare, tuple)
-        assert isinstance(tensorshare[0], bytes)
-        assert isinstance(tensorshare[1], int)
-
-    @pytest.mark.usefixtures("multiple_paddle_tensors")
-    @pytest.mark.parametrize("backend", [Backend.PADDLEPADDLE, "paddlepaddle"])
+    @pytest.mark.parametrize("backend", [None, Backend.PADDLEPADDLE, "paddlepaddle"])
     def test_tensor_processor_serialize_with_multiple_paddle_tensors_and_backend(
         self, multiple_paddle_tensors, backend
     ) -> None:
@@ -196,16 +163,7 @@ class TestTensorProcessorSerialize:
         assert isinstance(tensorshare[1], int)
 
     # @pytest.mark.usefixtures("multiple_tensorflow_tensors")
-    # def test_tensor_processor_serialize_with_multiple_tensorflow_tensors(self, multiple_tensorflow_tensors) -> None:
-    #     """Test the serialize function with multiple tensorflow tensors."""
-    #     tensorshare = TensorProcessor.serialize(multiple_tensorflow_tensors)
-
-    #     assert isinstance(tensorshare, tuple)
-    #     assert isinstance(tensorshare[0], bytes)
-    #     assert isinstance(tensorshare[1], int)
-
-    # @pytest.mark.usefixtures("multiple_tensorflow_tensors")
-    # @parametrize("backend", [Backend.TENSORFLOW, "tensorflow"])
+    # @parametrize("backend", [None, Backend.TENSORFLOW, "tensorflow"])
     # def test_tensor_processor_serialize_with_multiple_tensorflow_tensors_and_backend(
     #     self, multiple_tensorflow_tensors, backend
     # ) -> None:
@@ -217,18 +175,7 @@ class TestTensorProcessorSerialize:
     # assert isinstance(tensorshare[1], int)
 
     @pytest.mark.usefixtures("multiple_torch_tensors")
-    def test_tensor_processor_serialize_with_multiple_torch_tensors(
-        self, multiple_torch_tensors
-    ) -> None:
-        """Test the serialize function with multiple torch tensors."""
-        tensorshare = TensorProcessor.serialize(multiple_torch_tensors)
-
-        assert isinstance(tensorshare, tuple)
-        assert isinstance(tensorshare[0], bytes)
-        assert isinstance(tensorshare[1], int)
-
-    @pytest.mark.usefixtures("multiple_torch_tensors")
-    @pytest.mark.parametrize("backend", [Backend.TORCH, "torch"])
+    @pytest.mark.parametrize("backend", [None, Backend.TORCH, "torch"])
     def test_tensor_processor_serialize_with_multiple_torch_tensors_and_backend(
         self, multiple_torch_tensors, backend
     ) -> None:
