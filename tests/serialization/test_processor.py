@@ -11,9 +11,9 @@ import torch
 from jax import Array
 
 from tensorshare.serialization.constants import (
-    BACKEND_SER_FUNC_MAPPING,
-    TENSOR_TYPE_MAPPING,
+    BACKEND_TENSOR_TYPE_MAPPING,
     Backend,
+    TensorType,
 )
 from tensorshare.serialization.processor import (
     TensorProcessor,
@@ -30,13 +30,13 @@ class TestTensorProcessorSerialize:
     ) -> None:
         """Test the _infer_backend function with multiple flax tensors."""
         tensor_type = type(multiple_flax_tensors["embeddings"])
+        type_str = f"{tensor_type.__module__}.{tensor_type.__name__}"
         backend = _infer_backend(multiple_flax_tensors)
 
         assert isinstance(backend, str)
         assert backend == "flax"
         assert backend == Backend.FLAX
-        assert backend in BACKEND_SER_FUNC_MAPPING
-        assert backend == TENSOR_TYPE_MAPPING[tensor_type]
+        assert backend == BACKEND_TENSOR_TYPE_MAPPING[type_str]
 
     @pytest.mark.usefixtures("multiple_numpy_tensors")
     def test_infer_backend_with_multiple_numpy_tensors(
@@ -44,13 +44,13 @@ class TestTensorProcessorSerialize:
     ) -> None:
         """Test the _infer_backend function with multiple numpy tensors."""
         tensor_type = type(multiple_numpy_tensors["embeddings"])
+        type_str = f"{tensor_type.__module__}.{tensor_type.__name__}"
         backend = _infer_backend(multiple_numpy_tensors)
 
         assert isinstance(backend, str)
         assert backend == "numpy"
         assert backend == Backend.NUMPY
-        assert backend in BACKEND_SER_FUNC_MAPPING
-        assert backend == TENSOR_TYPE_MAPPING[tensor_type]
+        assert backend == BACKEND_TENSOR_TYPE_MAPPING[type_str]
 
     @pytest.mark.usefixtures("multiple_paddle_tensors")
     def test_infer_backend_with_multiple_paddle_tensors(
@@ -58,13 +58,13 @@ class TestTensorProcessorSerialize:
     ) -> None:
         """Test the _infer_backend function with multiple paddle tensors."""
         tensor_type = type(multiple_paddle_tensors["embeddings"])
+        type_str = f"{tensor_type.__module__}.{tensor_type.__name__}"
         backend = _infer_backend(multiple_paddle_tensors)
 
         assert isinstance(backend, str)
         assert backend == "paddlepaddle"
         assert backend == Backend.PADDLEPADDLE
-        assert backend in BACKEND_SER_FUNC_MAPPING
-        assert backend == TENSOR_TYPE_MAPPING[tensor_type]
+        assert backend == BACKEND_TENSOR_TYPE_MAPPING[type_str]
 
     # @pytest.mark.usefixtures("multiple_tensorflow_tensors")
     # def test_infer_backend_with_multiple_tensorflow_tensors(
@@ -72,13 +72,13 @@ class TestTensorProcessorSerialize:
     # ) -> None:
     #     """Test the _infer_backend function with multiple tensorflow tensors."""
     #     tensor_type = type(multiple_tensorflow_tensors["embeddings"])
+    #     type_str = f"{tensor_type.__module__}.{tensor_type.__name__}"
     #     backend = _infer_backend(multiple_tensorflow_tensors)
 
     #     assert isinstance(backend, str)
     #     assert backend == "tensorflow"
     #     assert backend == Backend.TENSORFLOW
-    #     assert backend in BACKEND_SER_FUNC_MAPPING
-    #     assert backend == TENSOR_TYPE_MAPPING[tensor_type]
+    #     assert backend == BACKEND_TENSOR_TYPE_MAPPING[type_str]
 
     @pytest.mark.usefixtures("multiple_torch_tensors")
     def test_infer_backend_with_multiple_torch_tensors(
@@ -86,20 +86,23 @@ class TestTensorProcessorSerialize:
     ) -> None:
         """Test the _infer_backend function with multiple torch tensors."""
         tensor_type = type(multiple_torch_tensors["embeddings"])
+        type_str = f"{tensor_type.__module__}.{tensor_type.__name__}"
         backend = _infer_backend(multiple_torch_tensors)
 
         assert isinstance(backend, str)
         assert backend == "torch"
         assert backend == Backend.TORCH
-        assert backend in BACKEND_SER_FUNC_MAPPING
-        assert backend == TENSOR_TYPE_MAPPING[tensor_type]
+        assert backend == BACKEND_TENSOR_TYPE_MAPPING[type_str]
 
     @pytest.mark.usefixtures("multiple_backend_tensors")
     def test_infer_backend_with_multiple_backend_tensors(
         self, multiple_backend_tensors
     ) -> None:
         """Test the _infer_backend function with multiple backend tensors."""
-        tensor_types = [type(tensor) for tensor in multiple_backend_tensors.values()]
+        tensor_types = [
+            f"{type(tensor).__module__}.{type(tensor).__name__}"
+            for tensor in multiple_backend_tensors.values()
+        ]
 
         with pytest.raises(
             TypeError,
@@ -112,14 +115,17 @@ class TestTensorProcessorSerialize:
     def test_infer_backend_with_unsupported_tensor(self) -> None:
         """Test the serialize function with an unsupported tensor."""
         tensors = {"unsupported": 1}
-        first_tensor_type = [type(tensor) for tensor in tensors.values()][0]
+        first_tensor_type = [
+            f"{type(tensor).__module__}.{type(tensor).__name__}"
+            for tensor in tensors.values()
+        ][0]
 
         with pytest.raises(
             TypeError,
             match=re.escape(
                 f"Unsupported tensor type {first_tensor_type}. Supported types are"
-                f" {list(TENSOR_TYPE_MAPPING.keys())}\nThe supported backends are"
-                f" {list(BACKEND_SER_FUNC_MAPPING.keys())}."
+                f" {list(TensorType)}\nThe supported backends are"
+                f" {list(Backend)}."
             ),
         ):
             TensorProcessor.serialize(tensors)
@@ -205,7 +211,10 @@ class TestTensorProcessorSerialize:
         self, multiple_backend_tensors
     ) -> None:
         """Test the serialize function with multiple backend tensors."""
-        tensor_types = [type(tensor) for tensor in multiple_backend_tensors.values()]
+        tensor_types = [
+            f"{type(tensor).__module__}.{type(tensor).__name__}"
+            for tensor in multiple_backend_tensors.values()
+        ]
 
         with pytest.raises(
             TypeError,
@@ -257,8 +266,7 @@ class TestTensorProcessorSerialize:
         with pytest.raises(
             KeyError,
             match=re.escape(
-                f"Invalid backend `{backend}`. Must be one of"
-                f" {list(Backend.__members__)}."
+                f"Invalid backend `{backend}`. Must be one of {list(Backend)}."
             ),
         ):
             TensorProcessor.serialize(multiple_torch_tensors, backend=backend)
@@ -397,8 +405,7 @@ class TestTensorProcessorDeserialize:
         with pytest.raises(
             KeyError,
             match=re.escape(
-                f"Invalid backend `{backend}`. Must be one of"
-                f" {list(Backend.__members__)}."
+                f"Invalid backend `{backend}`. Must be one of {list(Backend)}."
             ),
         ):
             TensorProcessor.deserialize(serialized_fixed_numpy_tensors, backend=backend)

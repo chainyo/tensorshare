@@ -11,13 +11,12 @@ from pydantic import ByteSize
 
 from tensorshare.schema import TensorShare
 from tensorshare.serialization.constants import Backend
-from tensorshare.serialization.utils import (
-    serialize_flax,
-    serialize_numpy,
-    serialize_paddle,
-    # serialize_tensorflow,
-    serialize_torch,
-)
+from tensorshare.serialization.flax import serialize as serialize_flax
+from tensorshare.serialization.numpy import serialize as serialize_numpy
+from tensorshare.serialization.paddle import serialize as serialize_paddle
+from tensorshare.serialization.torch import serialize as serialize_torch
+
+# from tensorshare.serialization.tensorflow import serialize as serialize_tensorflow
 
 
 class TestTensorShare:

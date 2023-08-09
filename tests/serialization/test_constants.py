@@ -1,30 +1,19 @@
 """Test the tensorshare.serialization.constants module."""
 
-import jaxlib
-import numpy as np
-import paddle
 
 # import tensorflow as tf
-import torch
 
 from tensorshare.serialization.constants import (
-    BACKEND_DESER_FUNC_MAPPING,
-    BACKEND_SER_FUNC_MAPPING,
-    TENSOR_TYPE_MAPPING,
+    BACKEND_MODULE_MAPPING,
+    BACKEND_TENSOR_TYPE_MAPPING,
     Backend,
+    TensorType,
 )
-from tensorshare.serialization.utils import (
-    deserialize_flax,
-    deserialize_numpy,
-    deserialize_paddle,
-    # deserialize_tensorflow,
-    deserialize_torch,
-    serialize_flax,
-    serialize_numpy,
-    serialize_paddle,
-    # serialize_tensorflow,
-    serialize_torch,
-)
+
+# from tensorshare.serialization.tensorflow import (
+#     deserialize as tensorflow_deserialize,
+#     serialize as tensorflow_serialize,
+# )
 
 
 class TestBackendEnum:
@@ -40,56 +29,57 @@ class TestBackendEnum:
         assert Backend.TORCH == "torch"
 
 
-class TestProcessorConstants:
+class TestTensorTypeEnum:
+    """Tests for the tensor type enum."""
+
+    def test_tensor_type_enum(self) -> None:
+        """Test the tensor type enum."""
+        assert len(TensorType) == 4
+        assert TensorType.FLAX == "jaxlib.xla_extension.ArrayImpl"
+        assert TensorType.NUMPY == "numpy.ndarray"
+        assert TensorType.PADDLEPADDLE == "paddle.Tensor"
+        # assert TensorType.TENSORFLOW == "tf.Tensor"
+        assert TensorType.TORCH == "torch.Tensor"
+
+
+class TestSerializationConstants:
     """Test the backend enum and associated constants."""
 
-    def test_backend_ser_func_mapping(self) -> None:
-        """Test the backends function mapping."""
-        assert isinstance(BACKEND_SER_FUNC_MAPPING, dict)
-        assert len(BACKEND_SER_FUNC_MAPPING) > 0
+    def test_backend_module_mapping(self) -> None:
+        """Test the backend module mapping."""
+        assert isinstance(BACKEND_MODULE_MAPPING, dict)
+        assert len(BACKEND_MODULE_MAPPING) > 0
 
-        assert "flax" in BACKEND_SER_FUNC_MAPPING
-        assert "numpy" in BACKEND_SER_FUNC_MAPPING
-        assert "paddlepaddle" in BACKEND_SER_FUNC_MAPPING
-        # assert "tensorflow" in BACKEND_SER_FUNC_MAPPING
-        assert "torch" in BACKEND_SER_FUNC_MAPPING
+        assert "flax" in BACKEND_MODULE_MAPPING
+        assert "numpy" in BACKEND_MODULE_MAPPING
+        assert "paddlepaddle" in BACKEND_MODULE_MAPPING
+        # assert "tensorflow" in BACKEND_MODULE_MAPPING
+        assert "torch" in BACKEND_MODULE_MAPPING
 
-        assert BACKEND_SER_FUNC_MAPPING["flax"] == serialize_flax
-        assert BACKEND_SER_FUNC_MAPPING["numpy"] == serialize_numpy
-        assert BACKEND_SER_FUNC_MAPPING["paddlepaddle"] == serialize_paddle
-        # assert BACKEND_SER_FUNC_MAPPING["tensorflow"] == serialize_tensorflow
-        assert BACKEND_SER_FUNC_MAPPING["torch"] == serialize_torch
-
-    def test_backend_deser_func_mapping(self) -> None:
-        """Test the backend deserialization function mapping."""
-        assert isinstance(BACKEND_DESER_FUNC_MAPPING, dict)
-        assert len(BACKEND_DESER_FUNC_MAPPING) > 0
-
-        assert "flax" in BACKEND_DESER_FUNC_MAPPING
-        assert "numpy" in BACKEND_DESER_FUNC_MAPPING
-        assert "paddlepaddle" in BACKEND_DESER_FUNC_MAPPING
-        # assert "tensorflow" in BACKEND_DESER_FUNC_MAPPING
-        assert "torch" in BACKEND_DESER_FUNC_MAPPING
-
-        assert BACKEND_DESER_FUNC_MAPPING["flax"] == deserialize_flax
-        assert BACKEND_DESER_FUNC_MAPPING["numpy"] == deserialize_numpy
-        assert BACKEND_DESER_FUNC_MAPPING["paddlepaddle"] == deserialize_paddle
-        # assert BACKEND_DESER_FUNC_MAPPING["tensorflow"] == deserialize_tensorflow
-        assert BACKEND_DESER_FUNC_MAPPING["torch"] == deserialize_torch
+        assert BACKEND_MODULE_MAPPING["flax"] == "tensorshare.serialization.flax"
+        assert BACKEND_MODULE_MAPPING["numpy"] == "tensorshare.serialization.numpy"
+        assert (
+            BACKEND_MODULE_MAPPING["paddlepaddle"] == "tensorshare.serialization.paddle"
+        )
+        # assert (
+        #     BACKEND_MODULE_MAPPING["tensorflow"]
+        #     == "tensorshare.serialization.tensorflow"
+        # )
+        assert BACKEND_MODULE_MAPPING["torch"] == "tensorshare.serialization.torch"
 
     def test_tensor_type_mapping(self) -> None:
         """Test the tensor type mapping."""
-        assert isinstance(TENSOR_TYPE_MAPPING, dict)
-        assert len(TENSOR_TYPE_MAPPING) > 0
+        assert isinstance(BACKEND_TENSOR_TYPE_MAPPING, dict)
+        assert len(BACKEND_TENSOR_TYPE_MAPPING) > 0
 
-        assert jaxlib.xla_extension.ArrayImpl in TENSOR_TYPE_MAPPING
-        assert np.ndarray in TENSOR_TYPE_MAPPING
-        assert paddle.Tensor in TENSOR_TYPE_MAPPING
-        # assert tf.Tensor in TENSOR_TYPE_MAPPING
-        assert torch.Tensor in TENSOR_TYPE_MAPPING
+        assert "jaxlib.xla_extension.ArrayImpl" in BACKEND_TENSOR_TYPE_MAPPING
+        assert "numpy.ndarray" in BACKEND_TENSOR_TYPE_MAPPING
+        assert "paddle.Tensor" in BACKEND_TENSOR_TYPE_MAPPING
+        # assert "tf.Tensor" in BACKEND_TENSOR_TYPE_MAPPING
+        assert "torch.Tensor" in BACKEND_TENSOR_TYPE_MAPPING
 
-        assert TENSOR_TYPE_MAPPING[jaxlib.xla_extension.ArrayImpl] == "flax"
-        assert TENSOR_TYPE_MAPPING[np.ndarray] == "numpy"
-        assert TENSOR_TYPE_MAPPING[paddle.Tensor] == "paddlepaddle"
-        # assert TENSOR_TYPE_MAPPING[tf.Tensor] == "tensorflow"
-        assert TENSOR_TYPE_MAPPING[torch.Tensor] == "torch"
+        assert BACKEND_TENSOR_TYPE_MAPPING["jaxlib.xla_extension.ArrayImpl"] == "flax"
+        assert BACKEND_TENSOR_TYPE_MAPPING["numpy.ndarray"] == "numpy"
+        assert BACKEND_TENSOR_TYPE_MAPPING["paddle.Tensor"] == "paddlepaddle"
+        # assert BACKEND_TENSOR_TYPE_MAPPING["tf.Tensor"] == "tensorflow"
+        assert BACKEND_TENSOR_TYPE_MAPPING["torch.Tensor"] == "torch"

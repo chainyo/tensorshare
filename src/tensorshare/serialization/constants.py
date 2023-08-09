@@ -1,27 +1,7 @@
 """Constants for tensorshare.serialization."""
 
 from enum import Enum
-from typing import Callable, Dict, OrderedDict, Union
-
-import jaxlib
-import numpy as np
-import paddle
-
-# import tensorflow as tf
-import torch
-
-from tensorshare.serialization.utils import (
-    deserialize_flax,
-    deserialize_numpy,
-    deserialize_paddle,
-    # deserialize_tensorflow,
-    deserialize_torch,
-    serialize_flax,
-    serialize_numpy,
-    serialize_paddle,
-    # serialize_tensorflow,
-    serialize_torch,
-)
+from typing import Dict, OrderedDict
 
 
 class Backend(str, Enum):
@@ -34,36 +14,33 @@ class Backend(str, Enum):
     TORCH = "torch"
 
 
-# Mapping between backend and serialization function
-BACKEND_SER_FUNC_MAPPING: Dict[Backend, Callable] = OrderedDict(
+class TensorType(str, Enum):
+    """Tensor types."""
+
+    FLAX = "jaxlib.xla_extension.ArrayImpl"
+    NUMPY = "numpy.ndarray"
+    PADDLEPADDLE = "paddle.Tensor"
+    # TENSORFLOW = "tensorflow.Tensor"
+    TORCH = "torch.Tensor"
+
+
+# Mapping between backend and serialization module
+BACKEND_MODULE_MAPPING: Dict[Backend, str] = OrderedDict(
     [
-        (Backend.FLAX, serialize_flax),
-        (Backend.NUMPY, serialize_numpy),
-        (Backend.PADDLEPADDLE, serialize_paddle),
-        # (Backend.TENSORFLOW, serialize_tensorflow),
-        (Backend.TORCH, serialize_torch),
+        (Backend.FLAX, "tensorshare.serialization.flax"),
+        (Backend.NUMPY, "tensorshare.serialization.numpy"),
+        (Backend.PADDLEPADDLE, "tensorshare.serialization.paddle"),
+        # (Backend.TENSORFLOW, "tensorshare.serialization.tensorflow"),
+        (Backend.TORCH, "tensorshare.serialization.torch"),
     ]
 )
-# Mapping between backend and deserialization function
-BACKEND_DESER_FUNC_MAPPING: Dict[Backend, Callable] = OrderedDict(
+# Mapping between backend and tensor type
+BACKEND_TENSOR_TYPE_MAPPING: Dict[TensorType, Backend] = OrderedDict(
     [
-        (Backend.FLAX, deserialize_flax),
-        (Backend.NUMPY, deserialize_numpy),
-        (Backend.PADDLEPADDLE, deserialize_paddle),
-        # (Backend.TENSORFLOW, deserialize_tensorflow),
-        (Backend.TORCH, deserialize_torch),
-    ]
-)
-# Mapping between tensor type and backend
-TENSOR_TYPE_MAPPING: Dict[
-    Union[jaxlib.xla_extension.ArrayImpl, np.ndarray, paddle.Tensor, torch.Tensor],
-    Backend,
-] = OrderedDict(
-    [
-        (jaxlib.xla_extension.ArrayImpl, Backend.FLAX),
-        (np.ndarray, Backend.NUMPY),
-        (paddle.Tensor, Backend.PADDLEPADDLE),
-        # (tf.Tensor, Backend.TENSORFLOW),
-        (torch.Tensor, Backend.TORCH),
+        (TensorType.FLAX, Backend.FLAX),
+        (TensorType.NUMPY, Backend.NUMPY),
+        (TensorType.PADDLEPADDLE, Backend.PADDLEPADDLE),
+        # (TensorType.TENSORFLOW, Backend.TENSORFLOW),
+        (TensorType.TORCH, Backend.TORCH),
     ]
 )
