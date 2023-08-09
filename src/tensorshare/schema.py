@@ -40,8 +40,9 @@ class TensorShare(BaseModel):
         """Return size as a string in human readable format."""
         return self.size.human_readable()
 
-    @staticmethod
+    @classmethod
     def from_dict(
+        cls,
         tensors: Dict[str, Union[Array, np.ndarray, paddle.Tensor, torch.Tensor]],
         metadata: Optional[Dict[str, str]] = None,
         backend: Optional[Union[str, Backend]] = None,
@@ -70,4 +71,24 @@ class TensorShare(BaseModel):
             tensors=tensors, metadata=metadata, backend=backend
         )
 
-        return TensorShare(tensors=_tensors, size=size)
+        return cls(tensors=_tensors, size=size)
+
+    def to_tensors(
+        self,
+        backend: Union[str, Backend],
+    ) -> Dict[str, Union[Array, np.ndarray, paddle.Tensor, torch.Tensor]]:
+        """
+        Convert a TensorShare object to a dictionary of tensors in the specified backend.
+
+        Args:
+            backend (Union[str, Backend]): Backend to use for the conversion.
+
+        Raises:
+            TypeError: If backend is not a string or an instance of Backend enum.
+            ValueError: If backend is not supported.
+
+        Returns:
+            Dict[str, Union[Array, np.ndarray, paddle.Tensor, torch.Tensor]]:
+                Tensors stored in a dictionary with their name as key in the specified backend.
+        """
+        return TensorProcessor.deserialize(self.tensors, backend=backend)
