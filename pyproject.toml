@@ -28,6 +28,7 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
+  "aiohttp>=3.8.5",
   "pydantic>=2.1.1",
   "safetensors>=0.3.1",
 ]
