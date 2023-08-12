@@ -32,7 +32,6 @@ class TensorShareClient:
         provided for testing purposes.
 
     Example:
-        >>> import asyncio
         >>> import torch
         >>> from tensorshare import TensorShare, TensorShareClient
 
@@ -47,6 +46,8 @@ class TensorShareClient:
         >>> # <ClientResponse(http://localhost:8765/receive_tensor) [200 OK]>    
 
         >>> # Asynchronous interface
+        >>> import asyncio
+
         >>> async def main():
         ...     r = await client.async_ping_server()
         ...     print(r)
