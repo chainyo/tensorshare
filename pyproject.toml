@@ -138,7 +138,7 @@ format = [
   "check",
 ]
 typecheck = [
-  "mypy src",
+  "mypy src --install-types --non-interactive",
 ]
 
 [tool.ruff]

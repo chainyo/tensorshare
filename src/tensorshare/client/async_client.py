@@ -8,7 +8,7 @@ from tensorshare.schema import TensorShare
 
 
 class AsyncTensorShareClient(TensorShareClient):
-    """Asyncynchronous Client for sending tensors to a remote server."""
+    """Asynchronous Client for sending tensors to a remote server."""
 
     def __init__(self, server_url: str, timeout: int = 10) -> None:
         """Initialize the client.
