@@ -43,7 +43,7 @@ class TensorShareClient:
         >>> # True
 
         >>> print(client.send_tensor(ts))
-        >>> # <ClientResponse(http://localhost:8765/receive_tensor) [200 OK]>    
+        >>> # <ClientResponse(http://localhost:8765/receive_tensor) [200 OK]>
 
         >>> # Asynchronous interface
         >>> import asyncio
@@ -109,7 +109,9 @@ class TensorShareClient:
         """
         return asyncio.run(self.async_send_tensor(tensor_data))
 
-    async def async_send_tensor(self, tensor_data: TensorShare) -> aiohttp.ClientResponse:
+    async def async_send_tensor(
+        self, tensor_data: TensorShare
+    ) -> aiohttp.ClientResponse:
         """
         Send a TensorShare object to the server using aiohttp.
 
