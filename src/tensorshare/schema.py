@@ -11,7 +11,7 @@ if TYPE_CHECKING:  # pragma: no cover
     import torch
     from jax import Array
 
-from pydantic import BaseModel, ByteSize, ConfigDict
+from pydantic import Base64Bytes, BaseModel, ByteSize, ConfigDict
 
 from tensorshare.serialization import Backend, TensorProcessor
 
@@ -19,7 +19,7 @@ from tensorshare.serialization import Backend, TensorProcessor
 class TensorShare(BaseModel):
     """Base model for tensor sharing."""
 
-    tensors: bytes
+    tensors: Base64Bytes
     size: ByteSize
 
     model_config = ConfigDict(
@@ -32,7 +32,6 @@ class TensorShare(BaseModel):
             ),
             "size": 84,
         },
-        ser_json_bytes="base64",
     )
 
     @property
