@@ -29,7 +29,7 @@ from tensorshare.schema import DefaultResponse, TensorShare, TensorShareServer
 from tensorshare.server import (
     compute_operation,
     get_computation_operation,
-    ping, 
+    ping,
     receive_tensor,
 )
 
@@ -85,7 +85,7 @@ class TestComputeOperation:
 
 class TestGetComputationOperation:
     """Test the get computation operation method."""
-    
+
     def test_get_computation_operation(self) -> None:
         """Test the get computation operation method."""
         assert get_computation_operation is not None
