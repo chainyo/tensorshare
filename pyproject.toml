@@ -28,7 +28,6 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-  "aiohttp>=3.8.5",
   "pydantic>=2.1.1",
   "safetensors>=0.3.1",
 ]
@@ -58,6 +57,8 @@ Source = "https://github.com/chainyo/tensorshare"
 path = "src/tensorshare/__init__.py"
 
 [project.optional-dependencies]
+client = ["aiohttp>=3.8.5"]
+server = ["fastapi>=0.101.1"]
 torch = ["torch>=1.10"]
 numpy = ["numpy>=1.21.6"]
 # tensorflow = ["tensorflow"]  Disable until 2.14 is released for pydantic v2 compatibility
@@ -77,6 +78,8 @@ quality = [
 ]
 tests = [
   "aioresponses>=0.7.4",
+  "aiohttp>=3.8.5",
+  "fastapi>=0.101.1",
   "flax>=0.6.3",
   "jax<0.4.14",
   "jaxlib<0.4.14",
@@ -88,8 +91,10 @@ tests = [
   # "tensorflow",
   "torch>=1.10",
 ]
-# To install all optional frameworks dependencies: pip install tensorshare[all]
+# To install all optional modules and backends dependencies: pip install tensorshare[all]
 all = [
+  "aiohttp>=3.8.5",
+  "fastapi>=0.101.1",
   "flax>=0.6.3",
   "jax<0.4.14",
   "jaxlib<0.4.14",
@@ -101,6 +106,7 @@ all = [
 # To install all the dependencies for development purposes: pip install -e ".[dev]"
 dev = [
   "black~=22.10.0",
+  "fastapi>=0.101.1",
   "flax>=0.6.3",
   "jax<0.4.14",
   "jaxlib<0.4.14",
