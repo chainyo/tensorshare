@@ -161,7 +161,9 @@ class TestTensorShare:
         assert len(tensorshare.tensors) > 0
         assert tensorshare.size > 0
 
-        assert tensorshare.tensors == base64.b64encode(serialize_flax(dict_zeros_flax_tensor))
+        assert tensorshare.tensors == base64.b64encode(
+            serialize_flax(dict_zeros_flax_tensor)
+        )
         assert tensorshare.size == ByteSize(len(serialize_flax(dict_zeros_flax_tensor)))
 
     @pytest.mark.usefixtures("dict_zeros_numpy_tensor")
@@ -179,8 +181,12 @@ class TestTensorShare:
         assert len(tensorshare.tensors) > 0
         assert tensorshare.size > 0
 
-        assert tensorshare.tensors == base64.b64encode(serialize_numpy(dict_zeros_numpy_tensor))
-        assert tensorshare.size == ByteSize(len(serialize_numpy(dict_zeros_numpy_tensor)))
+        assert tensorshare.tensors == base64.b64encode(
+            serialize_numpy(dict_zeros_numpy_tensor)
+        )
+        assert tensorshare.size == ByteSize(
+            len(serialize_numpy(dict_zeros_numpy_tensor))
+        )
 
     @pytest.mark.usefixtures("dict_zeros_paddle_tensor")
     @pytest.mark.parametrize("backend", [None, Backend.PADDLEPADDLE, "paddlepaddle"])
@@ -232,7 +238,9 @@ class TestTensorShare:
         assert len(tensorshare.tensors) > 0
         assert tensorshare.size > 0
 
-        assert tensorshare.tensors == base64.b64encode(serialize_torch(dict_zeros_torch_tensor))
+        assert tensorshare.tensors == base64.b64encode(
+            serialize_torch(dict_zeros_torch_tensor)
+        )
         assert tensorshare.size == ByteSize(
             len(serialize_torch(dict_zeros_torch_tensor))
         )
@@ -241,7 +249,9 @@ class TestTensorShare:
     @pytest.mark.usefixtures("dict_zeros_flax_tensor")
     @pytest.mark.parametrize("backend", [Backend.FLAX, "flax"])
     def test_to_tensors_method_with_flax(
-        self, serialized_fixed_numpy_tensors, backend,
+        self,
+        serialized_fixed_numpy_tensors,
+        backend,
     ) -> None:
         """Test the to_tensors method with flax backend."""
         tensorshare = TensorShare(

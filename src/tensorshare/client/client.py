@@ -59,7 +59,12 @@ class TensorShareClient:
         >>> # <ClientResponse(http://localhost:8765/receive_tensor) [200 OK]>
     """
 
-    def __init__(self, server_url: str, timeout: int = 10) -> None:
+    def __init__(
+        self,
+        server_url: str,
+        timeout: int = 10,
+        validate_endpoints: bool = True,
+    ) -> None:
         """Initialize the client.
 
         Args:
@@ -67,6 +72,9 @@ class TensorShareClient:
                 The url of the server to send tensors to.
             timeout (int):
                 The timeout in seconds for the http requests. Defaults to 10.
+            validate_endpoints (bool):
+                Whether to validate the endpoints on the server at the time of
+                initialization. Defaults to True.
 
         Raises:
             ValueError: If the server_url is not a valid url.
@@ -84,7 +92,8 @@ class TensorShareClient:
 
         self.timeout = timeout
 
-        self._validate_endpoints()
+        if validate_endpoints:
+            self._validate_endpoints()
 
     def ping_server(self) -> bool:
         """Ping the server to check if it is available."""
@@ -148,35 +157,12 @@ class TensorShareClient:
         # TODO: Add logging to indicate which endpoint is being checked.
         try:
             # Check the ping endpoint
-            r = self.ping_server()
-            assert r is True
+            assert self.ping_server() is True
 
             # Check the receive_tensor endpoint
-            r = self.send_tensor(fake_tensorshare_data())
-            assert r.status == 200
+            assert self.send_tensor(fake_tensorshare_data()).status == 200
 
         except Exception as e:
             raise AssertionError(
                 f"Could not connect to the server at {self.server.url}\n{e}"
             ) from e
-
-
-# import torch
-
-# from tensorshare.schema import TensorShare
-
-# ts = TensorShare.from_dict({"embeddings": torch.rand(10, 10)})
-# client = TensorShareClient("http://localhost:8765")
-# # client = AsyncTensorShareClient("htt:")
-
-# async def main():
-#     r = await client.async_ping_server()
-#     print(r)
-#     r = await client.async_send_tensor(ts)
-#     print(r)
-
-# import asyncio
-# asyncio.run(main())
-
-# print(client.ping_server())
-# print(client.send_tensor(ts))

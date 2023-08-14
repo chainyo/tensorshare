@@ -9,8 +9,15 @@ import pytest
 
 # import tensorflow as tf
 import torch
+from aioresponses import aioresponses
 
 from tensorshare.serialization.numpy import serialize
+
+
+@pytest.fixture
+def mock_server():
+    with aioresponses() as m:
+        yield m
 
 
 @pytest.fixture
