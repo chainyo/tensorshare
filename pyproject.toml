@@ -81,6 +81,7 @@ tests = [
   "aiohttp>=3.8.5",
   "fastapi>=0.101.1",
   "flax>=0.6.3",
+  "httpx >=0.23.0",
   "jax<0.4.14",
   "jaxlib<0.4.14",
   "numpy>=1.21.6",

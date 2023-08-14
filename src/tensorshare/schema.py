@@ -129,7 +129,7 @@ class TensorShareServer(BaseModel):
 
     @classmethod
     def from_dict(
-        cls, server_config: Dict[str, Union[str, BaseModel]]
+        cls, server_config: Dict[str, Union[str, Type[BaseModel]]]
     ) -> TensorShareServer:
         """
         Create a TensorShareServer object from a dictionary.

@@ -24,9 +24,10 @@ class TensorShareClient:
 
     Example:
         >>> import torch
-        >>> from tensorshare import TensorShare, TensorShareClient
+        >>> from tensorshare import TensorShare, TensorShareClient, TensorShareServer
 
-        >>> client = TensorShareClient("http://localhost:8765")
+        >>> server_config = TensorShareServer("http://localhost:8765")
+        >>> client = TensorShareClient(server_config)
 
         >>> # Synchronous interface
         >>> print(client.ping_server())
