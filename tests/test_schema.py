@@ -464,6 +464,7 @@ class TestTensorShareServer:
         "config",
         [
             {},
+            {"url": 123},
             {"ping": "https://localhost:8000/ping"},
             {"receive_tensor": "https://localhost:8000/receive_tensor"},
             {"response_model": DefaultResponse},
@@ -473,6 +474,44 @@ class TestTensorShareServer:
         """Test the schema from_dict method with invalid dict."""
         with pytest.raises(
             ValueError,
-            match=re.escape("Verify the configuration dictionary, `url` is missing."),
+            match=re.escape(
+                "Verify the configuration dictionary, `url` is missing or invalid."
+            ),
         ):
             TensorShareServer.from_dict(server_config=config)
+
+    @pytest.mark.parametrize(
+        ["target", "config"],
+        [
+            ("ping", {"url": "https://localhost:8000", "ping": 123}),
+            (
+                "receive_tensor",
+                {"url": "https://localhost:8000", "receive_tensor": 123},
+            ),
+            (
+                "response_model",
+                {"url": "https://localhost:8000", "response_model": 123},
+            ),
+        ],
+    )
+    def test_schema_from_dict_method_with_invalid_value(
+        self, target: str, config: dict
+    ) -> None:
+        """Test the schema from_dict method with invalid value."""
+        if target == "response_model":
+            with pytest.raises(
+                ValueError,
+                match=re.escape(
+                    "Verify the configuration dictionary, `response_model` must be a"
+                    " subclass of BaseModel."
+                ),
+            ):
+                TensorShareServer.from_dict(server_config=config)
+        else:
+            with pytest.raises(
+                ValueError,
+                match=re.escape(
+                    f"Verify the configuration dictionary, `{target}` must be a string."
+                ),
+            ):
+                TensorShareServer.from_dict(server_config=config)

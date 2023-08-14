@@ -79,20 +79,7 @@ class TestTensorShareClient:
         """Test the client init with invalid url."""
         with pytest.raises(
             ValueError,
-            match=re.escape(
-                "3 validation errors for TensorShareServer\nurl\n  URL scheme should"
-                f" be 'http' or 'https' [type=url_scheme, input_value='{url}',"
-                " input_type=str]\n    For further information visit"
-                " https://errors.pydantic.dev/2.1/v/url_scheme\nping\n  URL scheme"
-                " should be 'http' or 'https' [type=url_scheme,"
-                f" input_value=Url('{url}/ping'), input_type=Url]\n    For further"
-                " information visit"
-                " https://errors.pydantic.dev/2.1/v/url_scheme\nreceive_tensor\n  URL"
-                " scheme should be 'http' or 'https' [type=url_scheme,"
-                f" input_value=Url('{url}/receive_tensor'), input_type=Url]\n    For"
-                " further information visit"
-                " https://errors.pydantic.dev/2.1/v/url_scheme"
-            ),
+            match=re.escape("3 validation errors for TensorShareServer"),
         ):
             server_config = TensorShareServer.from_dict({"url": url})
             TensorShareClient(server_config)

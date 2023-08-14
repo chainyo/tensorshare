@@ -129,7 +129,7 @@ class TensorShareServer(BaseModel):
 
     @classmethod
     def from_dict(
-        cls, server_config: Dict[str, Union[str, Type[BaseModel]]]
+        cls, server_config: Dict[str, Union[str, BaseModel]]
     ) -> TensorShareServer:
         """
         Create a TensorShareServer object from a dictionary.
@@ -149,18 +149,36 @@ class TensorShareServer(BaseModel):
         """
         url = server_config.get("url", None)
 
-        if url is None:
-            raise ValueError("Verify the configuration dictionary, `url` is missing.")
+        if url is None or not isinstance(url, str):
+            raise ValueError(
+                "Verify the configuration dictionary, `url` is missing or invalid."
+            )
 
-        ping = HttpUrl(f"{url}/{server_config.get('ping', 'ping')}")
-        receive_tensor = HttpUrl(
-            f"{url}/{server_config.get('receive_tensor', 'receive_tensor')}"
-        )
+        ping = server_config.get("ping", "ping")
+        if not isinstance(ping, str):
+            raise ValueError(
+                "Verify the configuration dictionary, `ping` must be a string."
+            )
+
+        receive_tensor = server_config.get("receive_tensor", "receive_tensor")
+        if not isinstance(receive_tensor, str):
+            raise ValueError(
+                "Verify the configuration dictionary, `receive_tensor` must be a"
+                " string."
+            )
+
         response_model = server_config.get("response_model", DefaultResponse)
+        if not isinstance(response_model, type) or not issubclass(
+            response_model, BaseModel
+        ):
+            raise ValueError(
+                "Verify the configuration dictionary, `response_model` must be a"
+                " subclass of BaseModel."
+            )
 
         return cls(
-            url=url,
-            ping=ping,
-            receive_tensor=receive_tensor,
+            url=HttpUrl(url),
+            ping=HttpUrl(f"{url}/{ping}"),
+            receive_tensor=HttpUrl(f"{url}/{receive_tensor}"),
             response_model=response_model,
         )
