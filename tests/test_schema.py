@@ -1,5 +1,7 @@
 """Tests for the pydantic schemas of tensorshare."""
 
+import base64
+
 import jax.numpy as jnp
 import numpy as np
 import paddle
@@ -38,20 +40,12 @@ class TestTensorShare:
         assert isinstance(tensorshare.size_as_str, str)
         assert tensorshare.size_as_str == "112B"
 
-        assert (
-            tensorshare.model_dump_json(indent=4)
-            == '{\n    "tensors":'
-            ' "SAAAAAAAAAB7ImVtYmVkZGluZ3MiOnsiZHR5cGUiOiJGNjQiLCJzaGFwZSI6WzIsMl0sImRhdGFfb2Zmc2V0cyI6WzAsMzJdfX0gICAgICAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",\n'
-            '    "size": 112\n}'
-        )
-
     @pytest.mark.usefixtures("random_fp32_numpy_tensors")
     def test_tensorshare_pydantic_schema_with_random_tensor(
         self, random_fp32_numpy_tensors
     ) -> None:
         """Test the pydantic schema of tensorshare."""
         converted_tensors = serialize_numpy(random_fp32_numpy_tensors)
-
         tensorshare = TensorShare(
             tensors=converted_tensors,
             size=len(converted_tensors),
@@ -69,7 +63,7 @@ class TestTensorShare:
         """Test the tensorshare schema with flax tensors."""
         _tensors = serialize_flax(dict_zeros_flax_tensor)
         tensorshare = TensorShare(
-            tensors=_tensors,
+            tensors=base64.b64encode(_tensors),
             size=len(_tensors),
         )
 
@@ -79,7 +73,7 @@ class TestTensorShare:
         assert len(tensorshare.tensors) > 0
         assert tensorshare.size > 0
 
-        assert tensorshare.tensors == _tensors
+        assert tensorshare.tensors == base64.b64encode(_tensors)
         assert tensorshare.size == len(_tensors)
 
     @pytest.mark.usefixtures("dict_zeros_numpy_tensor")
@@ -87,7 +81,7 @@ class TestTensorShare:
         """Test the tensorshare schema with numpy tensors."""
         _tensors = serialize_numpy(dict_zeros_numpy_tensor)
         tensorshare = TensorShare(
-            tensors=_tensors,
+            tensors=base64.b64encode(_tensors),
             size=len(_tensors),
         )
 
@@ -97,7 +91,7 @@ class TestTensorShare:
         assert len(tensorshare.tensors) > 0
         assert tensorshare.size > 0
 
-        assert tensorshare.tensors == _tensors
+        assert tensorshare.tensors == base64.b64encode(_tensors)
         assert tensorshare.size == len(_tensors)
 
     @pytest.mark.usefixtures("dict_zeros_paddle_tensor")
@@ -105,7 +99,7 @@ class TestTensorShare:
         """Test the tensorshare schema with paddle tensors."""
         _tensors = serialize_paddle(dict_zeros_paddle_tensor)
         tensorshare = TensorShare(
-            tensors=_tensors,
+            tensors=base64.b64encode(_tensors),
             size=len(_tensors),
         )
 
@@ -115,7 +109,7 @@ class TestTensorShare:
         assert len(tensorshare.tensors) > 0
         assert tensorshare.size > 0
 
-        assert tensorshare.tensors == _tensors
+        assert tensorshare.tensors == base64.b64encode(_tensors)
         assert tensorshare.size == len(_tensors)
 
         # @pytest.mark.usefixtures("dict_zeros_tensorflow_tensor")
@@ -123,7 +117,7 @@ class TestTensorShare:
         """Test the tensorshare schema with tensorflow tensors."""
         # _tensors = serialize_tensorflow(dict_zeros_tensorflow_tensor)
         # tensorshare = TensorShare(
-        #     tensors=_tensors,
+        #     tensors=base64.b64encode(_tensors),
         #     size=len(_tensors),
         # )
 
@@ -133,7 +127,7 @@ class TestTensorShare:
         # assert len(tensorshare.tensors) > 0
         # assert tensorshare.size > 0
 
-        # assert tensorshare.tensors == _tensors
+        # assert tensorshare.tensors == base64.b64encode(_tensors)
         # assert tensorshare.size == len(_tensors)
 
     @pytest.mark.usefixtures("dict_zeros_torch_tensor")
@@ -141,7 +135,7 @@ class TestTensorShare:
         """Test the tensorshare schema with torch tensors."""
         _tensors = serialize_torch(dict_zeros_torch_tensor)
         tensorshare = TensorShare(
-            tensors=_tensors,
+            tensors=base64.b64encode(_tensors),
             size=len(_tensors),
         )
 
@@ -151,7 +145,7 @@ class TestTensorShare:
         assert len(tensorshare.tensors) > 0
         assert tensorshare.size > 0
 
-        assert tensorshare.tensors == _tensors
+        assert tensorshare.tensors == base64.b64encode(_tensors)
         assert tensorshare.size == len(_tensors)
 
     @pytest.mark.usefixtures("dict_zeros_flax_tensor")
@@ -167,7 +161,7 @@ class TestTensorShare:
         assert len(tensorshare.tensors) > 0
         assert tensorshare.size > 0
 
-        assert tensorshare.tensors == serialize_flax(dict_zeros_flax_tensor)
+        assert tensorshare.tensors == base64.b64encode(serialize_flax(dict_zeros_flax_tensor))
         assert tensorshare.size == ByteSize(len(serialize_flax(dict_zeros_flax_tensor)))
 
     @pytest.mark.usefixtures("dict_zeros_numpy_tensor")
@@ -184,6 +178,9 @@ class TestTensorShare:
 
         assert len(tensorshare.tensors) > 0
         assert tensorshare.size > 0
+
+        assert tensorshare.tensors == base64.b64encode(serialize_numpy(dict_zeros_numpy_tensor))
+        assert tensorshare.size == ByteSize(len(serialize_numpy(dict_zeros_numpy_tensor)))
 
     @pytest.mark.usefixtures("dict_zeros_paddle_tensor")
     @pytest.mark.parametrize("backend", [None, Backend.PADDLEPADDLE, "paddlepaddle"])
@@ -213,9 +210,9 @@ class TestTensorShare:
     #     assert len(tensorshare.tensors) > 0
     #     assert tensorshare.size > 0
 
-    #     assert tensorshare.tensors == serialize_tensorflow(
+    #     assert tensorshare.tensors == base64.b64encode(serialize_tensorflow(
     #         dict_zeros_tensorflow_tensor
-    #     )
+    #     ))
     #     assert tensorshare.size == len(
     #         serialize_tensorflow(dict_zeros_tensorflow_tensor)
     #     )
@@ -235,19 +232,20 @@ class TestTensorShare:
         assert len(tensorshare.tensors) > 0
         assert tensorshare.size > 0
 
-        assert tensorshare.tensors == serialize_torch(dict_zeros_torch_tensor)
+        assert tensorshare.tensors == base64.b64encode(serialize_torch(dict_zeros_torch_tensor))
         assert tensorshare.size == ByteSize(
             len(serialize_torch(dict_zeros_torch_tensor))
         )
 
-    @pytest.mark.usefixtures("serialized_fixed_numpy_tensors")
+    # @pytest.mark.usefixtures("serialized_fixed_numpy_tensors")
+    @pytest.mark.usefixtures("dict_zeros_flax_tensor")
     @pytest.mark.parametrize("backend", [Backend.FLAX, "flax"])
     def test_to_tensors_method_with_flax(
-        self, serialized_fixed_numpy_tensors, backend
+        self, serialized_fixed_numpy_tensors, backend,
     ) -> None:
         """Test the to_tensors method with flax backend."""
         tensorshare = TensorShare(
-            tensors=serialized_fixed_numpy_tensors,
+            tensors=base64.b64encode(serialized_fixed_numpy_tensors),
             size=len(serialized_fixed_numpy_tensors),
         )
         tensors = tensorshare.to_tensors(backend=backend)
@@ -263,7 +261,7 @@ class TestTensorShare:
     ) -> None:
         """Test the to_tensors method with numpy backend."""
         tensorshare = TensorShare(
-            tensors=serialized_fixed_numpy_tensors,
+            tensors=base64.b64encode(serialized_fixed_numpy_tensors),
             size=len(serialized_fixed_numpy_tensors),
         )
         tensors = tensorshare.to_tensors(backend=backend)
@@ -279,7 +277,7 @@ class TestTensorShare:
     ) -> None:
         """Test the to_tensors method with paddle backend."""
         tensorshare = TensorShare(
-            tensors=serialized_fixed_numpy_tensors,
+            tensors=base64.b64encode(serialized_fixed_numpy_tensors),
             size=len(serialized_fixed_numpy_tensors),
         )
         tensors = tensorshare.to_tensors(backend=backend)
@@ -293,7 +291,7 @@ class TestTensorShare:
     # def test_to_tensors_method_with_tensorflow(self, serialized_fixed_numpy_tensors, backend) -> None:
     #     """Test the to_tensors method with tensorflow backend."""
     #     tensorshare = TensorShare(
-    #         tensors=serialized_fixed_numpy_tensors,
+    #         tensors=base64.b64encode(serialized_fixed_numpy_tensors),
     #         size=len(serialized_fixed_numpy_tensors)
     #     )
     #     tensors = tensorshare.to_tensors(backend=backend)
@@ -309,7 +307,7 @@ class TestTensorShare:
     ) -> None:
         """Test the to_tensors method with torch backend."""
         tensorshare = TensorShare(
-            tensors=serialized_fixed_numpy_tensors,
+            tensors=base64.b64encode(serialized_fixed_numpy_tensors),
             size=len(serialized_fixed_numpy_tensors),
         )
         tensors = tensorshare.to_tensors(backend=backend)

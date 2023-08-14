@@ -135,7 +135,6 @@ class TensorShareClient:
                 data=tensor_data.model_dump_json(),
                 timeout=self.timeout,
             )
-            session.close()
 
         return response
 

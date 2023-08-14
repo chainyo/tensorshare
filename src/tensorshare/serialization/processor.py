@@ -37,16 +37,6 @@ def _get_backend_method(backend: Backend, func_name: str) -> Any:
     return getattr(module, func_name)
 
 
-def _is_base64_encoded(data: Any) -> bool:
-    # Regular expression to match base64 encoded string pattern
-    try:
-        decoded_data = base64.b64decode(data)
-        encoded_data = base64.b64encode(decoded_data)
-        return encoded_data == data
-    except:
-        return False
-
-
 def _infer_backend(
     tensors: Dict[
         str, Union["Array", "np.ndarray", "paddle.Tensor", "tf.Tensor", "torch.Tensor"]
@@ -220,9 +210,6 @@ class TensorProcessor:
                 " to access the Backend enum."
             )
 
-        if _is_base64_encoded(data):
-            data = base64.b64decode(data)
-
-        tensors = _get_backend_method(_backend, "deserialize")(data)
+        tensors = _get_backend_method(_backend, "deserialize")(base64.b64decode(data))
 
         return tensors  # type: ignore

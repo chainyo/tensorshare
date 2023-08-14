@@ -1,5 +1,6 @@
 """Test the TensorProcessor interface and the associated functions."""
 
+import base64
 import re
 
 import numpy as np
@@ -9,6 +10,7 @@ import pytest
 # import tensorflow as tf
 import torch
 from jax import Array
+from safetensors import SafetensorError
 
 from tensorshare.serialization.constants import (
     BACKEND_TENSOR_TYPE_MAPPING,
@@ -302,9 +304,14 @@ class TestTensorProcessorDeserialize:
         self, serialized_fixed_numpy_tensors, backend
     ) -> None:
         """Test the deserialize function with flax backend."""
-        tensors = TensorProcessor.deserialize(
-            serialized_fixed_numpy_tensors, backend=backend
-        )
+        with pytest.raises(
+            SafetensorError,
+            match=re.escape("Error while deserializing: HeaderTooLarge"),
+        ):
+            TensorProcessor.deserialize(serialized_fixed_numpy_tensors, backend=backend)
+
+        b64_encoded = base64.b64encode(serialized_fixed_numpy_tensors)
+        tensors = TensorProcessor.deserialize(b64_encoded, backend=backend)
 
         assert isinstance(tensors, dict)
         assert len(tensors) > 0
@@ -318,9 +325,14 @@ class TestTensorProcessorDeserialize:
         self, serialized_fixed_numpy_tensors, backend
     ) -> None:
         """Test the deserialize function with numpy backend."""
-        tensors = TensorProcessor.deserialize(
-            serialized_fixed_numpy_tensors, backend=backend
-        )
+        with pytest.raises(
+            SafetensorError,
+            match=re.escape("Error while deserializing: HeaderTooLarge"),
+        ):
+            TensorProcessor.deserialize(serialized_fixed_numpy_tensors, backend=backend)
+
+        b64_encoded = base64.b64encode(serialized_fixed_numpy_tensors)
+        tensors = TensorProcessor.deserialize(b64_encoded, backend=backend)
 
         assert isinstance(tensors, dict)
         assert len(tensors) > 0
@@ -334,9 +346,14 @@ class TestTensorProcessorDeserialize:
         self, serialized_fixed_numpy_tensors, backend
     ) -> None:
         """Test the deserialize function with paddlepaddle backend."""
-        tensors = TensorProcessor.deserialize(
-            serialized_fixed_numpy_tensors, backend=backend
-        )
+        with pytest.raises(
+            SafetensorError,
+            match=re.escape("Error while deserializing: HeaderTooLarge"),
+        ):
+            TensorProcessor.deserialize(serialized_fixed_numpy_tensors, backend=backend)
+
+        b64_encoded = base64.b64encode(serialized_fixed_numpy_tensors)
+        tensors = TensorProcessor.deserialize(b64_encoded, backend=backend)
 
         assert isinstance(tensors, dict)
         assert len(tensors) > 0
@@ -350,7 +367,18 @@ class TestTensorProcessorDeserialize:
     #     self, serialized_fixed_numpy_tensors, backend
     # ) -> None:
     #     """Test the deserialize function with tensorflow backend."""
-    #     tensors = TensorProcessor.deserialize(serialized_fixed_numpy_tensors, backend=backend)
+    #     with pytest.raises(
+    #         SafetensorError,
+    #         match=re.escape(
+    #             "Error while deserializing: HeaderTooLarge"
+    #         ),
+    #     ):
+    #         TensorProcessor.deserialize(
+    #             serialized_fixed_numpy_tensors, backend=backend
+    #         )
+
+    #     b64_encoded = base64.b64encode(serialized_fixed_numpy_tensors)
+    #     tensors = TensorProcessor.deserialize(b64_encoded, backend=backend)
 
     #     assert isinstance(tensors, dict)
     #     assert len(tensors) > 0
@@ -364,9 +392,14 @@ class TestTensorProcessorDeserialize:
         self, serialized_fixed_numpy_tensors, backend
     ) -> None:
         """Test the deserialize function with torch backend."""
-        tensors = TensorProcessor.deserialize(
-            serialized_fixed_numpy_tensors, backend=backend
-        )
+        with pytest.raises(
+            SafetensorError,
+            match=re.escape("Error while deserializing: HeaderTooLarge"),
+        ):
+            TensorProcessor.deserialize(serialized_fixed_numpy_tensors, backend=backend)
+
+        b64_encoded = base64.b64encode(serialized_fixed_numpy_tensors)
+        tensors = TensorProcessor.deserialize(b64_encoded, backend=backend)
 
         assert isinstance(tensors, dict)
         assert len(tensors) > 0

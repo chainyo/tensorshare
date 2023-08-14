@@ -11,7 +11,7 @@ if TYPE_CHECKING:  # pragma: no cover
     import torch
     from jax import Array
 
-from pydantic import Base64Bytes, BaseModel, ByteSize, ConfigDict
+from pydantic import BaseModel, ByteSize, ConfigDict
 
 from tensorshare.serialization import Backend, TensorProcessor
 
@@ -19,17 +19,14 @@ from tensorshare.serialization import Backend, TensorProcessor
 class TensorShare(BaseModel):
     """Base model for tensor sharing."""
 
-    tensors: Base64Bytes
+    tensors: bytes
     size: ByteSize
 
     model_config = ConfigDict(
         extra="forbid",
         frozen=True,
         json_schema_extra={
-            "tensors": (
-                b'H\x00\x00\x00\x00\x00\x00\x00{"embeddings":{"dtype":"F32","shape":[1,1],"data_offsets":[0,4]}}'
-                b"       \x00\x00\x00\x00"
-            ),
+            "tensors": b"SAAAAAAAAAB7ImVtYmVkZGluZ3MiOnsiZHR5cGUiOiJGMzIiLCJzaGFwZSI6WzEsMV0sImRhdGFfb2Zmc2V0cyI6WzAsNF19fSAgICAgICAAAAAA",
             "size": 84,
         },
     )
