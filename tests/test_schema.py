@@ -10,9 +10,9 @@ import pytest
 
 # import tensorflow as tf
 import torch
-from pydantic import ByteSize, HttpUrl
+from pydantic import BaseModel, ByteSize, HttpUrl
 
-from tensorshare.schema import TensorShare, TensorShareServer
+from tensorshare.schema import DefaultResponse, TensorShare, TensorShareServer
 from tensorshare.serialization.constants import Backend
 from tensorshare.serialization.flax import serialize as serialize_flax
 from tensorshare.serialization.numpy import serialize as serialize_numpy
@@ -328,6 +328,24 @@ class TestTensorShare:
         assert tensors["embeddings"].shape == torch.Size([2, 2])
 
 
+class TestDefaultResponse:
+    """Test the pydantic schema DefaultResponse."""
+
+    def test_default_response_init(self) -> None:
+        """Test the schema init."""
+        response = DefaultResponse(message="Test")
+
+        assert isinstance(response.message, str)
+        assert response.message == "Test"
+        assert response.model_dump() == {"message": "Test"}
+
+
+class MockResponse(BaseModel):
+    """Mock response."""
+
+    mock: str
+
+
 class TestTensorShareServer:
     """Test the pydantic schema TensorShareServer."""
 
@@ -338,6 +356,8 @@ class TestTensorShareServer:
             ping="https://localhost:8000/ping",
             receive_tensor="https://localhost:8000/receive_tensor",
         )
+
+        assert server.response_model == DefaultResponse
 
         assert server.url == HttpUrl("https://localhost:8000")
         assert str(server.url) == "https://localhost:8000/"
@@ -351,6 +371,17 @@ class TestTensorShareServer:
             "ping": HttpUrl("https://localhost:8000/ping"),
             "receive_tensor": HttpUrl("https://localhost:8000/receive_tensor"),
         }
+
+    def test_schema_with_mock_response(self) -> None:
+        """Test the schema with mock response."""
+        server = TensorShareServer(
+            url="https://localhost:8000",
+            ping="https://localhost:8000/ping",
+            receive_tensor="https://localhost:8000/receive_tensor",
+            response_model=MockResponse,
+        )
+
+        assert server.response_model == MockResponse
 
     def test_schema_validation_error(self) -> None:
         """Test the schema validation error."""
@@ -368,3 +399,80 @@ class TestTensorShareServer:
                 ping="https://localhost:8000/ping",
                 receive_tensor="https://localhost:8000/receive_tensor",
             )
+
+    @pytest.mark.parametrize(
+        "config",
+        [
+            {
+                "url": "https://localhost:1234",
+                "ping": "new_ping",
+                "receive_tensor": "get_tensor",
+                "response_model": MockResponse,
+            },
+            {
+                "url": "https://localhost:8888",
+                "receive_tensor": "get_tensor",
+            },
+            {
+                "url": "https://localhost:9876",
+                "ping": "new_ping",
+            },
+            {
+                "url": "https://localhost:8091",
+                "response_model": MockResponse,
+            },
+        ],
+    )
+    def test_schema_from_dict_method_with_custom(self, config: dict) -> None:
+        """Test the schema from_dict method with custom."""
+        server_config = TensorShareServer.from_dict(server_config=config)
+
+        assert isinstance(server_config, TensorShareServer)
+
+        assert server_config.url == HttpUrl(config["url"])
+        assert str(server_config.url) == f"{config['url']}/"
+
+        if "ping" in config:
+            assert server_config.ping == HttpUrl(f"{config['url']}/{config['ping']}")
+            assert str(server_config.ping) == f"{config['url']}/{config['ping']}"
+        else:
+            assert server_config.ping == HttpUrl(f"{config['url']}/ping")
+            assert str(server_config.ping) == f"{config['url']}/ping"
+
+        if "receive_tensor" in config:
+            assert server_config.receive_tensor == HttpUrl(
+                f"{config['url']}/{config['receive_tensor']}"
+            )
+            assert (
+                str(server_config.receive_tensor)
+                == f"{config['url']}/{config['receive_tensor']}"
+            )
+        else:
+            assert server_config.receive_tensor == HttpUrl(
+                f"{config['url']}/receive_tensor"
+            )
+            assert (
+                str(server_config.receive_tensor) == f"{config['url']}/receive_tensor"
+            )
+
+        if "response_model" in config:
+            assert server_config.response_model == MockResponse
+        else:
+            assert server_config.response_model == DefaultResponse
+
+    @pytest.mark.parametrize(
+        "config",
+        [
+            {},
+            {"ping": "https://localhost:8000/ping"},
+            {"receive_tensor": "https://localhost:8000/receive_tensor"},
+            {"response_model": DefaultResponse},
+        ],
+    )
+    def test_schema_from_dict_method_with_invalid_dict(self, config: dict) -> None:
+        """Test the schema from_dict method with invalid dict."""
+        with pytest.raises(
+            ValueError,
+            match=re.escape("Verify the configuration dictionary, `url` is missing."),
+        ):
+            TensorShareServer.from_dict(server_config=config)

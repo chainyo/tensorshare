@@ -3,10 +3,9 @@
 import asyncio
 
 import aiohttp
-from pydantic import HttpUrl, ValidationError
 
-from tensorshare.utils import fake_tensorshare_data
 from tensorshare.schema import TensorShare, TensorShareServer
+from tensorshare.utils import fake_tensorshare_data
 
 
 class TensorShareClient:
@@ -28,12 +27,12 @@ class TensorShareClient:
         >>> from tensorshare import TensorShare, TensorShareClient
 
         >>> client = TensorShareClient("http://localhost:8765")
-        >>> ts = TensorShare.from_dict({"embeddings": torch.rand(10, 10)})
 
         >>> # Synchronous interface
         >>> print(client.ping_server())
         >>> # True
 
+        >>> ts = TensorShare.from_dict({"embeddings": torch.rand(10, 10)})
         >>> print(client.send_tensor(ts))
         >>> # <ClientResponse(http://localhost:8765/receive_tensor) [200 OK]>
 
@@ -53,35 +52,22 @@ class TensorShareClient:
 
     def __init__(
         self,
-        server_url: str,
+        server_config: TensorShareServer,
         timeout: int = 10,
         validate_endpoints: bool = True,
     ) -> None:
         """Initialize the client.
 
         Args:
-            server_url (str):
-                The url of the server to send tensors to.
+            server_config (TensorShareServer):
+                The server configuration to use for sending tensors.
             timeout (int):
                 The timeout in seconds for the http requests. Defaults to 10.
             validate_endpoints (bool):
                 Whether to validate the endpoints on the server at the time of
                 initialization. Defaults to True.
-
-        Raises:
-            ValueError: If the server_url is not a valid url.
         """
-        try:
-            self.server = TensorShareServer(
-                url=HttpUrl(server_url),
-                ping=HttpUrl(f"{server_url}/ping"),
-                receive_tensor=HttpUrl(f"{server_url}/receive_tensor"),
-            )
-        except ValidationError as e:
-            raise ValueError(
-                f"The provided server url is invalid -> {server_url}\n{e}"
-            ) from e
-
+        self.server = server_config
         self.timeout = timeout
 
         if validate_endpoints:

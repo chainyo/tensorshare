@@ -9,7 +9,8 @@ from tensorshare.schema import DefaultResponse, TensorShare, TensorShareServer
 
 router = APIRouter()
 
-server_config = TensorShareServer(server_url="http://localhost:8000")
+_default_config = {"url": "http://localhost:8000", "response_model": DefaultResponse}
+server_config = TensorShareServer.from_dict(server_config=_default_config)
 
 
 def compute_operation(tensors: TensorShare) -> server_config.response_model:
@@ -25,11 +26,11 @@ def compute_operation(tensors: TensorShare) -> server_config.response_model:
             The response model to send back to the client configured in the server_config.
             By default, it is a DefaultResponse object.
     """
-    return {"message": "success"}
+    return {"message": "Success"}
 
 
 @router.post(
-    "/receive_tensor/",
+    f"{server_config.receive_tensor.path}",
     response_model=server_config.response_model,
     status_code=http_status.HTTP_200_OK,
 )
@@ -43,16 +44,10 @@ def receive_tensor(
 
 
 @router.get(
-    "/ping/",
+    f"{server_config.ping.path}",
     response_model=DefaultResponse,
     status_code=http_status.HTTP_200_OK,
 )
 def ping() -> DefaultResponse:
-    """
-    Endpoint to check if the server is up.
-
-    Returns:
-        DefaultResponse:
-            A DefaultResponse object with a message.
-    """
+    """Endpoint to check if the server is up."""
     return {"message": "The TensorShare router is up and running!"}
