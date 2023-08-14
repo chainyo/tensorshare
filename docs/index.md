@@ -58,5 +58,5 @@ For more examples and details, please refer to the [Usage section](./usage).
 - [x] Serialization and deserialization
 - [x] TensorProcessor for processing tensors
 - [x] Pydantic schema for sharing tensors
-- [ ] Server for sharing tensors
-- [ ] Client for sharing tensors
+- [x] Server for sharing tensors
+- [x] Client for sharing tensors

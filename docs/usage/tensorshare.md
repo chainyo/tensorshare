@@ -1,4 +1,12 @@
-# Usage
+# TensorShare
+
+The `TensorShare` schema is the main class of the project. It's used to share tensors between different backends.
+
+This schema inherits from the [`pydantic.BaseModel`](https://docs.pydantic.dev/latest/usage/models/#basic-model-usage) 
+class and has two fields:
+
+* `tensors`: a base64 encoded string of the serialized tensors
+* `size`: the size of the tensors in bytes
 
 ## Creating a `TensorShare` object
 
@@ -9,12 +17,12 @@ After [installing the package](../installation) in your project, the TensorShare
 from tensorshare import TensorShare
 
 ts = TensorShare(
-    tensors=...,  # Serialized tensors to byte strings ready to be sent
+    tensors=...,  # Base64 encoded tensors to byte strings ready to be sent
     size=...,  # Size of the tensors in pydantic.ByteSize format
 )
 ```
 
-## Serializing tensors
+## Serializing tensors - `from_dict`
 
 Because it's tedious to serialize tensors manually, the package provides a `TensorShare.from_dict` method to create
 a new object from a dictionary of tensors in any supported backend.
@@ -34,7 +42,7 @@ ts = TensorShare.from_dict(tensors)
 You can specify the backend to use by passing the `backend` argument to the `from_dict` method.
 
 !!! tip
-    The backend can be specified as a string or as a `Backend` Enum value. Check the [Backends](#backends) section
+    The backend can be specified as a string or as a `Backend` Enum value. Check the [Backends](../usage/backends) section
     for more information.
 
 ```python
@@ -46,13 +54,16 @@ tensors = {
     "labels": torch.zeros((2, 2)),
 }
 ts = TensorShare.from_dict(tensors, backend="torch")
+print(ts)
+
+>>> tensors=b'gAAAAAAAAAB7ImVt...' size=168
 ```
 
 If you don't specify the backend, the package will try to infer it from the first tensor in the dictionary, which
 isn't always the best optimization. As a general rule, it's better to specify the backend explicitly.
 
 !!! warning
-    It's not possible to mix tensors from different backends in the same dictionary.
+    It's not possible (at the moment) to mix tensors from different backends in the same dictionary.
     The `from_dict` method will raise an exception if you try to do so.
 
 ### backend-specific examples
@@ -131,7 +142,7 @@ stored in the `TensorShare` object. The method expects a `backend` argument to s
 
 ```python
 ts = TensorShare(
-    tensors=...,  # Serialized tensors to byte strings ready to be sent
+    tensors=...,  # Base64 encoded tensors to byte strings ready to be sent
     size=...,  # Size of the tensors in pydantic.ByteSize format
 )
 tensors = ts.to_tensors(backend=...)
@@ -139,7 +150,7 @@ tensors = ts.to_tensors(backend=...)
 
 !!! tip
     Here again, the backend can be specified as a string or as a `Backend` Enum value.
-    Check the [Backends](#backends) section for more information.
+    Check the [Backends](../usage/backends) section for more information.
 
 Here are some examples of how to deserialize the tensors from a `TensorShare` object in different backends.
 You need to have the desired backend installed in your project to be able to deserialize the tensors in it.
@@ -166,61 +177,4 @@ tensors_tensorflow = ts.to_tensors(backend="tensorflow")  # or backend=Backend.T
 
 # Get torch.Tensor tensors
 tensors_pytorch = ts.to_tensors(backend="torch")  # or backend=Backend.TORCH
-```
-
-## Backends
-
-The project currently supports the following backends:
-
-* [x] Flax
-* [x] NumPy
-* [x] PaddlePaddle
-* [ ] TensorFlow (coming soon when `v2.14` is released)
-* [x] PyTorch
-
-#### Backend Enum
-
-We provide a `Backend` Enum class to help you choose the backend you want to use or for type hinting purposes.
-
-```python
-from tensorshare import Backend
-
-flax_backend = Backend.FLAX
->>> <Backend.FLAX: "flax">
-
-numpy_backend = Backend.NUMPY
->>> <Backend.NUMPY: "numpy">
-
-paddlepaddle_backend = Backend.PADDLEPADDLE
->>> <Backend.PADDLEPADDLE: "paddlepaddle">
-
-tensorflow_backend = Backend.TENSORFLOW
->>> <Backend.TENSORFLOW: "tensorflow">
-
-backend = Backend.TORCH
->>> <Backend.TORCH: "torch">
-```
-
-#### TensorType Enum
-
-We also provide a `TensorType` Enum class to help you choose the tensor type you want to use or for type hinting
-purposes.
-
-```python
-from tensorshare import TensorType
-
-flax_tensor = TensorType.FLAX
->>> <TensorType.FLAX: "jaxlib.xla_extension.ArrayImpl">
-
-numpy_tensor = TensorType.NUMPY
->>> <TensorType.NUMPY: "numpy.ndarray">
-
-paddlepaddle_tensor = TensorType.PADDLEPADDLE
->>> <TensorType.PADDLEPADDLE: "paddle.Tensor">
-
-tensorflow_tensor = TensorType.TENSORFLOW
->>> <TensorType.TENSORFLOW: "tensorflow.Tensor">
-
-torch_tensor = TensorType.TORCH
->>> <TensorType.TORCH: "torch.Tensor">
 ```

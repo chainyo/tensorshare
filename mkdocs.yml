@@ -59,9 +59,15 @@ extra:
       link: https://www.linkedin.com/in/thomas-chaigneau-dev
 
 nav:
-  - Home: index.md
+  - Getting Started: index.md
   - Installation: installation.md
-  - Usage: usage.md
+  - Usage:
+    - "Introduction": usage/introduction.md
+    - "TensorShare": usage/tensorshare.md
+    - "Backends": usage/backends.md
+    - "TensorShareServer": usage/tensorshare_server.md
+    - "TensorShareClient": usage/tensorshare_client.md
+    - "FastAPI Integration": usage/fastapi_integration.md
   - API Reference:
     - tensorshare.TensorShare: api/schema.md
     - tensorshare.serialization: api/serialization.md
