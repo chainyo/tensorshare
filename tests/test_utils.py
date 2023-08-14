@@ -2,8 +2,8 @@
 
 from pydantic import ByteSize
 
-from tensorshare import TensorShare
-from tensorshare.client.utils import fake_tensorshare_data
+from tensorshare.schema import TensorShare
+from tensorshare.utils import fake_tensorshare_data
 
 
 class TestClientUtils:

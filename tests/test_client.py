@@ -7,50 +7,8 @@ import pytest
 import torch
 from pydantic import HttpUrl
 
-from tensorshare import TensorShare
-from tensorshare.client.client import TensorShareClient, TensorShareServer
-
-
-class TestTensorShareServer:
-    """Test the pydantic schema TensorShareServer."""
-
-    def test_schema_init(self) -> None:
-        """Test the schema init."""
-        server = TensorShareServer(
-            url="https://localhost:8000",
-            ping="https://localhost:8000/ping",
-            receive_tensor="https://localhost:8000/receive_tensor",
-        )
-
-        assert server.url == HttpUrl("https://localhost:8000")
-        assert str(server.url) == "https://localhost:8000/"
-        assert server.ping == HttpUrl("https://localhost:8000/ping")
-        assert str(server.ping) == "https://localhost:8000/ping"
-        assert server.receive_tensor == HttpUrl("https://localhost:8000/receive_tensor")
-        assert str(server.receive_tensor) == "https://localhost:8000/receive_tensor"
-
-        assert server.model_dump() == {
-            "url": HttpUrl("https://localhost:8000"),
-            "ping": HttpUrl("https://localhost:8000/ping"),
-            "receive_tensor": HttpUrl("https://localhost:8000/receive_tensor"),
-        }
-
-    def test_schema_validation_error(self) -> None:
-        """Test the schema validation error."""
-        with pytest.raises(
-            ValueError,
-            match=re.escape(
-                "1 validation error for TensorShareServer\nurl\n  URL scheme should be"
-                " 'http' or 'https' [type=url_scheme, input_value='localhost:8000',"
-                " input_type=str]\n    For further information visit"
-                " https://errors.pydantic.dev/2.1/v/url_scheme"
-            ),
-        ):
-            TensorShareServer(
-                url="localhost:8000",
-                ping="https://localhost:8000/ping",
-                receive_tensor="https://localhost:8000/receive_tensor",
-            )
+from tensorshare.client import TensorShareClient
+from tensorshare.schema import DefaultResponse, TensorShare, TensorShareServer
 
 
 class TestTensorShareClient:
@@ -67,7 +25,8 @@ class TestTensorShareClient:
     )
     def test_client_init_no_validation(self, url: str) -> None:
         """Test the client init without endpoints validation."""
-        client = TensorShareClient(server_url=url, validate_endpoints=False)
+        server_config = TensorShareServer.from_dict({"url": url})
+        client = TensorShareClient(server_config, validate_endpoints=False)
 
         assert isinstance(client.server, TensorShareServer)
 
@@ -82,6 +41,8 @@ class TestTensorShareClient:
 
         assert client.server.receive_tensor == HttpUrl(f"{url}/receive_tensor")
         assert str(client.server.receive_tensor) == f"{url}/receive_tensor"
+
+        assert client.server.response_model == DefaultResponse
 
         assert client.server.model_dump() == {
             "url": HttpUrl(url),
@@ -108,7 +69,6 @@ class TestTensorShareClient:
         "url",
         [
             "localhost:8765",
-            "abc1234.com",
             "ftp://localhost:8765",
             "ftp://abc1234.com",
             "data://localhost:8765",
@@ -119,9 +79,10 @@ class TestTensorShareClient:
         """Test the client init with invalid url."""
         with pytest.raises(
             ValueError,
-            match=re.escape(f"The provided server url is invalid -> {url}\n"),
+            match=re.escape("3 validation errors for TensorShareServer"),
         ):
-            TensorShareClient(server_url=url)
+            server_config = TensorShareServer.from_dict({"url": url})
+            TensorShareClient(server_config)
 
     @pytest.mark.usefixtures("mock_server")
     @pytest.mark.parametrize(
@@ -139,28 +100,30 @@ class TestTensorShareClient:
         mock_server,
     ) -> None:
         """Test the client init with endpoints validation."""
-        url = "http://localhost:8765/"
+        url = "http://localhost:8765"
+        server_config = TensorShareServer.from_dict({"url": url})
 
         with pytest.raises(
             AssertionError,
-            match=re.escape(f"Could not connect to the server at {url}\n"),
+            match=re.escape(f"Could not connect to the server at {url}/\n"),
         ):
             mock_server.get(f"{url}/ping", status=ping_status)
             mock_server.post(f"{url}/receive_tensor", status=receive_tensor_status)
-            TensorShareClient(server_url=url)
+            TensorShareClient(server_config)
 
     @pytest.mark.usefixtures("mock_server")
     def test_client_ping_server(self, mock_server) -> None:
         """Test the client ping server."""
-        client = TensorShareClient(
-            server_url="http://localhost:8765", validate_endpoints=False
-        )
+        url = "http://localhost:8765"
+        server_config = TensorShareServer.from_dict({"url": url})
 
-        mock_server.get("http://localhost:8765/ping", status=200)
+        client = TensorShareClient(server_config, validate_endpoints=False)
+
+        mock_server.get(f"{url}/ping", status=200)
         r = client.ping_server()
         assert r is True
 
-        mock_server.get("http://localhost:8765/ping", status=500)
+        mock_server.get(f"{url}/ping", status=500)
         r = client.ping_server()
         assert r is False
 
@@ -168,15 +131,16 @@ class TestTensorShareClient:
     @pytest.mark.usefixtures("mock_server")
     async def test_client_async_ping_server(self, mock_server) -> None:
         """Test the client async ping server."""
-        client = TensorShareClient(
-            server_url="http://localhost:8765", validate_endpoints=False
-        )
+        url = "http://localhost:8765"
+        server_config = TensorShareServer.from_dict({"url": url})
 
-        mock_server.get("http://localhost:8765/ping", status=200)
+        client = TensorShareClient(server_config, validate_endpoints=False)
+
+        mock_server.get(f"{url}/ping", status=200)
         r = await client.async_ping_server()
         assert r is True
 
-        mock_server.get("http://localhost:8765/ping", status=500)
+        mock_server.get(f"{url}/ping", status=500)
         r = await client.async_ping_server()
         assert r is False
 
@@ -184,16 +148,17 @@ class TestTensorShareClient:
     def test_client_send_tensor(self, mock_server) -> None:
         """Test the client send tensor."""
         ts = TensorShare.from_dict({"embeddings": torch.ones(1, 1)})
-        client = TensorShareClient(
-            server_url="http://localhost:8765", validate_endpoints=False
-        )
+        url = "http://localhost:8765"
+        server_config = TensorShareServer.from_dict({"url": url})
 
-        mock_server.post("http://localhost:8765/receive_tensor", status=200)
+        client = TensorShareClient(server_config, validate_endpoints=False)
+
+        mock_server.post(f"{url}/receive_tensor", status=200)
         r = client.send_tensor(tensor_data=ts)
         assert r.status == 200
         assert isinstance(r, aiohttp.ClientResponse)
 
-        mock_server.post("http://localhost:8765/receive_tensor", status=500)
+        mock_server.post(f"{url}/receive_tensor", status=500)
         r = client.send_tensor(tensor_data=ts)
         assert r.status == 500
         assert isinstance(r, aiohttp.ClientResponse)
@@ -203,16 +168,17 @@ class TestTensorShareClient:
     async def test_client_async_send_tensor(self, mock_server) -> None:
         """Test the client async send tensor."""
         ts = TensorShare.from_dict({"embeddings": torch.ones(1, 1)})
-        client = TensorShareClient(
-            server_url="http://localhost:8765", validate_endpoints=False
-        )
+        url = "http://localhost:8765"
+        server_config = TensorShareServer.from_dict({"url": url})
 
-        mock_server.post("http://localhost:8765/receive_tensor", status=200)
+        client = TensorShareClient(server_config, validate_endpoints=False)
+
+        mock_server.post(f"{url}/receive_tensor", status=200)
         r = await client.async_send_tensor(tensor_data=ts)
         assert r.status == 200
         assert isinstance(r, aiohttp.ClientResponse)
 
-        mock_server.post("http://localhost:8765/receive_tensor", status=500)
+        mock_server.post(f"{url}/receive_tensor", status=500)
         r = await client.async_send_tensor(tensor_data=ts)
         assert r.status == 500
         assert isinstance(r, aiohttp.ClientResponse)
@@ -232,9 +198,10 @@ class TestTensorShareClient:
     )
     def test_client_send_tensor_with_invalid_tensors(self, tensors) -> None:
         """Test client send_tensor with invalid tensors."""
-        client = TensorShareClient(
-            server_url="http://localhost:8765", validate_endpoints=False
-        )
+        url = "http://localhost:8765"
+        server_config = TensorShareServer.from_dict({"url": url})
+
+        client = TensorShareClient(server_config, validate_endpoints=False)
 
         with pytest.raises(
             TypeError,

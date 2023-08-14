@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, Optional, Union
+from typing import TYPE_CHECKING, Dict, Optional, Type, Union
 
 if TYPE_CHECKING:  # pragma: no cover
     import numpy as np
@@ -11,7 +11,7 @@ if TYPE_CHECKING:  # pragma: no cover
     import torch
     from jax import Array
 
-from pydantic import BaseModel, ByteSize, ConfigDict
+from pydantic import BaseModel, ByteSize, ConfigDict, Field, HttpUrl
 
 from tensorshare.serialization import Backend, TensorProcessor
 
@@ -93,3 +93,92 @@ class TensorShare(BaseModel):
                 Tensors stored in a dictionary with their name as key in the specified backend.
         """
         return TensorProcessor.deserialize(self.tensors, backend=backend)
+
+
+class DefaultResponse(BaseModel):
+    """Base model for tensor sharing response endpoint."""
+
+    message: str
+
+
+class TensorShareServer(BaseModel):
+    """
+    TensorShare server schema used by FastAPI or the TensorShareClient.
+
+    Raises:
+        ValueError: If the url is not a valid url.
+    """
+
+    url: HttpUrl
+    ping: HttpUrl
+    receive_tensor: HttpUrl
+    response_model: Type[BaseModel] = Field(
+        default=DefaultResponse,
+        validate_default=True,
+        exclude=True,
+    )
+
+    model_config = ConfigDict(
+        extra="forbid",
+        json_schema_extra={
+            "url": "http://localhost:8000",
+            "ping": "http://localhost:8000/ping",
+            "receive_tensor": "http://localhost:8000/receive_tensor",
+        },
+    )
+
+    @classmethod
+    def from_dict(
+        cls, server_config: Dict[str, Union[str, Type[BaseModel]]]
+    ) -> TensorShareServer:
+        """
+        Create a TensorShareServer object from a dictionary.
+
+        Args:
+            server_config (Dict[str, Union[str, Type[BaseModel]]]):
+                Dictionary containing the server configuration.
+                The expected keys are `url`, `ping`, `receive_tensor` and `response_model`.
+                Only `url` is mandatory, `ping` and `receive_tensor` will be set to default values,
+                and `response_model` will be set to DefaultResponse.
+
+        Raises:
+            ValueError: If the url is not a valid url or missing.
+
+        Returns:
+            TensorShareServer: A TensorShareServer object.
+        """
+        url = server_config.get("url", None)
+
+        if url is None or not isinstance(url, str):
+            raise ValueError(
+                "Verify the configuration dictionary, `url` is missing or invalid."
+            )
+
+        ping = server_config.get("ping", "ping")
+        if not isinstance(ping, str):
+            raise ValueError(
+                "Verify the configuration dictionary, `ping` must be a string."
+            )
+
+        receive_tensor = server_config.get("receive_tensor", "receive_tensor")
+        if not isinstance(receive_tensor, str):
+            raise ValueError(
+                "Verify the configuration dictionary, `receive_tensor` must be a"
+                " string."
+            )
+
+        response_model = server_config.get("response_model", DefaultResponse)
+        if not isinstance(response_model, type) or not issubclass(
+            response_model, BaseModel
+        ):
+            raise ValueError(
+                "Verify the configuration dictionary, `response_model` must be a"
+                " subclass of BaseModel."
+            )
+
+        return cls(
+            url=HttpUrl(url),
+            ping=HttpUrl(f"{url}/{ping}"),
+            receive_tensor=HttpUrl(f"{url}/{receive_tensor}"),
+            response_model=response_model,
+        )
