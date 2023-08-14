@@ -28,6 +28,7 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
+  "aiohttp>=3.8.5",
   "pydantic>=2.1.1",
   "safetensors>=0.3.1",
 ]
@@ -75,12 +76,14 @@ quality = [
   "pre-commit~=2.20.0",
 ]
 tests = [
+  "aioresponses>=0.7.4",
   "flax>=0.6.3",
   "jax<0.4.14",
   "jaxlib<0.4.14",
   "numpy>=1.21.6",
   "paddlepaddle>=2.4.1",
   "pytest>=7.4",
+  "pytest-asyncio>=0.21.1",
   "pytest-cov>=4.1",
   # "tensorflow",
   "torch>=1.10",
@@ -137,7 +140,7 @@ format = [
   "check",
 ]
 typecheck = [
-  "mypy src",
+  "mypy src --install-types --non-interactive",
 ]
 
 [tool.ruff]
@@ -164,7 +167,7 @@ features = [
 ]
 
 [tool.hatch.envs.tests.scripts]
-run = "pytest --cov=tensorshare --cov-report=term-missing tests/ --durations 0 -s"
+run = "pytest --cov=tensorshare --cov-report=term-missing tests/ --durations 0 -s -vv"
 
 [[tool.hatch.envs.tests.matrix]]
 python = ["38", "39", "310", "311"]

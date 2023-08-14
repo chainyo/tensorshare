@@ -1,5 +1,6 @@
 """Processor interface for converting between different tensor formats."""
 
+import base64
 from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -95,10 +96,10 @@ class TensorProcessor:
         metadata: Optional[Dict[str, str]] = None,
         backend: Optional[Union[str, Backend]] = None,
     ) -> Tuple[bytes, ByteSize]:
-        """Serialize a dictionary of tensors to a TensorShare object.
+        """Serialize a dictionary of tensors to a tuple containing the serialized tensors and their size.
 
-        This method will convert a dictionary of tensors to a tuple containing the serialized tensors
-        and the size of the serialized tensors. It will use the backend if provided, otherwise it will
+        This method will convert a dictionary of tensors to a tuple containing the base64 encoded serialized
+        tensors and the size of the serialized tensors. It will use the backend if provided, otherwise it will
         try to infer the backend from the tensors format.
 
         Args:
@@ -123,7 +124,8 @@ class TensorProcessor:
             KeyError: If backend is not one of the supported backends.
 
         Returns:
-            Tuple[bytes, ByteSize]: A tuple containing the serialized tensors and the size of the file.
+            Tuple[bytes, ByteSize]:
+                A tuple containing the base64 encoded serialized tensors and the size of the serialized tensors.
         """
         if not isinstance(tensors, dict):
             raise TypeError(
@@ -156,7 +158,7 @@ class TensorProcessor:
             tensors, metadata=metadata
         )
 
-        return _tensors, ByteSize(len(_tensors))
+        return base64.b64encode(_tensors), ByteSize(len(_tensors))
 
     @staticmethod
     def deserialize(
@@ -165,14 +167,14 @@ class TensorProcessor:
     ) -> Dict[
         str, Union["Array", "np.ndarray", "paddle.Tensor", "tf.Tensor", "torch.Tensor"]
     ]:
-        """Deserialize bytes to a dictionary of tensors.
+        """Deserialize base64 encoded serialized tensors to a dictionary of tensors.
 
         This method will convert TensorShare.tensors to a dictionary of tensors with their name as key.
         The backend must be specified in order to deserialize the data.
 
         Args:
             data (bytes):
-                The serialized tensors to deserialize.
+                The base64 encoded serialized tensors to deserialize.
             backend (Union[str, Backend]):
                 The backend to use for the conversion. Must be one of the following:
                     - Backend.FLAX or 'flax'
@@ -208,6 +210,6 @@ class TensorProcessor:
                 " to access the Backend enum."
             )
 
-        tensors = _get_backend_method(_backend, "deserialize")(data)
+        tensors = _get_backend_method(_backend, "deserialize")(base64.b64decode(data))
 
         return tensors  # type: ignore
