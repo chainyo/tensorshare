@@ -3,18 +3,10 @@
 import asyncio
 
 import aiohttp
-from pydantic import BaseModel, HttpUrl, ValidationError
+from pydantic import HttpUrl, ValidationError
 
-from tensorshare.client.utils import fake_tensorshare_data
-from tensorshare.schema import TensorShare
-
-
-class TensorShareServer(BaseModel):
-    """ServerUrl model."""
-
-    url: HttpUrl
-    ping: HttpUrl
-    receive_tensor: HttpUrl
+from tensorshare.utils import fake_tensorshare_data
+from tensorshare.schema import TensorShare, TensorShareServer
 
 
 class TensorShareClient:

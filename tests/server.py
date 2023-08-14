@@ -9,8 +9,6 @@ app = FastAPI()
 def receive_tensor(shared_tensor: TensorShare):
     # async def receive_tensor(req: Request):
     """Receive a tensor from a client and print it"""
-    # body = await req.json()
-    # ts = TensorShare(**body)
     ts = shared_tensor
     print(type(ts), ts)
 

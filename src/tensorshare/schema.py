@@ -11,7 +11,7 @@ if TYPE_CHECKING:  # pragma: no cover
     import torch
     from jax import Array
 
-from pydantic import BaseModel, ByteSize, ConfigDict
+from pydantic import BaseModel, ByteSize, ConfigDict, HttpUrl
 
 from tensorshare.serialization import Backend, TensorProcessor
 
@@ -93,3 +93,18 @@ class TensorShare(BaseModel):
                 Tensors stored in a dictionary with their name as key in the specified backend.
         """
         return TensorProcessor.deserialize(self.tensors, backend=backend)
+
+
+class DefaultResponse(BaseModel):
+    """Base model for tensor sharing response endpoint."""
+
+    message: str
+
+
+class TensorShareServer(BaseModel):
+    """ServerUrl model."""
+
+    url: HttpUrl
+    ping: HttpUrl
+    receive_tensor: HttpUrl
+    response_model: type[BaseModel] = DefaultResponse

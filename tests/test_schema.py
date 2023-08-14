@@ -1,6 +1,7 @@
 """Tests for the pydantic schemas of tensorshare."""
 
 import base64
+import re
 
 import jax.numpy as jnp
 import numpy as np
@@ -9,9 +10,9 @@ import pytest
 
 # import tensorflow as tf
 import torch
-from pydantic import ByteSize
+from pydantic import ByteSize, HttpUrl
 
-from tensorshare.schema import TensorShare
+from tensorshare.schema import TensorShare, TensorShareServer
 from tensorshare.serialization.constants import Backend
 from tensorshare.serialization.flax import serialize as serialize_flax
 from tensorshare.serialization.numpy import serialize as serialize_numpy
@@ -325,3 +326,45 @@ class TestTensorShare:
         assert isinstance(tensors, dict)
         assert isinstance(tensors["embeddings"], torch.Tensor)
         assert tensors["embeddings"].shape == torch.Size([2, 2])
+
+
+class TestTensorShareServer:
+    """Test the pydantic schema TensorShareServer."""
+
+    def test_schema_init(self) -> None:
+        """Test the schema init."""
+        server = TensorShareServer(
+            url="https://localhost:8000",
+            ping="https://localhost:8000/ping",
+            receive_tensor="https://localhost:8000/receive_tensor",
+        )
+
+        assert server.url == HttpUrl("https://localhost:8000")
+        assert str(server.url) == "https://localhost:8000/"
+        assert server.ping == HttpUrl("https://localhost:8000/ping")
+        assert str(server.ping) == "https://localhost:8000/ping"
+        assert server.receive_tensor == HttpUrl("https://localhost:8000/receive_tensor")
+        assert str(server.receive_tensor) == "https://localhost:8000/receive_tensor"
+
+        assert server.model_dump() == {
+            "url": HttpUrl("https://localhost:8000"),
+            "ping": HttpUrl("https://localhost:8000/ping"),
+            "receive_tensor": HttpUrl("https://localhost:8000/receive_tensor"),
+        }
+
+    def test_schema_validation_error(self) -> None:
+        """Test the schema validation error."""
+        with pytest.raises(
+            ValueError,
+            match=re.escape(
+                "1 validation error for TensorShareServer\nurl\n  URL scheme should be"
+                " 'http' or 'https' [type=url_scheme, input_value='localhost:8000',"
+                " input_type=str]\n    For further information visit"
+                " https://errors.pydantic.dev/2.1/v/url_scheme"
+            ),
+        ):
+            TensorShareServer(
+                url="localhost:8000",
+                ping="https://localhost:8000/ping",
+                receive_tensor="https://localhost:8000/receive_tensor",
+            )
