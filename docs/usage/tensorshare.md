@@ -70,77 +70,77 @@ isn't always the best optimization. As a general rule, it's better to specify th
 
 Here are some examples of how to create a `TensorShare` object from a dictionary of tensors in different backends.
 
-##### Flax
+=== "Flax"
 
-```python
-import jax.numpy as jnp
-from tensorshare import TensorShare
+    ``` python
+    import jax.numpy as jnp
+    from tensorshare import TensorShare
 
-tensors = {
-    "embeddings": jnp.zeros((2, 2)),
-    "labels": jnp.zeros((2, 2)),
-}
-ts = TensorShare.from_dict(tensors, backend="flax")
-```
+    tensors = {
+        "embeddings": jnp.zeros((2, 2)),
+        "labels": jnp.zeros((2, 2)),
+    }
+    ts = TensorShare.from_dict(tensors, backend="flax")
+    ```
 
-##### NumPy
+=== "NumPy"
 
-```python
-import numpy as np
-from tensorshare import TensorShare
+    ``` python
+    import numpy as np
+    from tensorshare import TensorShare
 
-tensors = {
-    "embeddings": np.zeros((2, 2)),
-    "labels": np.zeros((2, 2)),
-}
-ts = TensorShare.from_dict(tensors, backend="numpy")
-```
+    tensors = {
+        "embeddings": np.zeros((2, 2)),
+        "labels": np.zeros((2, 2)),
+    }
+    ts = TensorShare.from_dict(tensors, backend="numpy")
+    ```
 
-##### PaddlePaddle
+=== "PaddlePaddle"
 
-```python
-import paddle
-from tensorshare import TensorShare
+    ``` python
+    import paddle
+    from tensorshare import TensorShare
 
-tensors = {
-    "embeddings": paddle.zeros((2, 2)),
-    "labels": paddle.zeros((2, 2)),
-}
-ts = TensorShare.from_dict(tensors, backend="paddlepaddle")
-```
+    tensors = {
+        "embeddings": paddle.zeros((2, 2)),
+        "labels": paddle.zeros((2, 2)),
+    }
+    ts = TensorShare.from_dict(tensors, backend="paddlepaddle")
+    ```
 
-##### PyTorch
+=== "PyTorch"
 
-```python
-import torch
-from tensorshare import TensorShare
+    ``` python
+    import torch
+    from tensorshare import TensorShare
 
-tensors = {
-    "embeddings": torch.zeros((2, 2)),
-    "labels": torch.zeros((2, 2)),
-}
-ts = TensorShare.from_dict(tensors, backend="torch")
-```
+    tensors = {
+        "embeddings": torch.zeros((2, 2)),
+        "labels": torch.zeros((2, 2)),
+    }
+    ts = TensorShare.from_dict(tensors, backend="torch")
+    ```
 
-##### TensorFlow
+=== "TensorFlow"
 
-```python
-import tensorflow as tf
-from tensorshare import TensorShare
+    ``` python
+    import tensorflow as tf
+    from tensorshare import TensorShare
 
-tensors = {
-    "embeddings": tf.zeros((2, 2)),
-    "labels": tf.zeros((2, 2)),
-}
-ts = TensorShare.from_dict(tensors, backend="tensorflow")
-```
+    tensors = {
+        "embeddings": tf.zeros((2, 2)),
+        "labels": tf.zeros((2, 2)),
+    }
+    ts = TensorShare.from_dict(tensors, backend="tensorflow")
+    ```
 
 ## Deserializing tensors
 
 Just like the `from_dict` method, the `to_tensors` method can be used to deserialize the serialized tensors
 stored in the `TensorShare` object. The method expects a `backend` argument to specify the backend to use.
 
-```python
+``` python
 ts = TensorShare(
     tensors=...,  # Base64 encoded tensors to byte strings ready to be sent
     size=...,  # Size of the tensors in pydantic.ByteSize format
@@ -155,26 +155,67 @@ tensors = ts.to_tensors(backend=...)
 Here are some examples of how to deserialize the tensors from a `TensorShare` object in different backends.
 You need to have the desired backend installed in your project to be able to deserialize the tensors in it.
 
-```python
-from tensorshare import TensorShare
+=== "Flax"
 
-ts = TensorShare(
-    tensors=...,  # Serialized tensors to byte strings ready to be sent
-    size=...,  # Size of the tensors in pydantic.ByteSize format
-)
+    ``` python
+    from tensorshare import TensorShare
 
-# Get jaxlib.xla_extension.ArrayImpl tensors
-tensors_flax = ts.to_tensors(backend="flax")  # or backend=Backend.FLAX
+    ts = TensorShare(
+        tensors=...,  # Base64 encoded tensors to byte strings ready to be sent
+        size=...,  # Size of the tensors in pydantic.ByteSize format
+    )
+    # Get jaxlib.xla_extension.ArrayImpl tensors
+    tensors_flax = ts.to_tensors(backend="flax")  # or backend=Backend.FLAX
+    ```
 
-# Get numpy.ndarray tensors
-tensors_numpy = ts.to_tensors(backend="numpy")  # or backend=Backend.NUMPY
+=== "NumPy"
 
-# Get paddle.Tensor tensors
-tensors_paddle = ts.to_tensors(backend="paddlepaddle")  # or backend=Backend.PADDLEPADDLE
+    ``` python
+    from tensorshare import TensorShare
 
-# Get tensorflow.Tensor tensors
-tensors_tensorflow = ts.to_tensors(backend="tensorflow")  # or backend=Backend.TENSORFLOW
+    ts = TensorShare(
+        tensors=...,  # Base64 encoded tensors to byte strings ready to be sent
+        size=...,  # Size of the tensors in pydantic.ByteSize format
+    )
+    # Get numpy.ndarray tensors
+    tensors_numpy = ts.to_tensors(backend="numpy")  # or backend=Backend.NUMPY
+    ```
 
-# Get torch.Tensor tensors
-tensors_pytorch = ts.to_tensors(backend="torch")  # or backend=Backend.TORCH
-```
+=== "PaddlePaddle"
+
+    ``` python
+    from tensorshare import TensorShare
+
+    ts = TensorShare(
+        tensors=...,  # Base64 encoded tensors to byte strings ready to be sent
+        size=...,  # Size of the tensors in pydantic.ByteSize format
+    )
+    # Get paddle.Tensor tensors
+    tensors_paddle = ts.to_tensors(backend="paddlepaddle")  # or backend=Backend.PADDLEPADDLE
+    ```
+
+=== "PyTorch"
+
+    ``` python
+    from tensorshare import TensorShare
+
+    ts = TensorShare(
+        tensors=...,  # Base64 encoded tensors to byte strings ready to be sent
+        size=...,  # Size of the tensors in pydantic.ByteSize format
+    )
+    # Get torch.Tensor tensors
+    tensors_pytorch = ts.to_tensors(backend="torch")  # or backend=Backend.TORCH
+    ```
+
+=== "TensorFlow"
+
+    ``` python
+    from tensorshare import TensorShare
+
+    ts = TensorShare(
+        tensors=...,  # Base64 encoded tensors to byte strings ready to be sent
+        size=...,  # Size of the tensors in pydantic.ByteSize format
+    )
+    # Get tensorflow.Tensor tensors
+    tensors_tensorflow = ts.to_tensors(backend="tensorflow")  # or backend=Backend.TENSORFLOW
+    ```

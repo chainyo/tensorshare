@@ -1,6 +1,6 @@
-## Backends
+## Supported backends
 
-The project currently supports the following backends:
+The project currently supports the following ML backends:
 
 * [x] Flax
 * [x] NumPy
@@ -30,6 +30,21 @@ tensorflow_backend = Backend.TENSORFLOW
 backend = Backend.TORCH
 >>> <Backend.TORCH: "torch">
 ```
+
+!!! tip
+    When a method is requiring you to specify a `backend` you can choose to use the `Backend` Enum class or the
+    string representation of the backend. For example, the following two lines are equivalent:
+
+    ```python
+    ts = TensorShare(...)
+
+    tensors = ts.to_tensors(backend=Backend.FLAX)
+    tensors = ts.to_tensors(backend="flax")
+    ```
+
+    One is prone to typos, the other enables type hinting and IDE autocompletion.
+
+    The choice is yours. 😉
 
 #### TensorType Enum
 

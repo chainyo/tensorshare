@@ -49,6 +49,23 @@ tensors = {
     "labels": torch.zeros((2, 2)),
 }
 ts = TensorShare.from_dict(tensors, backend="torch")
+print(ts)
+# tensors=b'gAAAAAAAAAB7ImVtYmVkZGluZ3MiOnsiZHR5cGUiO...' size=168
+```
+
+You can now freely send the tensors over the network via any mean (e.g. HTTP, gRPC, ...).
+
+On the other side, when you receive the tensors, you can deserialize them in any supported backend:
+
+```python
+from tensorshare import Backend
+
+np_tensors = ts.to_tensors(backend=Backend.NUMPY)
+print(np_tensors)
+# {
+# 	'embeddings': array([[0., 0.], [0., 0.]], dtype=float32),
+# 	'labels': array([[0., 0.], [0., 0.]], dtype=float32)
+# }
 ```
 
 For more examples and details, please refer to the [Usage section](./usage).

@@ -11,7 +11,7 @@ __version__ = "0.0.5"
 _import_structure = {
     "import_utils": ["require_backend"],
     "client": ["TensorShareClient"],
-    "schema": ["TensorShare"],
+    "schema": ["DefaultResponse", "TensorShare", "TensorShareServer"],
     "serialization": ["Backend", "TensorType"],
 }
 
