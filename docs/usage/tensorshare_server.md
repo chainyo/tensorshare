@@ -21,12 +21,14 @@ The `from_dict` method is used to create a `TensorShareServer` config from a dic
 ```python
 from tensorshare import DefaultResponse, TensorShareServer
 
-config = TensorShareServer.from_dict({
-    "url": "http://localhost:5000",  # required
-    "ping": "ping",  # optional
-    "receive_tensor": "receive_tensor",  # optional
-    "response_model": DefaultResponse,  # optional
-})
+config = TensorShareServer.from_dict(
+    server_config={
+        "url": "http://localhost:5000",      # required
+        "ping": "ping",                      # optional
+        "receive_tensor": "receive_tensor",  # optional
+        "response_model": DefaultResponse,   # optional
+    }
+)
 print(config)
 # url=Url('http://localhost:5000/')
 # ping=Url('http://localhost:5000/ping')
@@ -34,7 +36,7 @@ print(config)
 # response_model=<class 'tensorshare.schema.DefaultResponse'>
 ```
 
-The `url`, `ping` and `receive_tensor` properties leverages the `HttpUrl` type from [Pydantic](https://docs.pydantic.dev/latest/usage/types/urls/). This means that they will be validated and normalized.
+The `url`, `ping` and `receive_tensor` properties leverages the `HttpUrl` type from [Pydantic](https://docs.pydantic.dev/latest/usage/types/urls/). This means that they will be validated and normalized at runtime.
 
 ## Use the config
 
