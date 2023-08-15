@@ -46,6 +46,7 @@ def get_computation_operation() -> Callable:
     f"{server_config.receive_tensor.path}",
     response_model=server_config.response_model,
     status_code=http_status.HTTP_200_OK,
+    tags=["tensorshare"],
 )
 def receive_tensor(
     shared_tensor: TensorShare, operation: Callable = Depends(get_computation_operation)
@@ -60,6 +61,7 @@ def receive_tensor(
     f"{server_config.ping.path}",
     response_model=DefaultResponse,
     status_code=http_status.HTTP_200_OK,
+    tags=["tensorshare"],
 )
 def ping() -> DefaultResponse:
     """Endpoint to check if the server is up."""
