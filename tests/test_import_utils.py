@@ -42,13 +42,15 @@ class TestImportUtils:
         assert cache_info_after.currsize == cache_info_before.currsize
 
     def test_non_available_package(self) -> None:
-        """Test that _is_package_available returns False when a non-available package is passed.
+        """
+        Test that _is_package_available returns False when a non-available package is passed.
         """
         for package in ["mxnet", "pandas", "werkzeug"]:
             assert _is_package_available(package) is False
 
     def test_invalid_package_name(self) -> None:
-        """Test that _is_package_available raises an error when an invalid package name is passed.
+        """
+        Test that _is_package_available raises an error when an invalid package name is passed.
         """
         with pytest.raises(ValueError):
             _is_package_available("")

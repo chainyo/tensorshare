@@ -4,19 +4,23 @@ from typing import Dict, List
 import torch
 from fastapi import FastAPI
 from pydantic import BaseModel
+
 from tensorshare import (
-    create_async_tensorshare_router,
     TensorShare,
+    create_async_tensorshare_router,
 )
+
 
 def ml_pred(x: torch.Tensor) -> torch.Tensor:
     """Dummy function to simulate a synchronous inference function."""
     return x.mean(dim=1)
 
+
 class GoBrrBrr(BaseModel):
     """The new response_model to use for the router."""
 
     predictions: List[List[float]]  # List of pridctions converted to list of floats
+
 
 async def compute_go_brr_brr(tensors: TensorShare) -> Dict[str, List[float]]:
     """New computation operation to run inference on the received tensor."""
@@ -29,6 +33,7 @@ async def compute_go_brr_brr(tensors: TensorShare) -> Dict[str, List[float]]:
 
     return {"predictions": inference_result}
 
+
 app = FastAPI()  # Your FastAPI application
 
 server_config = {"url": "http://localhost:8000", "response_model": GoBrrBrr}
@@ -38,7 +43,6 @@ ts_router = create_async_tensorshare_router(
     custom_operation=compute_go_brr_brr,
 )
 app.include_router(ts_router)
-
 
 
 if __name__ == "__main__":

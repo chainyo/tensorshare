@@ -6,7 +6,7 @@ import sys
 from .import_utils import _LazyModule
 
 __author__ = "Thomas Chaigneau <t.chaigneau.tc@gmail.com>"
-__version__ = "0.0.5"
+__version__ = "0.1.0"
 
 _import_structure = {
     "import_utils": ["require_backend"],
