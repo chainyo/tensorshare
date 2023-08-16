@@ -58,6 +58,10 @@ Check the [TensorShareServer](../usage/tensorshare_server) and the [FastAPI inte
 TensorShare is a framework-agnostic library. It means that the default installation does not include any framework
 and assumes that you will handle the backend (or backends) yourself.
 
+!!! note
+    All the backends are optional and can be installed separately, but they all require `numpy` to be installed.
+    That's why they all come with `numpy` as a dependency.
+
 However, we provide a set of backends that can be installed alongside TensorShare.
 
 * [x] [Jax](https://jax.readthedocs.io/en/latest/) | `flax>=0.6.3`, `jax>=0.3.25`, `jaxlib>=0.3.25`
@@ -96,7 +100,7 @@ You can also install all the backends at once:
 pip install tensorshare[all]
 ```
 
-## Development Installation
+## Contributing
 
 We use [Hatch](https://github.com/pypa/hatch) as package manager for development.
 
@@ -110,8 +114,14 @@ The `quality` and `tests` environments are also available.
 They will be auto-activated when running the corresponding commands.
 
 ```bash
-hatch run quality:format 
-hatch run test:run
+# Linting and formatting using black and ruff
+hatch run quality:format
+
+# Typechecking using mypy
+hatch run quality:typecheck
+
+# Testing using pytest
+hatch run tests:run
 ```
 
 But you can also create them manually:
