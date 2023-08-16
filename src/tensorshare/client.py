@@ -83,7 +83,9 @@ class TensorShareClient:
         async with aiohttp.ClientSession() as session:
             response = await session.get(str(self.server.ping), timeout=self.timeout)
 
-        return response.status == 200
+        _is_available: bool = response.status == 200
+
+        return _is_available
 
     def send_tensor(self, tensor_data: TensorShare) -> aiohttp.ClientResponse:
         """Send a TensorShare object to the server using aiohttp.

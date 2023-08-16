@@ -11,8 +11,9 @@ __version__ = "0.0.5"
 _import_structure = {
     "import_utils": ["require_backend"],
     "client": ["TensorShareClient"],
-    "schema": ["TensorShare"],
-    "serialization": ["Backend", "TensorType"],
+    "schema": ["DefaultResponse", "TensorShare", "TensorShareServer"],
+    "serialization": ["Backend", "TensorProcessor", "TensorType"],
+    "server": ["create_tensorshare_router", "create_async_tensorshare_router"],
 }
 
 sys.modules[__name__] = _LazyModule(

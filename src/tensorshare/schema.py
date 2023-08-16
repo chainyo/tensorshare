@@ -16,6 +16,12 @@ from pydantic import BaseModel, ByteSize, ConfigDict, Field, HttpUrl
 from tensorshare.serialization import Backend, TensorProcessor
 
 
+class DefaultResponse(BaseModel):
+    """Base model for tensor sharing response endpoint."""
+
+    message: str
+
+
 class TensorShare(BaseModel):
     """Base model for tensor sharing."""
 
@@ -93,12 +99,6 @@ class TensorShare(BaseModel):
                 Tensors stored in a dictionary with their name as key in the specified backend.
         """
         return TensorProcessor.deserialize(self.tensors, backend=backend)
-
-
-class DefaultResponse(BaseModel):
-    """Base model for tensor sharing response endpoint."""
-
-    message: str
 
 
 class TensorShareServer(BaseModel):

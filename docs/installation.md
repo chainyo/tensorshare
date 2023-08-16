@@ -19,6 +19,40 @@ poetry add tensorshare
 pipx install tensorshare
 ```
 
+## TensorShare modules
+
+TensorShare is a modular library. It means that you can install only the modules you need to reduce the installation
+time and the number of dependencies.
+
+!!! note
+    We do care about your CI/CD pipelines. That's why we provide a way to install only the modules you need.
+    Only `safetensors` and `pydantic` are mandatory.
+
+### Client module
+
+The client module is used to create a [`TensorShareClient`](../usage/tensorshare_client) for sending tensors to a
+FastAPI server.
+
+```bash
+pip install tensorshare[client]
+```
+
+!!! note
+    It just installs [`aiohttp`](https://github.com/aio-libs/aiohttp) on top of the main dependencies.
+
+### Server module
+
+The server module is used to integrate TensorShare with a FastAPI server. 
+
+```bash
+pip install tensorshare[server]
+```
+
+!!! note
+    It just installs [`fastapi`](https://github.com/tiangolo/fastapi) on top of the main dependencies.
+
+Check the [TensorShareServer](../usage/tensorshare_server) and the [FastAPI integration](../usage/fastapi_integration) sections for more details.
+
 ## Backend Installation
 
 TensorShare is a framework-agnostic library. It means that the default installation does not include any framework

@@ -49,14 +49,32 @@ tensors = {
     "labels": torch.zeros((2, 2)),
 }
 ts = TensorShare.from_dict(tensors, backend="torch")
+print(ts)
+# tensors=b'gAAAAAAAAAB7ImVtYmVkZGluZ3MiOnsiZHR5cGUiO...' size=168
+```
+
+You can now freely send the tensors over the network via any mean (e.g. HTTP, gRPC, ...).
+
+On the other side, when you receive the tensors, you can deserialize them in any supported backend:
+
+```python
+from tensorshare import Backend
+
+np_tensors = ts.to_tensors(backend=Backend.NUMPY)
+print(np_tensors)
+# {
+# 	'embeddings': array([[0., 0.], [0., 0.]], dtype=float32),
+# 	'labels': array([[0., 0.], [0., 0.]], dtype=float32)
+# }
 ```
 
 For more examples and details, please refer to the [Usage section](./usage).
 
 ## Roadmap
 
-- [x] Serialization and deserialization
-- [x] TensorProcessor for processing tensors
-- [x] Pydantic schema for sharing tensors
-- [ ] Server for sharing tensors
-- [ ] Client for sharing tensors
+- [x] Pydantic schema for sharing tensors ~> [TensorShare](./usage/tensorshare.md)
+- [x] Serialization and deserialization ~> [tensorshare.serialization](./api/serialization)
+- [x] TensorProcessor for processing tensors ~> [TensorProcessor](./api/processor)
+- [x] Server for sharing tensors ~> [TensorShareServer](./usage/tensorshare_server.md)
+- [x] Client for sharing tensors ~> [TensorShareClient](./usage/tensorshare_client.md)
+- [ ] New incredible features! (Check the [issues](https://github.com/chainyo/tensorshare/issues))
