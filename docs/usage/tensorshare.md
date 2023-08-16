@@ -164,7 +164,7 @@ You need to have the desired backend installed in your project to be able to des
         tensors=...,  # Base64 encoded tensors to byte strings ready to be sent
         size=...,  # Size of the tensors in pydantic.ByteSize format
     )
-    # Get jaxlib.xla_extension.ArrayImpl tensors
+    # Get a dict of jaxlib.xla_extension.ArrayImpl
     tensors_flax = ts.to_tensors(backend="flax")  # or backend=Backend.FLAX
     ```
 
@@ -177,7 +177,7 @@ You need to have the desired backend installed in your project to be able to des
         tensors=...,  # Base64 encoded tensors to byte strings ready to be sent
         size=...,  # Size of the tensors in pydantic.ByteSize format
     )
-    # Get numpy.ndarray tensors
+    # Get a dict of numpy.ndarray
     tensors_numpy = ts.to_tensors(backend="numpy")  # or backend=Backend.NUMPY
     ```
 
@@ -190,7 +190,7 @@ You need to have the desired backend installed in your project to be able to des
         tensors=...,  # Base64 encoded tensors to byte strings ready to be sent
         size=...,  # Size of the tensors in pydantic.ByteSize format
     )
-    # Get paddle.Tensor tensors
+    # Get a dict of paddle.Tensor
     tensors_paddle = ts.to_tensors(backend="paddlepaddle")  # or backend=Backend.PADDLEPADDLE
     ```
 
@@ -203,7 +203,7 @@ You need to have the desired backend installed in your project to be able to des
         tensors=...,  # Base64 encoded tensors to byte strings ready to be sent
         size=...,  # Size of the tensors in pydantic.ByteSize format
     )
-    # Get torch.Tensor tensors
+    # Get a dict of torch.Tensor
     tensors_pytorch = ts.to_tensors(backend="torch")  # or backend=Backend.TORCH
     ```
 
@@ -216,6 +216,6 @@ You need to have the desired backend installed in your project to be able to des
         tensors=...,  # Base64 encoded tensors to byte strings ready to be sent
         size=...,  # Size of the tensors in pydantic.ByteSize format
     )
-    # Get tensorflow.Tensor tensors
+    # Get a dict of tensorflow.Tensor
     tensors_tensorflow = ts.to_tensors(backend="tensorflow")  # or backend=Backend.TENSORFLOW
     ```
