@@ -86,8 +86,6 @@ If you want to customize the router, you will have to pass two parameters to the
     from fastapi import FastAPI, APIRouter
     from tensorshare import create_tensorshare_router
 
-    class
-
     app = FastAPI()  # Your FastAPI application
 
     server_config = {"url": "http://localhost:8000"}
@@ -345,7 +343,9 @@ parameter and update the `response_model` parameter to match the `GoBrrBrr` mode
     app.include_router(ts_router)
     ```
 
-And voilà! You now have a fully functional FastAPI application that can receive tensors from clients, run
+And voilà! 🎉
+
+You now have a fully functional FastAPI application that can receive tensors from clients, run
 custom operations on them and return the result.
 
 What a breeze! 😎

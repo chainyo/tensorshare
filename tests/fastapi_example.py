@@ -1,50 +1,47 @@
-from typing import Callable
+import asyncio
+from typing import Dict, List
 
-from fastapi import Depends, FastAPI
-
-from tensorshare.schema import DefaultResponse, TensorShare
-
-
-async def compute_operation(tensors: TensorShare) -> DefaultResponse:
-    """
-    Default action to perform when receiving a TensorShare object with a POST request.
-
-    Args:
-        tensors (TensorShare):
-            The TensorShare object received from the client.
-
-    Returns:
-        DefaultResponse:
-            The response model to send back to the client with the result of the computation.
-    """
-    print(tensors)
-    return DefaultResponse(message="Success!")
-
-
-target_operation = compute_operation
-
-
-def get_computation_operation() -> Callable:
-    """Dependency that returns the currently set computation function."""
-    return target_operation
-
-
-app = FastAPI()
-# app.include_router(router)
-
-
-@app.post(
-    "/receive_tensor",
+import torch
+from fastapi import FastAPI
+from pydantic import BaseModel
+from tensorshare import (
+    create_async_tensorshare_router,
+    TensorShare,
 )
-async def receive_tensor(
-    shared_tensor: TensorShare, operation: Callable = Depends(get_computation_operation)
-):
-    """Endpoint to handle tensors reception and computation."""
-    r = await compute_operation(shared_tensor)
-    return r
+
+def ml_pred(x: torch.Tensor) -> torch.Tensor:
+    """Dummy function to simulate a synchronous inference function."""
+    return x.mean(dim=1)
+
+class GoBrrBrr(BaseModel):
+    """The new response_model to use for the router."""
+
+    predictions: List[List[float]]  # List of pridctions converted to list of floats
+
+async def compute_go_brr_brr(tensors: TensorShare) -> Dict[str, List[float]]:
+    """New computation operation to run inference on the received tensor."""
+    torch_tensors: Dict[str, torch.Tensor] = tensors.to_tensors(backend="torch")
+
+    inference_result: List[List[float]] = []
+    for _, v in torch_tensors.items():
+        y_hat = await asyncio.run_in_executor(None, ml_pred, v)
+        inference_result.append(y_hat.tolist())
+
+    return {"predictions": inference_result}
+
+app = FastAPI()  # Your FastAPI application
+
+server_config = {"url": "http://localhost:8000", "response_model": GoBrrBrr}
+
+ts_router = create_async_tensorshare_router(
+    server_config=server_config,
+    custom_operation=compute_go_brr_brr,
+)
+app.include_router(ts_router)
+
 
 
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="localhost", port=8000)
+    uvicorn.run(app, host="localhost", port=8765)
