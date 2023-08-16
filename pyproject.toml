@@ -59,11 +59,11 @@ path = "src/tensorshare/__init__.py"
 [project.optional-dependencies]
 client = ["aiohttp>=3.8.5"]
 server = ["fastapi>=0.101.1"]
-torch = ["torch>=1.10"]
+torch = ["torch>=1.10", "numpy>=1.21.6"]
 numpy = ["numpy>=1.21.6"]
-# tensorflow = ["tensorflow"]  Disable until 2.14 is released for pydantic v2 compatibility
-jax = ["flax>=0.6.3", "jax<0.4.14", "jaxlib<0.4.14"]
-paddlepaddle = ["paddlepaddle>=2.4.1"]
+# tensorflow = ["tensorflow", "numpy>=1.21.6"]  Disable until 2.14 is released for pydantic v2 compatibility
+jax = ["flax>=0.6.3", "jax<0.4.14", "jaxlib<0.4.14", "numpy>=1.21.6"]
+paddlepaddle = ["paddlepaddle>=2.4.1", "numpy>=1.21.6"]
 docs = [
   "mkdocs>=1.4.0",
   "mkdocs-material>=8.5.4",
