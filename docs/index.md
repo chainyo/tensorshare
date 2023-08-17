@@ -68,7 +68,7 @@ print(np_tensors)
 # }
 ```
 
-For more examples and details, please refer to the [Usage section](./usage).
+For more examples and details, please refer to the [Usage section](./usage/introduction).
 
 ## Roadmap
 
