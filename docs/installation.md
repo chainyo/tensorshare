@@ -25,7 +25,7 @@ TensorShare is a modular library. It means that you can install only the modules
 time and the number of dependencies.
 
 !!! note
-    We do care about your CI/CD pipelines. That's why we provide a way to install only the modules you need.
+    We do care about your CI/CD pipelines. That's why we provide a way to install only the necessary modules.
     Only `safetensors` and `pydantic` are mandatory.
 
 ### Client module
@@ -38,7 +38,7 @@ pip install tensorshare[client]
 ```
 
 !!! note
-    It just installs [`aiohttp`](https://github.com/aio-libs/aiohttp) on top of the main dependencies.
+    It installs [`aiohttp`](https://github.com/aio-libs/aiohttp) on top of the main dependencies.
 
 ### Server module
 
@@ -49,7 +49,7 @@ pip install tensorshare[server]
 ```
 
 !!! note
-    It just installs [`fastapi`](https://github.com/tiangolo/fastapi) on top of the main dependencies.
+    It installs [`fastapi`](https://github.com/tiangolo/fastapi) on top of the main dependencies.
 
 Check the [TensorShareServer](../usage/tensorshare_server) and the [FastAPI integration](../usage/fastapi_integration) sections for more details.
 
@@ -59,7 +59,7 @@ TensorShare is a framework-agnostic library. It means that the default installat
 and assumes that you will handle the backend (or backends) yourself.
 
 !!! note
-    All the backends are optional and can be installed separately, but they all require `numpy` to be installed.
+    All the backends are optional and can be installed separately, but they all require `numpy`.
     That's why they all come with `numpy` as a dependency.
 
 However, we provide a set of backends that can be installed alongside TensorShare.
@@ -102,7 +102,7 @@ pip install tensorshare[all]
 
 ## Contributing
 
-We use [Hatch](https://github.com/pypa/hatch) as package manager for development.
+We use [Hatch](https://github.com/pypa/hatch) as the package manager for development.
 
 For installing the default environment:
 

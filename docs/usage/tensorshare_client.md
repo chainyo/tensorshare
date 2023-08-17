@@ -1,7 +1,8 @@
 The `TensorShareClient` class is a core component of this project, enabling users to send tensors to a remote server 
 using asynchronous HTTP requests.
 
-It's built on top of the [`aiohttp`](https://github.com/aio-libs/aiohttp) library, which allows for asynchronous HTTP communication, enhancing the efficiency and speed of tensor sharing.
+It's built on top of the [`aiohttp`](https://github.com/aio-libs/aiohttp) library, allowing asynchronous HTTP
+communication and enhancing the efficiency and speed of tensor sharing.
 
 This class extends the TensorShare ecosystem by providing both synchronous and asynchronous interfaces for 
 sending tensors, ensuring flexibility and adaptability to various use cases and environments.
@@ -39,7 +40,7 @@ client = TensorShareClient(server_config, timeout=10, validate_endpoints=True)
 
 * __server_config__ ([`TensorShareServer`](../usage/tensorshare_server)): The configuration for the remote server.
 * __timeout__ (`int`): Specifies the maximum duration (in seconds) to wait for an HTTP response. Defaults to 10 seconds.
-* __validate_endpoints__ (`bool`): Determines whether the client should validate the server's endpoints upon initialization. Default is True (recommended).
+* __validate_endpoints__ (`bool`): Determines whether the client should validate the server's endpoints upon initialization. Defaults to True (recommended).
 
 ## Methods
 
@@ -47,7 +48,7 @@ The methods are available in both synchronous and asynchronous forms, with the l
 The asynchronous methods are recommended for production use, as they are non-blocking and more efficient.
 
 !!! note
-    The synchronous methods are using the asynchronous ones under the hood wrapped in a `asyncio.run` call,
+    The synchronous methods use the asynchronous ones under the hood wrapped in an `asyncio.run` call,
 
 ### `ping_server`
 

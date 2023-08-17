@@ -27,7 +27,7 @@
 
 TensorShare is a powerful tool enabling ⚡ lightning-fast tensor sharing across networks.
 
-This project leverage the best open-source tools to provide a simple and easy-to-use interface for sharing tensors:
+This project leverages the best open-source tools to provide a simple and easy-to-use interface for sharing tensors:
 
 * [safetensors](https://github.com/huggingface/safetensors) for secure tensor serialization and deserialization.
 * [pydantic](https://github.com/pydantic/pydantic) for data validation and settings management.
@@ -53,7 +53,7 @@ print(ts)
 # tensors=b'gAAAAAAAAAB7ImVtYmVkZGluZ3MiOnsiZHR5cGUiO...' size=168
 ```
 
-You can now freely send the tensors over the network via any mean (e.g. HTTP, gRPC, ...).
+You can now freely send the tensors over the network via any means (e.g. HTTP, gRPC, ...).
 
 On the other side, when you receive the tensors, you can deserialize them in any supported backend:
 

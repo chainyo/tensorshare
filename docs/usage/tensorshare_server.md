@@ -1,4 +1,4 @@
-The `TensorShareServer` schema is used to define the server configuration which will receive the tensors from any client.
+The `TensorShareServer` schema defines the server configuration that will receive the tensors from any client.
 
 It will be used by the [`TensorShareClient`](../usage/tensorshare_client) for sending tensors over the network.
 
@@ -8,15 +8,15 @@ The schema inherits from the [`pydantic.BaseModel`](https://docs.pydantic.dev/la
 
 * `url`: The URL of the server. This is the URL that the client will use to connect to the server. It should be a valid URL, including the protocol (e.g. `http://localhost:5000` or `https://example.com`).
 
-* `ping`: The path to the healthcheck endpoint. This is the path that the client will use to check if the server is available. It should be a valid string, without the leading slash (e.g. `ping` or `healthcheck`). It will be `ping` by default.
+* `ping`: The path to the health-check endpoint. This is the path that the client will use to check if the server is available. It should be a valid string, without the leading slash (e.g. `ping` or `healthcheck`). It will be `ping` by default.
 
-* `receive_tensor`: The path to the endpoint that will receive the tensor. This is the path that the client will use to send the tensor to the server. It should be a valid string, without the leading slash (e.g. `receive_tensor` or `tensors`). It will be `receive_tensor` by default.
+* `receive_tensor`: The path to the endpoint receiving the tensor. This is the path that the client will use to send the tensor to the server. It should be a valid string without the leading slash (e.g. `receive_tensor` or `tensors`). It will be `receive_tensor` by default.
 
-* `response_model`: The response model that the server will return to the client. It should be a subclass of `BaseModel` from [Pydantic](https://docs.pydantic.dev/latest/usage/models/#basic-model-usage). It will be `DefaultResponse` by default which is a simple model returning a `message` string.
+* `response_model`: The response model that the server will return to the client. It should be a subclass of `BaseModel` from [Pydantic](https://docs.pydantic.dev/latest/usage/models/#basic-model-usage). It will be `DefaultResponse` by default, a simple model returning a `message` string.
 
 ## Create a config - `from_dict`
 
-The `from_dict` method is used to create a `TensorShareServer` config from a dictionary.
+The `from_dict` method creates a `TensorShareServer` config from a dictionary.
 
 ```python
 from tensorshare import DefaultResponse, TensorShareServer
@@ -36,11 +36,11 @@ print(config)
 # response_model=<class 'tensorshare.schema.DefaultResponse'>
 ```
 
-The `url`, `ping` and `receive_tensor` properties leverages the `HttpUrl` type from [Pydantic](https://docs.pydantic.dev/latest/usage/types/urls/). This means that they will be validated and normalized at runtime.
+The `url`, `ping` and `receive_tensor` properties leverage the `HttpUrl` type from [Pydantic](https://docs.pydantic.dev/latest/usage/types/urls/). This means that they will be validated and normalized at runtime.
 
 ## Use the config
 
-Just like any pydantic model, you can use the config as a normal python object.
+Like any `pydantic` model, you can use the config as a standard Python class object.
 
 ```python
 config.url

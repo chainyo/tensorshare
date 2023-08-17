@@ -1,7 +1,7 @@
 TensorShare provides built-in integration capabilities with [`FastAPI`](https://github.com/tiangolo/fastapi),
 a high-performance web framework for building APIs with Python.
 
-By combining the power of TensorShare's tensor sharing capabilities with FastAPI's intuitive and robust API development,
+By combining the power of TensorShare's tensor-sharing capabilities with FastAPI's intuitive and robust API development,
 you can easily set up an efficient server-side endpoint to handle tensor computations.
 
 !!! tip
@@ -10,7 +10,7 @@ you can easily set up an efficient server-side endpoint to handle tensor computa
 
 ## Pre-requisites
 
-This module obviously needs `fastapi` to be installed:
+This module (obviously) needs `fastapi` to be installed:
 
 ``` bash
 pip install tensorshare[server]
@@ -18,12 +18,12 @@ pip install tensorshare[server]
 
 ## The pre-built router
 
-TensorShare provides a pre-built router that you can use to quickly integrate tensor sharing into any existing
+TensorShare provides a pre-built router that you can use to quickly integrate tensor-sharing into any existing
 FastAPI application.
 
 ### Importing the router
 
-To import the router, simply use the following import statement:
+To import the router, use the following import statement:
 
 === "Sync"
 
@@ -39,7 +39,7 @@ To import the router, simply use the following import statement:
 
 ### Adding it to FastAPI
 
-To add the router to your FastAPI application, simply add it to the `include` parameter of the `APIRouter` constructor:
+To add the router to your FastAPI application, add it to the `include` parameter of the `APIRouter` constructor:
 
 === "Sync"
 
@@ -145,7 +145,7 @@ The router comes with a built-in `ping` endpoint that you can use to check if th
         return result
     ```
 
-There is nothing too fancy here, just a simple endpoint that returns a `DefaultResponse` object with a message.
+Nothing is too fancy here, just a simple endpoint that returns a `DefaultResponse` object with a message.
 
 The `config.ping.path` will be the path defined in the [`TensorShareServer`](../usage/tensorshare_server)
 configuration object you provided when creating the router.
@@ -194,15 +194,15 @@ The router also comes with a built-in `receive_tensor` endpoint that you can use
         return result
     ```
 
-Just like the `ping` endpoint, the endpoint path will be the one defined in the [`TensorShareServer`](../usage/tensorshare_server) configuration object.
+Like the `ping` endpoint, the endpoint path will be defined in the [`TensorShareServer`](../usage/tensorshare_server) configuration object.
 
 ### Customizing the computation operation
 
-As you can see there is an `operation` parameter that is a `Callable` object.
+As you can see, there is an `operation` parameter that is a `Callable` object.
 This parameter is a dependency that will be resolved by the `get_computation_operation`
 function.
 
-It allows you to easily customize the computation operation that will be applied to the received tensor, simply by
+It allows you to easily customize the computation operation that will be applied to the received tensor simply by
 providing a custom `Callable` object during the router creation (See [Customize the router](#customize-the-router)).
 
 Here is the behavior of the `get_computation_operation` function:
@@ -267,10 +267,10 @@ def compute_go_brr_brr(tensors: TensorShare) -> Dict[str, List[float]]:
 ```
 
 !!! tip
-    This is a very simple example, but you can do much more complex things with this.
-    You can obviously run `async` functions, or even run a whole pipeline of operations.
+    This is an elementary example, but you can do more complex things with this.
+    You can run `async` functions or even run a whole pipeline of operations.
 
-Now during the router creation, you can simply pass the `compute_go_brr_brr` function to the `custom_operation`
+Now during the router creation, you can pass the `compute_go_brr_brr` function to the `custom_operation`
 parameter and update the `response_model` parameter to match the `GoBrrBrr` model:
 
 === "Sync"

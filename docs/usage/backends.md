@@ -32,7 +32,7 @@ backend = Backend.TORCH
 ```
 
 !!! tip
-    When a method is requiring you to specify a `backend` you can choose to use the `Backend` Enum class or the
+    When a method requires you to specify a `backend` you can choose to use the `Backend` Enum class or the
     string representation of the backend. For example, the following two lines are equivalent:
 
     ```python
@@ -42,7 +42,7 @@ backend = Backend.TORCH
     tensors = ts.to_tensors(backend="flax")
     ```
 
-    One is prone to typos, the other enables type hinting and IDE autocompletion.
+    One is prone to typos. The other enables type hinting and IDE autocompletion.
 
     The choice is yours. 😉
 

@@ -68,7 +68,7 @@ isn't always the best optimization. As a general rule, it's better to specify th
 
 ### backend-specific examples
 
-Here are some examples of how to create a `TensorShare` object from a dictionary of tensors in different backends.
+Here are some examples of creating a `TensorShare` object from a dictionary of tensors in different backends.
 
 === "Flax"
 
@@ -137,7 +137,7 @@ Here are some examples of how to create a `TensorShare` object from a dictionary
 
 ## Deserializing tensors
 
-Just like the `from_dict` method, the `to_tensors` method can be used to deserialize the serialized tensors
+Like the `from_dict` method, the `to_tensors` method can be used to deserialize the serialized tensors
 stored in the `TensorShare` object. The method expects a `backend` argument to specify the backend to use.
 
 ``` python
@@ -149,11 +149,11 @@ tensors = ts.to_tensors(backend=...)
 ```
 
 !!! tip
-    Here again, the backend can be specified as a string or as a `Backend` Enum value.
+    Again, the backend can be specified as a string or a `Backend` Enum value.
     Check the [Backends](../usage/backends) section for more information.
 
-Here are some examples of how to deserialize the tensors from a `TensorShare` object in different backends.
-You need to have the desired backend installed in your project to be able to deserialize the tensors in it.
+Here are some examples of deserializing the tensors from a `TensorShare` object in different backends.
+You must have the desired backend installed in your project to deserialize the tensors in it.
 
 === "Flax"
 
