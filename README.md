@@ -68,7 +68,7 @@ print(np_tensors)
 # }
 ```
 
-For more examples and details, please refer to the [Usage section](https://chainyo.github.io/tensorshare/usage/).
+For more examples and details, please refer to the [Usage section](https://chainyo.github.io/tensorshare/usage/introduction).
 
 ## Roadmap
 
