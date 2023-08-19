@@ -1,5 +1,6 @@
 """Test the Client module."""
 
+import logging
 import re
 
 import aiohttp
@@ -93,13 +94,13 @@ class TestTensorShareClient:
             (500, 500),
         ],
     )
-    def test_client_init_with_validation(
+    def test_client_init_with_validation_with_different_status(
         self,
         ping_status: int,
         receive_tensor_status: int,
         mock_server,
     ) -> None:
-        """Test the client init with endpoints validation."""
+        """Test the client init with endpoints validation with different status."""
         url = "http://localhost:8765"
         server_config = TensorShareServer.from_dict({"url": url})
 
@@ -110,6 +111,25 @@ class TestTensorShareClient:
             mock_server.get(f"{url}/ping", status=ping_status)
             mock_server.post(f"{url}/receive_tensor", status=receive_tensor_status)
             TensorShareClient(server_config)
+
+    @pytest.mark.usefixtures("mock_server")
+    def test_client_init_with_validation(self, mock_server, caplog) -> None:
+        """Test the client init with endpoints validation."""
+        url = "http://localhost:8765"
+        server_config = TensorShareServer.from_dict({"url": url})
+
+        mock_server.get(f"{url}/ping", status=200)
+        mock_server.post(f"{url}/receive_tensor", status=200)
+        client = TensorShareClient(server_config)
+
+        assert isinstance(client.server, TensorShareServer)
+        assert len(caplog.records) == 3
+        assert caplog.records[0].levelno == logging.INFO
+        assert caplog.records[1].levelno == logging.INFO
+        assert caplog.records[2].levelno == logging.INFO
+        assert caplog.records[0].message == "Validating endpoints on the server..."
+        assert caplog.records[1].message == "ping endpoit ✅"
+        assert caplog.records[2].message == "receive_tensor endpoint ✅"
 
     @pytest.mark.usefixtures("mock_server")
     def test_client_ping_server(self, mock_server) -> None:
