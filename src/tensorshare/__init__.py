@@ -14,6 +14,7 @@ _import_structure = {
     "schema": ["DefaultResponse", "TensorShare", "TensorShareServer"],
     "serialization": ["Backend", "TensorProcessor", "TensorType"],
     "server": ["create_tensorshare_router", "create_async_tensorshare_router"],
+    "utils": ["prepare_tensors_to_dict"],
 }
 
 sys.modules[__name__] = _LazyModule(

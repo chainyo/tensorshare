@@ -6,6 +6,7 @@ import re
 import jax.numpy as jnp
 import numpy as np
 import paddle
+import pkg_resources
 import pytest
 
 # import tensorflow as tf
@@ -385,13 +386,14 @@ class TestTensorShareServer:
 
     def test_schema_validation_error(self) -> None:
         """Test the schema validation error."""
+        pydantic_version = pkg_resources.get_distribution("pydantic").version[:-2]
         with pytest.raises(
             ValueError,
             match=re.escape(
                 "1 validation error for TensorShareServer\nurl\n  URL scheme should be"
                 " 'http' or 'https' [type=url_scheme, input_value='localhost:8000',"
                 " input_type=str]\n    For further information visit"
-                " https://errors.pydantic.dev/2.1/v/url_scheme"
+                f" https://errors.pydantic.dev/{pydantic_version}/v/url_scheme"
             ),
         ):
             TensorShareServer(
