@@ -1,6 +1,7 @@
 """Test the TensorProcessor interface and the associated functions."""
 
 import base64
+import logging
 import re
 
 import numpy as np
@@ -196,7 +197,7 @@ class TestTensorProcessorSerialize:
 
     @pytest.mark.usefixtures("multiple_torch_tensors")
     def test_tensor_processor_serialize_with_metadata(
-        self, multiple_torch_tensors
+        self, multiple_torch_tensors, caplog
     ) -> None:
         """Test the serialize function with metadata."""
         metadata = {"foo": "bar"}
@@ -207,6 +208,16 @@ class TestTensorProcessorSerialize:
         assert isinstance(tensorshare, tuple)
         assert isinstance(tensorshare[0], bytes)
         assert isinstance(tensorshare[1], int)
+
+        assert len(caplog.records) == 1
+        assert caplog.records[0].levelno == logging.WARNING
+        assert (
+            "No backend specified. The backend will be inferred from the tensors"
+            " format."
+            " If you want to specify the backend, use the `backend` argument. Check"
+            " https://chainyo.github.io/tensorshare/usage/tensorshare/#with-a-specific-backend"
+            in caplog.text
+        )
 
     @pytest.mark.usefixtures("multiple_backend_tensors")
     def test_tensor_processor_serialize_with_multiple_backend_tensors(
@@ -245,16 +256,21 @@ class TestTensorProcessorSerialize:
         ],
     )
     def test_tensor_processor_serialize_with_invalid_tensors_format(
-        self, tensors
+        self, tensors, caplog
     ) -> None:
         """Test the serialize function with an invalid tensors format."""
-        with pytest.raises(
-            TypeError,
-            match=re.escape(
-                f"Tensors must be a dictionary, got `{type(tensors)}` instead."
-            ),
-        ):
+        with pytest.raises(TypeError):
             TensorProcessor.serialize(tensors)
+
+            assert len(caplog.records) == 1
+            assert caplog.records[0].levelno == logging.WARNING
+            assert (
+                f"Tensors should be a dictionary, got `{type(tensors)}` instead."
+                " Consider using the `prepare_tensors_to_dict` to lazy format "
+                "your tensors. Check"
+                " https://chainyo.github.io/tensorshare/usage/tensorshare/#lazy-tensors-formatting"
+                in caplog.text
+            )
 
     @pytest.mark.usefixtures("multiple_torch_tensors")
     @pytest.mark.parametrize(

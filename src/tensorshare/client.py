@@ -4,6 +4,7 @@ import asyncio
 
 import aiohttp
 
+from tensorshare.logging import logger
 from tensorshare.schema import TensorShare, TensorShareServer
 from tensorshare.utils import fake_tensorshare_data
 
@@ -76,6 +77,11 @@ class TensorShareClient:
 
     def ping_server(self) -> bool:
         """Ping the server to check if it is available."""
+        logger.warning_once(
+            "Using the synchronous interface for the client is not recommended."
+            " It may cause performance issues, and is only provided for testing."
+            " Please use the asynchronous interface instead: `async_ping_server`."
+        )
         return asyncio.run(self.async_ping_server())
 
     async def async_ping_server(self) -> bool:
@@ -97,6 +103,11 @@ class TensorShareClient:
         Returns:
             aiohttp.ClientResponse: The response from the server.
         """
+        logger.warning_once(
+            "Using the synchronous interface for the client is not recommended."
+            " It may cause performance issues, and is only provided for testing."
+            " Please use the asynchronous interface instead: `async_send_tensor`."
+        )
         return asyncio.run(self.async_send_tensor(tensor_data))
 
     async def async_send_tensor(
@@ -135,13 +146,14 @@ class TensorShareClient:
         Raises:
             AssertionError: If any of the endpoints are not available.
         """
-        # TODO: Add logging to indicate which endpoint is being checked.
-        try:
-            # Check the ping endpoint
-            assert self.ping_server() is True
+        logger.info("Validating endpoints on the server...")
 
-            # Check the receive_tensor endpoint
+        try:
+            assert asyncio.run(self.async_ping_server()) is True
+            logger.info("ping endpoit ✅")
+
             assert self.send_tensor(fake_tensorshare_data()).status == 200
+            logger.info("receive_tensor endpoint ✅")
 
         except Exception as e:
             raise AssertionError(

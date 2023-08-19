@@ -12,6 +12,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
 from pydantic import ByteSize
 
+from tensorshare.logging import logger
 from tensorshare.serialization.constants import (
     BACKEND_MODULE_MAPPING,
     BACKEND_TENSOR_TYPE_MAPPING,
@@ -128,9 +129,13 @@ class TensorProcessor:
                 A tuple containing the base64 encoded serialized tensors and the size of the serialized tensors.
         """
         if not isinstance(tensors, dict):
-            raise TypeError(
-                f"Tensors must be a dictionary, got `{type(tensors)}` instead."
+            logger.warning(
+                f"Tensors should be a dictionary, got `{type(tensors)}` instead."
+                " Consider using the `prepare_tensors_to_dict` to lazy format "
+                "your tensors. Check"
+                " https://chainyo.github.io/tensorshare/usage/tensorshare/#lazy-tensors-formatting"
             )
+            raise TypeError
         elif not tensors:
             raise ValueError("Tensors dictionary cannot be empty.")
 
@@ -152,6 +157,12 @@ class TensorProcessor:
                     " tensors format."
                 )
         else:
+            logger.warning(
+                "No backend specified. The backend will be inferred from the tensors"
+                " format."
+                " If you want to specify the backend, use the `backend` argument. Check"
+                " https://chainyo.github.io/tensorshare/usage/tensorshare/#with-a-specific-backend"
+            )
             _backend = _infer_backend(tensors)
 
         _tensors = _get_backend_method(_backend, "serialize")(
