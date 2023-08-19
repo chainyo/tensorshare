@@ -1,12 +1,12 @@
 """Tests for the pydantic schemas of tensorshare."""
 
 import base64
-import pkg_resources
 import re
 
 import jax.numpy as jnp
 import numpy as np
 import paddle
+import pkg_resources
 import pytest
 
 # import tensorflow as tf
