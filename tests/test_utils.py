@@ -52,6 +52,7 @@ class TestClientUtils:
                     "embeddings_2": [1, 2, 3],
                 },
             ),
+            (1, {"embeddings": 1}),
         ],
     )
     def test_prepare_tensors_to_dict(self, data: Any, expected: Dict[str, Any]) -> None:
