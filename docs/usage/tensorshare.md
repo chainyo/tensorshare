@@ -219,3 +219,18 @@ You must have the desired backend installed in your project to deserialize the t
     # Get a dict of tensorflow.Tensor
     tensors_tensorflow = ts.to_tensors(backend="tensorflow")  # or backend=Backend.TENSORFLOW
     ```
+
+## Lazy tensors formatting
+
+If you don't want to handle the formatting of the tensors yourself, we provide 
+an utils function to prepare tensors to be used in the `TensorShare` class.
+
+``` python
+from tensorshare import prepare_tensors_to_dict
+
+tensors_in_any_format: Any = ...
+tensors = prepare_tensors_to_dict(tensors_in_any_format)
+>>> {"embeddings_0": ..., "embeddings_1": ..., ...}
+```
+
+Check the [utils documentation](../api/prepare_tensors) for more information.
