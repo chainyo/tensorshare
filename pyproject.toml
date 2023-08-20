@@ -61,7 +61,7 @@ client = ["aiohttp>=3.8.5"]
 server = ["fastapi>=0.101.1"]
 torch = ["torch>=1.10", "numpy>=1.21.6"]
 numpy = ["numpy>=1.21.6"]
-# tensorflow = ["tensorflow", "numpy>=1.21.6"]  Disable until 2.14 is released for pydantic v2 compatibility
+tensorflow = ["tensorflow>=2.14.0", "numpy>=1.21.6"]
 jax = ["flax>=0.6.3", "jax<0.4.14", "jaxlib<0.4.14", "numpy>=1.21.6"]
 paddlepaddle = ["paddlepaddle>=2.4.1", "numpy>=1.21.6"]
 docs = [
@@ -89,7 +89,7 @@ tests = [
   "pytest>=7.4",
   "pytest-asyncio>=0.21.1",
   "pytest-cov>=4.1",
-  # "tensorflow",
+  "tensorflow>=2.14.0",
   "torch>=1.10",
 ]
 # To install all optional modules and backends dependencies: pip install tensorshare[all]
@@ -101,7 +101,7 @@ all = [
   "jaxlib<0.4.14",
   "numpy>=1.21.6",
   "paddlepaddle>=2.4.1",
-  # "tensorflow",
+  "tensorflow>=2.14.0",
   "torch>=1.10",
 ]
 # To install all the dependencies for development purposes: pip install -e ".[dev]"
@@ -121,7 +121,7 @@ dev = [
   "ruff>=0.0.263",
   "numpy>=1.21.6",
   "paddlepaddle>=2.4.1",
-  # "tensorflow",
+  "tensorflow>=2.14.0",
   "torch>=1.10",
 ]
 

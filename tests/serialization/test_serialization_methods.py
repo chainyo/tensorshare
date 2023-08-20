@@ -3,8 +3,7 @@
 import numpy as np
 import paddle
 import pytest
-
-# import tensorflow as tf
+import tensorflow as tf
 import torch
 from jax import Array
 
@@ -26,11 +25,12 @@ from tensorshare.serialization.paddle import (
 from tensorshare.serialization.paddle import (
     serialize as paddle_serialize,
 )
-
-# from tensorshare.serialization.tensorflow import (
-#     deserialize as tf_deserialize,
-#     serialize as tf_serialize,
-# )
+from tensorshare.serialization.tensorflow import (
+    deserialize as tensorflow_deserialize,
+)
+from tensorshare.serialization.tensorflow import (
+    serialize as tensorflow_serialize,
+)
 from tensorshare.serialization.torch import (
     deserialize as torch_deserialize,
 )
@@ -69,13 +69,13 @@ class TestSerializationFunctions:
         assert isinstance(tensor_bytes, bytes)
         assert len(tensor_bytes) > 0
 
-    # @pytest.mark.usefixtures("zeros_tensorflow_tensor")
-    # def test_serialize_tensorflow(self, zeros_tensorflow_tensor) -> None:
-    #     """Test convertion from tensorflow to safetensors."""
-    #     tensor_bytes = tensorflow_serialize(zeros_tensorflow_tensor)
-    #
-    #     assert isinstance(tensor_bytes, bytes)
-    #     assert len(tensor_bytes) > 0
+    @pytest.mark.usefixtures("zeros_tensorflow_tensor")
+    def test_serialize_tensorflow(self, zeros_tensorflow_tensor) -> None:
+        """Test convertion from tensorflow to safetensors."""
+        tensor_bytes = tensorflow_serialize(zeros_tensorflow_tensor)
+
+        assert isinstance(tensor_bytes, bytes)
+        assert len(tensor_bytes) > 0
 
     @pytest.mark.usefixtures("zeros_torch_tensor")
     def test_serialize_torch(self, zeros_torch_tensor) -> None:
@@ -123,16 +123,16 @@ class TestDeserializationFunctions:
         assert isinstance(_tensors["embeddings"], paddle.Tensor)
         assert _tensors["embeddings"].shape == [2, 2]
 
-    # @pytest.mark.usefixtures("serialized_fixed_numpy_tensors")
-    # def test_deserialize_tensorflow(self, serialized_fixed_numpy_tensors) -> None:
-    #     """Test convertion from safetensors to tensorflow."""
-    #     _tensors = tensorflow_deserialize(serialized_fixed_numpy_tensors)
-    #
-    #     assert isinstance(_tensors, dict)
-    #     assert len(_tensors) > 0
-    #
-    #     assert isinstance(_tensors["embeddings"], tf.Tensor)
-    #     assert _tensors["embeddings"].shape == [2, 2]
+    @pytest.mark.usefixtures("serialized_fixed_numpy_tensors")
+    def test_deserialize_tensorflow(self, serialized_fixed_numpy_tensors) -> None:
+        """Test convertion from safetensors to tensorflow."""
+        _tensors = tensorflow_deserialize(serialized_fixed_numpy_tensors)
+
+        assert isinstance(_tensors, dict)
+        assert len(_tensors) > 0
+
+        assert isinstance(_tensors["embeddings"], tf.Tensor)
+        assert _tensors["embeddings"].shape == [2, 2]
 
     @pytest.mark.usefixtures("serialized_fixed_numpy_tensors")
     def test_deserialize_torch(self, serialized_fixed_numpy_tensors) -> None:

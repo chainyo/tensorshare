@@ -10,7 +10,7 @@ class Backend(str, Enum):
     FLAX = "flax"
     NUMPY = "numpy"
     PADDLEPADDLE = "paddlepaddle"
-    # TENSORFLOW = "tensorflow"
+    TENSORFLOW = "tensorflow"
     TORCH = "torch"
 
 
@@ -20,7 +20,7 @@ class TensorType(str, Enum):
     FLAX = "jaxlib.xla_extension.ArrayImpl"
     NUMPY = "numpy.ndarray"
     PADDLEPADDLE = "paddle.Tensor"
-    # TENSORFLOW = "tensorflow.Tensor"
+    TENSORFLOW = "tensorflow.Tensor"
     TORCH = "torch.Tensor"
 
 
@@ -30,7 +30,7 @@ BACKEND_MODULE_MAPPING: Dict[Backend, str] = OrderedDict(
         (Backend.FLAX, "tensorshare.serialization.flax"),
         (Backend.NUMPY, "tensorshare.serialization.numpy"),
         (Backend.PADDLEPADDLE, "tensorshare.serialization.paddle"),
-        # (Backend.TENSORFLOW, "tensorshare.serialization.tensorflow"),
+        (Backend.TENSORFLOW, "tensorshare.serialization.tensorflow"),
         (Backend.TORCH, "tensorshare.serialization.torch"),
     ]
 )
@@ -40,7 +40,7 @@ BACKEND_TENSOR_TYPE_MAPPING: Dict[TensorType, Backend] = OrderedDict(
         (TensorType.FLAX, Backend.FLAX),
         (TensorType.NUMPY, Backend.NUMPY),
         (TensorType.PADDLEPADDLE, Backend.PADDLEPADDLE),
-        # (TensorType.TENSORFLOW, Backend.TENSORFLOW),
+        (TensorType.TENSORFLOW, Backend.TENSORFLOW),
         (TensorType.TORCH, Backend.TORCH),
     ]
 )
