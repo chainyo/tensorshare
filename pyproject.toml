@@ -59,11 +59,11 @@ path = "src/tensorshare/__init__.py"
 [project.optional-dependencies]
 client = ["aiohttp>=3.8.5"]
 server = ["fastapi>=0.101.1"]
-torch = ["torch>=1.10", "numpy>=1.21.6"]
 numpy = ["numpy>=1.21.6"]
+torch = ["torch>=1.10", "tensorshare[numpy]"]
 # tensorflow = ["tensorflow", "numpy>=1.21.6"]  Disable until 2.14 is released for pydantic v2 compatibility
-jax = ["flax>=0.6.3", "jax<0.4.14", "jaxlib<0.4.14", "numpy>=1.21.6"]
-paddlepaddle = ["paddlepaddle>=2.4.1", "numpy>=1.21.6"]
+jax = ["flax>=0.6.3", "jax<0.4.14", "jaxlib<0.4.14", "tensorshare[numpy]"]
+paddlepaddle = ["paddlepaddle>=2.4.1", "tensorshare[numpy]"]
 docs = [
   "mkdocs>=1.4.0",
   "mkdocs-material>=8.5.4",
@@ -78,52 +78,15 @@ quality = [
 ]
 tests = [
   "aioresponses>=0.7.4",
-  "aiohttp>=3.8.5",
-  "fastapi>=0.101.1",
   "flax>=0.6.3",
   "httpx >=0.23.0",
-  "jax<0.4.14",
-  "jaxlib<0.4.14",
-  "numpy>=1.21.6",
-  "paddlepaddle>=2.4.1",
   "pytest>=7.4",
   "pytest-asyncio>=0.21.1",
   "pytest-cov>=4.1",
-  # "tensorflow",
-  "torch>=1.10",
+  "tensorshare[client,server,jax,torch,paddlepaddle]",
 ]
-# To install all optional modules and backends dependencies: pip install tensorshare[all]
-all = [
-  "aiohttp>=3.8.5",
-  "fastapi>=0.101.1",
-  "flax>=0.6.3",
-  "jax<0.4.14",
-  "jaxlib<0.4.14",
-  "numpy>=1.21.6",
-  "paddlepaddle>=2.4.1",
-  # "tensorflow",
-  "torch>=1.10",
-]
-# To install all the dependencies for development purposes: pip install -e ".[dev]"
-dev = [
-  "black>=22.10.0",
-  "fastapi>=0.101.1",
-  "flax>=0.6.3",
-  "jax<0.4.14",
-  "jaxlib<0.4.14",
-  "mkdocs>=1.4.0",
-  "mkdocs-material>=8.5.4",
-  "mkdocs-git-revision-date-localized-plugin>=1.1.0",
-  "mkdocstrings[python]>=0.20.0",
-  "pre-commit>=2.20.0",
-  "pytest>=7.4",
-  "pytest-cov>=4.1",
-  "ruff>=0.0.263",
-  "numpy>=1.21.6",
-  "paddlepaddle>=2.4.1",
-  # "tensorflow",
-  "torch>=1.10",
-]
+all = ["tensorshare[client,server,jax,torch,paddlepaddle]"]
+dev = ["tensorshare[all,docs,quality,tests]"]
 
 [tool.mypy]
 python_version = "3.8"
