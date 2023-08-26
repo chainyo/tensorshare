@@ -28,8 +28,8 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-  "pydantic>=2.1.1",
-  "safetensors>=0.3.1",
+  "pydantic>=1.10.12",
+  "safetensors>=0.3.2",
 ]
 dynamic = ["version"]
 keywords = [
@@ -93,6 +93,9 @@ python_version = "3.8"
 check_untyped_defs = true
 ignore_missing_imports = true
 warn_return_any = true
+
+[tool.pytest.ini_options]
+log_cli_level = "INFO"
 
 [tool.hatch.envs.quality]
 features = [
