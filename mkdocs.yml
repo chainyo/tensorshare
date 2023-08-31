@@ -79,4 +79,5 @@ nav:
     - tensorshare.TensorShareClient: api/tensorshare_client.md
     - Serialization: api/serialization.md
     - Backend & TensorType: api/constants.md
+    - Utils functions: api/prepare_tensors.md
   - 📝 License: license.md
