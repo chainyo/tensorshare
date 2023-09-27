@@ -72,9 +72,9 @@ For more examples and details, please refer to the [Usage section](https://chain
 
 ## Roadmap
 
-- [x] Pydantic schema for sharing tensors ~> [TensorShare](https://chainyo.github.io/tensorshare/usage/tensorshare.md)
+- [x] Pydantic schema for sharing tensors ~> [TensorShare](https://chainyo.github.io/tensorshare/usage/tensorshare)
 - [x] Serialization and deserialization ~> [tensorshare.serialization](https://chainyo.github.io/tensorshare/api/serialization)
 - [x] TensorProcessor for processing tensors ~> [TensorProcessor](https://chainyo.github.io/tensorshare/api/processor)
-- [x] Server for sharing tensors ~> [TensorShareServer](https://chainyo.github.io/tensorshare/usage/tensorshare_server.md)
-- [x] Client for sharing tensors ~> [TensorShareClient](https://chainyo.github.io/tensorshare/usage/tensorshare_client.md)
+- [x] Server for sharing tensors ~> [TensorShareServer](https://chainyo.github.io/tensorshare/usage/tensorshare_server)
+- [x] Client for sharing tensors ~> [TensorShareClient](https://chainyo.github.io/tensorshare/usage/tensorshare_client)
 - [ ] New incredible features! (Check the [issues](https://github.com/chainyo/tensorshare/issues))

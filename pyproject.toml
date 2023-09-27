@@ -28,8 +28,8 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-  "pydantic>=2.1.1",
-  "safetensors>=0.3.1",
+  "pydantic>=1.10.12",
+  "safetensors>=0.3.2",
 ]
 dynamic = ["version"]
 keywords = [
@@ -59,9 +59,9 @@ path = "src/tensorshare/__init__.py"
 [project.optional-dependencies]
 client = ["aiohttp>=3.8.5"]
 server = ["fastapi>=0.101.1"]
-torch = ["torch>=1.10", "numpy>=1.21.6"]
 numpy = ["numpy>=1.21.6"]
 tensorflow = ["tensorflow>=2.14.0", "numpy>=1.21.6"]
+torch = ["torch>=1.10", "numpy>=1.21.6"]
 jax = ["flax>=0.6.3", "jax<0.4.14", "jaxlib<0.4.14", "numpy>=1.21.6"]
 paddlepaddle = ["paddlepaddle>=2.4.1", "numpy>=1.21.6"]
 docs = [
@@ -78,14 +78,8 @@ quality = [
 ]
 tests = [
   "aioresponses>=0.7.4",
-  "aiohttp>=3.8.5",
-  "fastapi>=0.101.1",
   "flax>=0.6.3",
   "httpx >=0.23.0",
-  "jax<0.4.14",
-  "jaxlib<0.4.14",
-  "numpy>=1.21.6",
-  "paddlepaddle>=2.4.1",
   "pytest>=7.4",
   "pytest-asyncio>=0.21.1",
   "pytest-cov>=4.1",
@@ -130,6 +124,9 @@ python_version = "3.8"
 check_untyped_defs = true
 ignore_missing_imports = true
 warn_return_any = true
+
+[tool.pytest.ini_options]
+log_cli_level = "INFO"
 
 [tool.hatch.envs.quality]
 features = [
