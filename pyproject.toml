@@ -76,7 +76,9 @@ quality = [
   "pre-commit>=2.20.0",
 ]
 tests = [
+  "aiohttp>=3.8.5",
   "aioresponses>=0.7.4",
+  "fastapi>=0.101.1",
   "flax>=0.6.3",
   "jax<0.4.14",
   "jaxlib<0.4.14",
