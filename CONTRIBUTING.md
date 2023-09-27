@@ -37,7 +37,7 @@ Request features on the [Issue Tracker].
 
 ## How to set up your development environment
 
-You need Python 3.8+ and [Hatch].
+You need Python 3.9+ and [Hatch].
 
 It is recommended to use `pipx` to install these tools to make it system-wide available:
 

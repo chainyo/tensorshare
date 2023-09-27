@@ -7,8 +7,7 @@ import re
 import numpy as np
 import paddle
 import pytest
-
-# import tensorflow as tf
+import tensorflow as tf
 import torch
 from jax import Array
 from safetensors import SafetensorError
@@ -69,19 +68,19 @@ class TestTensorProcessorSerialize:
         assert backend == Backend.PADDLEPADDLE
         assert backend == BACKEND_TENSOR_TYPE_MAPPING[type_str]
 
-    # @pytest.mark.usefixtures("multiple_tensorflow_tensors")
-    # def test_infer_backend_with_multiple_tensorflow_tensors(
-    #     self, multiple_tensorflow_tensors
-    # ) -> None:
-    #     """Test the _infer_backend function with multiple tensorflow tensors."""
-    #     tensor_type = type(multiple_tensorflow_tensors["embeddings"])
-    #     type_str = f"{tensor_type.__module__}.{tensor_type.__name__}"
-    #     backend = _infer_backend(multiple_tensorflow_tensors)
+    @pytest.mark.usefixtures("multiple_tensorflow_tensors")
+    def test_infer_backend_with_multiple_tensorflow_tensors(
+        self, multiple_tensorflow_tensors
+    ) -> None:
+        """Test the _infer_backend function with multiple tensorflow tensors."""
+        tensor_type = type(multiple_tensorflow_tensors["embeddings"])
+        type_str = f"{tensor_type.__module__}.{tensor_type.__name__}"
+        backend = _infer_backend(multiple_tensorflow_tensors)
 
-    #     assert isinstance(backend, str)
-    #     assert backend == "tensorflow"
-    #     assert backend == Backend.TENSORFLOW
-    #     assert backend == BACKEND_TENSOR_TYPE_MAPPING[type_str]
+        assert isinstance(backend, str)
+        assert backend == "tensorflow"
+        assert backend == Backend.TENSORFLOW
+        assert backend == BACKEND_TENSOR_TYPE_MAPPING[type_str]
 
     @pytest.mark.usefixtures("multiple_torch_tensors")
     def test_infer_backend_with_multiple_torch_tensors(
@@ -171,17 +170,19 @@ class TestTensorProcessorSerialize:
         assert isinstance(tensorshare[0], bytes)
         assert isinstance(tensorshare[1], int)
 
-    # @pytest.mark.usefixtures("multiple_tensorflow_tensors")
-    # @parametrize("backend", [None, Backend.TENSORFLOW, "tensorflow"])
-    # def test_tensor_processor_serialize_with_multiple_tensorflow_tensors_and_backend(
-    #     self, multiple_tensorflow_tensors, backend
-    # ) -> None:
-    #     """Test the serialize function with multiple tensorflow tensors and backend."""
-    #     tensorshare = TensorProcessor.serialize(multiple_tensorflow_tensors, backend=backend)
+    @pytest.mark.usefixtures("multiple_tensorflow_tensors")
+    @pytest.mark.parametrize("backend", [None, Backend.TENSORFLOW, "tensorflow"])
+    def test_tensor_processor_serialize_with_multiple_tensorflow_tensors_and_backend(
+        self, multiple_tensorflow_tensors, backend
+    ) -> None:
+        """Test the serialize function with multiple tensorflow tensors and backend."""
+        tensorshare = TensorProcessor.serialize(
+            multiple_tensorflow_tensors, backend=backend
+        )
 
-    # assert isinstance(tensorshare, tuple)
-    # assert isinstance(tensorshare[0], bytes)
-    # assert isinstance(tensorshare[1], int)
+        assert isinstance(tensorshare, tuple)
+        assert isinstance(tensorshare[0], bytes)
+        assert isinstance(tensorshare[1], int)
 
     @pytest.mark.usefixtures("multiple_torch_tensors")
     @pytest.mark.parametrize("backend", [None, Backend.TORCH, "torch"])
@@ -377,30 +378,26 @@ class TestTensorProcessorDeserialize:
         assert isinstance(tensors["embeddings"], paddle.Tensor)
         assert tensors["embeddings"].shape == [2, 2]
 
-    # @pytest.mark.usefixtures("serialized_fixed_numpy_tensors")
-    # @pytest.mark.parametrize("backend", [Backend.TENSORFLOW, "tensorflow"])
-    # def test_tensor_processor_deserialize_with_tensorflow_backend(
-    #     self, serialized_fixed_numpy_tensors, backend
-    # ) -> None:
-    #     """Test the deserialize function with tensorflow backend."""
-    #     with pytest.raises(
-    #         SafetensorError,
-    #         match=re.escape(
-    #             "Error while deserializing: HeaderTooLarge"
-    #         ),
-    #     ):
-    #         TensorProcessor.deserialize(
-    #             serialized_fixed_numpy_tensors, backend=backend
-    #         )
+    @pytest.mark.usefixtures("serialized_fixed_numpy_tensors")
+    @pytest.mark.parametrize("backend", [Backend.TENSORFLOW, "tensorflow"])
+    def test_tensor_processor_deserialize_with_tensorflow_backend(
+        self, serialized_fixed_numpy_tensors, backend
+    ) -> None:
+        """Test the deserialize function with tensorflow backend."""
+        with pytest.raises(
+            SafetensorError,
+            match=re.escape("Error while deserializing: HeaderTooLarge"),
+        ):
+            TensorProcessor.deserialize(serialized_fixed_numpy_tensors, backend=backend)
 
-    #     b64_encoded = base64.b64encode(serialized_fixed_numpy_tensors)
-    #     tensors = TensorProcessor.deserialize(b64_encoded, backend=backend)
+        b64_encoded = base64.b64encode(serialized_fixed_numpy_tensors)
+        tensors = TensorProcessor.deserialize(b64_encoded, backend=backend)
 
-    #     assert isinstance(tensors, dict)
-    #     assert len(tensors) > 0
+        assert isinstance(tensors, dict)
+        assert len(tensors) > 0
 
-    #     assert isinstance(tensors["embeddings"], tf.Tensor)
-    #     assert tensors["embeddings"].shape == (2, 2)
+        assert isinstance(tensors["embeddings"], tf.Tensor)
+        assert tensors["embeddings"].shape == (2, 2)
 
     @pytest.mark.usefixtures("serialized_fixed_numpy_tensors")
     @pytest.mark.parametrize("backend", [Backend.TORCH, "torch"])

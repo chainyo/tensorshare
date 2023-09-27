@@ -6,7 +6,7 @@ requires = ["hatchling"]
 name = "tensorshare"
 description = "🤝 Trade any tensors over the network"
 readme = "README.md"
-requires-python = ">=3.8,<3.12"
+requires-python = ">=3.9,<3.12"
 license = "MIT"
 authors = [{name = "Thomas Chaigneau", email = "t.chaigneau.tc@gmail.com"}]
 classifiers = [
@@ -20,7 +20,6 @@ classifiers = [
   "Development Status :: 4 - Beta",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
@@ -60,10 +59,10 @@ path = "src/tensorshare/__init__.py"
 client = ["aiohttp>=3.8.5"]
 server = ["fastapi>=0.101.1"]
 numpy = ["numpy>=1.21.6"]
-torch = ["torch>=1.10", "tensorshare[numpy]"]
-# tensorflow = ["tensorflow", "numpy>=1.21.6"]  Disable until 2.14 is released for pydantic v2 compatibility
-jax = ["flax>=0.6.3", "jax<0.4.14", "jaxlib<0.4.14", "tensorshare[numpy]"]
-paddlepaddle = ["paddlepaddle>=2.4.1", "tensorshare[numpy]"]
+tensorflow = ["tensorflow>=2.14.0", "numpy>=1.21.6"]
+torch = ["torch>=1.10", "numpy>=1.21.6"]
+jax = ["flax>=0.6.3", "jax<0.4.14", "jaxlib<0.4.14", "numpy>=1.21.6"]
+paddlepaddle = ["paddlepaddle>=2.4.1", "numpy>=1.21.6"]
 docs = [
   "mkdocs>=1.4.0",
   "mkdocs-material>=8.5.4",
@@ -77,19 +76,54 @@ quality = [
   "pre-commit>=2.20.0",
 ]
 tests = [
+  "aiohttp>=3.8.5",
   "aioresponses>=0.7.4",
+  "fastapi>=0.101.1",
   "flax>=0.6.3",
+  "jax<0.4.14",
+  "jaxlib<0.4.14",
   "httpx >=0.23.0",
+  "numpy>=1.21.6",
+  "paddlepaddle>=2.4.1",
   "pytest>=7.4",
   "pytest-asyncio>=0.21.1",
   "pytest-cov>=4.1",
-  "tensorshare[client,server,jax,torch,paddlepaddle]",
+  "tensorflow>=2.14.0",
+  "torch>=1.10",
 ]
-all = ["tensorshare[client,server,jax,torch,paddlepaddle]"]
-dev = ["tensorshare[all,docs,quality,tests]"]
+all = [
+  "aiohttp>=3.8.5",
+  "fastapi>=0.101.1",
+  "flax>=0.6.3",
+  "jax<0.4.14",
+  "jaxlib<0.4.14",
+  "numpy>=1.21.6",
+  "paddlepaddle>=2.4.1",
+  "tensorflow>=2.14.0",
+  "torch>=1.10",
+]
+dev = [
+  "black>=22.10.0",
+  "fastapi>=0.101.1",
+  "flax>=0.6.3",
+  "jax<0.4.14",
+  "jaxlib<0.4.14",
+  "mkdocs>=1.4.0",
+  "mkdocs-material>=8.5.4",
+  "mkdocs-git-revision-date-localized-plugin>=1.1.0",
+  "mkdocstrings[python]>=0.20.0",
+  "pre-commit>=2.20.0",
+  "pytest>=7.4",
+  "pytest-cov>=4.1",
+  "ruff>=0.0.263",
+  "numpy>=1.21.6",
+  "paddlepaddle>=2.4.1",
+  "tensorflow>=2.14.0",
+  "torch>=1.10",
+]
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 check_untyped_defs = true
 ignore_missing_imports = true
 warn_return_any = true
@@ -143,7 +177,7 @@ features = [
 run = "pytest --cov=tensorshare --cov-report=term-missing tests/ --durations 0 -s -vv"
 
 [[tool.hatch.envs.tests.matrix]]
-python = ["38", "39", "310", "311"]
+python = ["39", "310", "311"]
 
 [tool.hatch.envs.docs]
 features = [

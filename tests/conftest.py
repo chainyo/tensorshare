@@ -6,8 +6,7 @@ import jax.numpy as jnp
 import numpy as np
 import paddle
 import pytest
-
-# import tensorflow as tf
+import tensorflow as tf
 import torch
 from aioresponses import aioresponses
 
@@ -62,10 +61,10 @@ def dict_zeros_paddle_tensor() -> dict:
     return {"embeddings": paddle.zeros((512, 1024))}
 
 
-# @pytest.fixture
-# def dict_zeros_tensorflow_tensor() -> dict:
-#     """Return a dictionary of tensorflow tensors."""
-#     return {"embeddings": tf.zeros((512, 1024))}
+@pytest.fixture
+def dict_zeros_tensorflow_tensor() -> dict:
+    """Return a dictionary of tensorflow tensors."""
+    return {"embeddings": tf.zeros((512, 1024))}
 
 
 @pytest.fixture
@@ -92,10 +91,10 @@ def zeros_paddle_tensor() -> paddle.Tensor:
     return paddle.zeros((512, 1024))
 
 
-# @pytest.fixture
-# def zeros_tensorflow_tensor() -> tf.Tensor:
-#     """Return a tensorflow tensor of zeros."""
-#     return tf.zeros((512, 1024))
+@pytest.fixture
+def zeros_tensorflow_tensor() -> tf.Tensor:
+    """Return a tensorflow tensor of zeros."""
+    return tf.zeros((512, 1024))
 
 
 @pytest.fixture
@@ -131,13 +130,13 @@ def multiple_paddle_tensors() -> dict:
     }
 
 
-# @pytest.fixture
-# def multiple_tensorflow_tensors() -> dict:
-#     """Return a dictionary of tensorflow tensors."""
-#     return {
-#         "embeddings": tf.zeros((512, 1024)),
-#         "labels": tf.zeros((512, 1024)),
-#     }
+@pytest.fixture
+def multiple_tensorflow_tensors() -> dict:
+    """Return a dictionary of tensorflow tensors."""
+    return {
+        "embeddings": tf.zeros((512, 1024)),
+        "labels": tf.zeros((512, 1024)),
+    }
 
 
 @pytest.fixture

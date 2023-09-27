@@ -8,8 +8,7 @@ import numpy as np
 import paddle
 import pkg_resources
 import pytest
-
-# import tensorflow as tf
+import tensorflow as tf
 import torch
 from pydantic import BaseModel, ByteSize, HttpUrl
 
@@ -18,9 +17,8 @@ from tensorshare.serialization.constants import Backend
 from tensorshare.serialization.flax import serialize as serialize_flax
 from tensorshare.serialization.numpy import serialize as serialize_numpy
 from tensorshare.serialization.paddle import serialize as serialize_paddle
+from tensorshare.serialization.tensorflow import serialize as serialize_tensorflow
 from tensorshare.serialization.torch import serialize as serialize_torch
-
-# from tensorshare.serialization.tensorflow import serialize as serialize_tensorflow
 
 
 class TestTensorShare:
@@ -114,23 +112,23 @@ class TestTensorShare:
         assert tensorshare.tensors == base64.b64encode(_tensors)
         assert tensorshare.size == len(_tensors)
 
-        # @pytest.mark.usefixtures("dict_zeros_tensorflow_tensor")
-        # def test_tensorshare_with_tensorflow(self, dict_zeros_tensorflow_tensor) -> None:
+    @pytest.mark.usefixtures("dict_zeros_tensorflow_tensor")
+    def test_tensorshare_with_tensorflow(self, dict_zeros_tensorflow_tensor) -> None:
         """Test the tensorshare schema with tensorflow tensors."""
-        # _tensors = serialize_tensorflow(dict_zeros_tensorflow_tensor)
-        # tensorshare = TensorShare(
-        #     tensors=base64.b64encode(_tensors),
-        #     size=len(_tensors),
-        # )
+        _tensors = serialize_tensorflow(dict_zeros_tensorflow_tensor)
+        tensorshare = TensorShare(
+            tensors=base64.b64encode(_tensors),
+            size=len(_tensors),
+        )
 
-        # assert isinstance(tensorshare.tensors, bytes)
-        # assert isinstance(tensorshare.size, int)
+        assert isinstance(tensorshare.tensors, bytes)
+        assert isinstance(tensorshare.size, int)
 
-        # assert len(tensorshare.tensors) > 0
-        # assert tensorshare.size > 0
+        assert len(tensorshare.tensors) > 0
+        assert tensorshare.size > 0
 
-        # assert tensorshare.tensors == base64.b64encode(_tensors)
-        # assert tensorshare.size == len(_tensors)
+        assert tensorshare.tensors == base64.b64encode(_tensors)
+        assert tensorshare.size == len(_tensors)
 
     @pytest.mark.usefixtures("dict_zeros_torch_tensor")
     def test_tensorshare_with_torch(self, dict_zeros_torch_tensor) -> None:
@@ -205,25 +203,29 @@ class TestTensorShare:
         assert len(tensorshare.tensors) > 0
         assert tensorshare.size > 0
 
-    # @pytest.mark.usefixtures("dict_zeros_tensorflow_tensor")
-    # @parametrize("backend", [None, Backend.TENSORFLOW, "tensorflow"])
-    # def test_from_dict_method_with_tensorflow(self, dict_zeros_tensorflow_tensor, backend) -> None:
-    #     """Test the from_dict method with tensorflow tensors."""
-    #     tensorshare = TensorShare.from_dict(dict_zeros_tensorflow_tensor, backend=backend)
+    @pytest.mark.usefixtures("dict_zeros_tensorflow_tensor")
+    @pytest.mark.parametrize("backend", [None, Backend.TENSORFLOW, "tensorflow"])
+    def test_from_dict_method_with_tensorflow(
+        self, dict_zeros_tensorflow_tensor, backend
+    ) -> None:
+        """Test the from_dict method with tensorflow tensors."""
+        tensorshare = TensorShare.from_dict(
+            dict_zeros_tensorflow_tensor, backend=backend
+        )
 
-    #     assert isinstance(tensorshare, TensorShare)
-    #     assert isinstance(tensorshare.tensors, bytes)
-    #     assert isinstance(tensorshare.size, int)
+        assert isinstance(tensorshare, TensorShare)
+        assert isinstance(tensorshare.tensors, bytes)
+        assert isinstance(tensorshare.size, int)
 
-    #     assert len(tensorshare.tensors) > 0
-    #     assert tensorshare.size > 0
+        assert len(tensorshare.tensors) > 0
+        assert tensorshare.size > 0
 
-    #     assert tensorshare.tensors == base64.b64encode(serialize_tensorflow(
-    #         dict_zeros_tensorflow_tensor
-    #     ))
-    #     assert tensorshare.size == len(
-    #         serialize_tensorflow(dict_zeros_tensorflow_tensor)
-    #     )
+        assert tensorshare.tensors == base64.b64encode(
+            serialize_tensorflow(dict_zeros_tensorflow_tensor)
+        )
+        assert tensorshare.size == len(
+            serialize_tensorflow(dict_zeros_tensorflow_tensor)
+        )
 
     @pytest.mark.usefixtures("dict_zeros_torch_tensor")
     @pytest.mark.parametrize("backend", [None, Backend.TORCH, "torch"])
@@ -298,19 +300,21 @@ class TestTensorShare:
         assert isinstance(tensors["embeddings"], paddle.Tensor)
         assert tensors["embeddings"].shape == [2, 2]
 
-    # @pytest.mark.usefixtures("serialized_fixed_numpy_tensors")
-    # @pytest.mark.parametrize("backend", [Backend.TENSORFLOW, "tensorflow"])
-    # def test_to_tensors_method_with_tensorflow(self, serialized_fixed_numpy_tensors, backend) -> None:
-    #     """Test the to_tensors method with tensorflow backend."""
-    #     tensorshare = TensorShare(
-    #         tensors=base64.b64encode(serialized_fixed_numpy_tensors),
-    #         size=len(serialized_fixed_numpy_tensors)
-    #     )
-    #     tensors = tensorshare.to_tensors(backend=backend)
+    @pytest.mark.usefixtures("serialized_fixed_numpy_tensors")
+    @pytest.mark.parametrize("backend", [Backend.TENSORFLOW, "tensorflow"])
+    def test_to_tensors_method_with_tensorflow(
+        self, serialized_fixed_numpy_tensors, backend
+    ) -> None:
+        """Test the to_tensors method with tensorflow backend."""
+        tensorshare = TensorShare(
+            tensors=base64.b64encode(serialized_fixed_numpy_tensors),
+            size=len(serialized_fixed_numpy_tensors),
+        )
+        tensors = tensorshare.to_tensors(backend=backend)
 
-    #     assert isinstance(tensors, dict)
-    #     assert isinstance(tensors["embeddings"], tf.Tensor)
-    #     assert tensors["embeddings"].shape == [2, 2]
+        assert isinstance(tensors, dict)
+        assert isinstance(tensors["embeddings"], tf.Tensor)
+        assert tensors["embeddings"].shape == [2, 2]
 
     @pytest.mark.usefixtures("serialized_fixed_numpy_tensors")
     @pytest.mark.parametrize("backend", [Backend.TORCH, "torch"])

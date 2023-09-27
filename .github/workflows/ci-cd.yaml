@@ -31,7 +31,7 @@ jobs:
       - name: setup-python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: 3.9
 
       - name: install-dependencies
         run: |
@@ -56,7 +56,7 @@ jobs:
       - name: setup-python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: 3.9
 
       - name: install-dependencies
         run: |
@@ -87,7 +87,7 @@ jobs:
       - name: setup-python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: 3.9
 
       - name: install-dependencies
         run: |
@@ -110,7 +110,7 @@ jobs:
       - name: setup-python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: 3.9
 
       - name: install-dependencies
         run: |
